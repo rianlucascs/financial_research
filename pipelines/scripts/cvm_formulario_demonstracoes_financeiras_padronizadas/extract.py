@@ -312,4 +312,5 @@ class ExtractZipFiles(ExtractCVMFormularioDemonstracoesFinanceirasPadronizadas):
     """
     
     def main(self, ctx):
+        # Configura o logger e o ambiente
         pass
