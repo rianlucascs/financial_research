@@ -1,0 +1,7 @@
+beautifulsoup4==4.14.3
+numpy==2.2.6
+pandas==2.3.3
+python-dotenv==1.2.1
+selenium==4.40.0
+webdriver-manager==4.0.2
+wget==3.2

@@ -1,0 +1,83 @@
+services:
+  # Pipeline 1: B3 Índices Segmentos Setoriais
+  b3-indices-pipeline:
+    build:
+      context: ..
+      dockerfile: Pipelines/Dockerfile
+    container_name: b3-indices-pipeline
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PIPELINE_NAME=b3_indices_segmentos_setoriais
+      - PIPELINE_ENV=prod
+    volumes:
+      - ./data:/app/Pipelines/data
+      - ./logs:/app/Pipelines/logs
+      - ./state:/app/Pipelines/state
+    restart: "no"
+    tmpfs:
+      - /tmp
+    deploy:
+      resources:
+        limits:
+          memory: 6G
+        reservations:
+          memory: 4G
+
+  # Pipeline 2: CVM Formulário Informações Trimestrais (ITR)
+  cvm-itr-pipeline:
+    build:
+      context: ..
+      dockerfile: Pipelines/Dockerfile
+    container_name: cvm-itr-pipeline
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PIPELINE_NAME=cvm_formulario_informacoes_trimestrais
+      - PIPELINE_ENV=prod
+    volumes:
+      - ./data:/app/Pipelines/data
+      - ./logs:/app/Pipelines/logs
+      - ./state:/app/Pipelines/state
+    restart: "no"
+    tmpfs:
+      - /tmp
+    depends_on:
+      b3-indices-pipeline:
+        condition: service_completed_successfully
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+        reservations:
+          memory: 6G
+
+  # Pipeline 3: CVM Demonstrações Financeiras Padronizadas (DFP)
+  cvm-dfp-pipeline:
+    build:
+      context: ..
+      dockerfile: Pipelines/Dockerfile
+    container_name: cvm-dfp-pipeline
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PIPELINE_NAME=cvm_formulario_demonstracoes_financeiras_padronizadas
+      - PIPELINE_ENV=prod
+    volumes:
+      - ./data:/app/Pipelines/data
+      - ./logs:/app/Pipelines/logs
+      - ./state:/app/Pipelines/state
+    restart: "no"
+    tmpfs:
+      - /tmp
+    depends_on:
+      cvm-itr-pipeline:
+        condition: service_completed_successfully
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+        reservations:
+          memory: 6G
+
+
+
+
+
