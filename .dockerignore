@@ -8,15 +8,15 @@ __pycache__/
 *.pyd
 *.log
 
-Research/
 *.ipynb
 **/.ipynb_checkpoints/
 
-Pipelines/data/
-Pipelines/logs/
-Pipelines/state/
-Pipelines/jobs/
+data/
+logs/
+state/
+jobs/
 
-Pipelines/run_pipeline.ps1
-Pipelines/README.Docker.md
-Pipelines/ARQUITETURA.md
+docker/
+
+README.md
+README.Docker.md

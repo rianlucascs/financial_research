@@ -1,4 +1,5 @@
 
+
 from pipelines.shared.checkpoint_values import (
     STATUS_SUCCESSFUL,
     STATUS_FAILED,
@@ -61,8 +62,7 @@ class DownloadZipFiles(ExtractCVMFormularioDemonstracoesFinanceirasPadronizadas)
     """
     Classe responsável pelo download dos arquivos zip.
     """
-
-
+    
     def _gravar_checkpoint_download(self, filename: str, status: str, failure_point: str, attempts: int, ctx) -> None:
         
         try:
@@ -304,7 +304,6 @@ class ExtractZipFiles(ExtractCVMFormularioDemonstracoesFinanceirasPadronizadas):
     """
     Classe responsável pela extração dos arquivos zip.
     """
-    
     
     def _gravar_checkpoint_extract(self, filename: str, status: str, failure_point: str, attempts: int, extracted_files: list[str], ctx) -> None:
         

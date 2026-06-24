@@ -3,16 +3,16 @@ services:
   b3-indices-pipeline:
     build:
       context: ..
-      dockerfile: Pipelines/Dockerfile
+      dockerfile: docker/Dockerfile.pipelines
     container_name: b3-indices-pipeline
     environment:
       - PYTHONUNBUFFERED=1
       - PIPELINE_NAME=b3_indices_segmentos_setoriais
       - PIPELINE_ENV=prod
     volumes:
-      - ./data:/app/Pipelines/data
-      - ./logs:/app/Pipelines/logs
-      - ./state:/app/Pipelines/state
+      - ../data:/app/data
+      - ../logs:/app/logs
+      - ../state:/app/state
     restart: "no"
     tmpfs:
       - /tmp
@@ -27,16 +27,16 @@ services:
   cvm-itr-pipeline:
     build:
       context: ..
-      dockerfile: Pipelines/Dockerfile
+      dockerfile: docker/Dockerfile.pipelines
     container_name: cvm-itr-pipeline
     environment:
       - PYTHONUNBUFFERED=1
       - PIPELINE_NAME=cvm_formulario_informacoes_trimestrais
       - PIPELINE_ENV=prod
     volumes:
-      - ./data:/app/Pipelines/data
-      - ./logs:/app/Pipelines/logs
-      - ./state:/app/Pipelines/state
+      - ../data:/app/data
+      - ../logs:/app/logs
+      - ../state:/app/state
     restart: "no"
     tmpfs:
       - /tmp
@@ -54,16 +54,16 @@ services:
   cvm-dfp-pipeline:
     build:
       context: ..
-      dockerfile: Pipelines/Dockerfile
+      dockerfile: docker/Dockerfile.pipelines
     container_name: cvm-dfp-pipeline
     environment:
       - PYTHONUNBUFFERED=1
       - PIPELINE_NAME=cvm_formulario_demonstracoes_financeiras_padronizadas
       - PIPELINE_ENV=prod
     volumes:
-      - ./data:/app/Pipelines/data
-      - ./logs:/app/Pipelines/logs
-      - ./state:/app/Pipelines/state
+      - ../data:/app/data
+      - ../logs:/app/logs
+      - ../state:/app/state
     restart: "no"
     tmpfs:
       - /tmp
