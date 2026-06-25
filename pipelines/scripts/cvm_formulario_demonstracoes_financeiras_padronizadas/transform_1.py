@@ -20,21 +20,14 @@ from pandas import DataFrame, concat, read_csv
 
 
 class TransformCVMFormularioDemonstracoesFinanceirasPadronizadasStep1:
-    """
-    Etapa 1 de transformação do pipeline DFP (CVM).
-
-    Lê os arquivos CSV brutos de cada ano (2011 até o ano corrente), concatena
-    os dados de cada tipo de demonstração (DFPs configurados em settings.DFPS) e
-    salva o resultado consolidado como um único arquivo CSV no diretório interim.
-    Ao final de cada DFP, grava um checkpoint indicando sucesso ou falha.
-    """
+    """Concatena os CSVs brutos anuais (2011 até o ano corrente) de cada tipo de demonstração DFP (CVM),
+    salvando o resultado consolidado na camada interim e gravando checkpoint de sucesso ou falha."""
     
     
     def __init__(self, pipeline: str):
         
         self.pipeline = pipeline
         self.process = "transform_1"
-        self.driver = None
         self.logger = None
 
 
@@ -66,9 +59,7 @@ class TransformCVMFormularioDemonstracoesFinanceirasPadronizadasStep1:
         
         except Exception as e:
             
-            self.logger.exception(f"Falha ao gravar checkpoint de download para '{item_name}': {e}")
-            
-            raise
+            self.logger.exception(f"Falha ao gravar checkpoint de download para '{item_name}'")
     
     
     def _transform_1(self, ctx) -> None:
@@ -89,47 +80,41 @@ class TransformCVMFormularioDemonstracoesFinanceirasPadronizadasStep1:
 
                 # garante que o arquivo interim seja sempre atualizado, mesmo que já exista um prévio.
                 ctx.delete_file(path_iterim_csv) 
-
-                # Verifica se o arquivo interim já existe. Se não existir, cria o arquivo concatenando os arquivos CSV de cada ano.
-                if not path_iterim_csv.exists():
                     
-                    for for_year in range(2011, year_now + 1):
+                for for_year in range(2011, year_now + 1):
                         
-                        try:
-                            name_raw_csv = f"dfp_cia_aberta_{dfp_name}_{for_year}.csv"
-                            path_raw_csv = raw_path / "csv" / name_raw_csv
+                    try:
+                        name_raw_csv = f"dfp_cia_aberta_{dfp_name}_{for_year}.csv"
+                        path_raw_csv = raw_path / "csv" / name_raw_csv
 
-                            df_raw_csv = read_csv(path_raw_csv, sep=";", decimal=",", encoding="iso-8859-1")
+                        df_raw_csv = read_csv(path_raw_csv, sep=";", decimal=",", encoding="iso-8859-1")
 
-                        except Exception as e:
+                    except Exception as e:
                             
-                            if for_year == year_now:
+                        if for_year == year_now:
                                 
-                                self.logger.error(f"Erro ao abrir o arquivo '{name_raw_csv}'.", exc_info=False)
+                            self.logger.error(f"Erro ao abrir o arquivo '{name_raw_csv}'.", exc_info=False)
 
-                            else:
+                        else:
                                 
-                                self.logger.error(f"Erro ao abrir o arquivo '{name_raw_csv}': {e}", exc_info=True)
+                            self.logger.error(f"Erro ao abrir o arquivo '{name_raw_csv}': {e}", exc_info=True)
 
-                            continue # Continua para o próximo ano, mesmo em caso de erro.
+                        continue # Continua para o próximo ano, mesmo em caso de erro.
                         
-                        # Concatenando os dados do arquivo CSV do ano atual com o DataFrame acumulado.
-                        df = concat([df, df_raw_csv])
+                    # Concatenando os dados do arquivo CSV do ano atual com o DataFrame acumulado.
+                    df = concat([df, df_raw_csv])
                     
-                    # Salva o DataFrame concatenado em um arquivo CSV no diretório interim.
-                    df.to_csv(path_iterim_csv, index=False, encoding="utf-8", mode="w")
+                # Salva o DataFrame concatenado em um arquivo CSV no diretório interim.
+                df.to_csv(path_iterim_csv, index=False, encoding="utf-8", mode="w")
 
-                    # Libera memória após a criação do arquivo CSV concatenado.
-                    del df
-                    del df_raw_csv
+                # Libera memória após a criação do arquivo CSV concatenado.
+                del df
+                del df_raw_csv
                     
-                    gc.collect()
+                gc.collect()
                     
-                    self.logger.info(f"Arquivo '{filename}' criado e salvo com sucesso.")
+                self.logger.info(f"Arquivo '{filename}' criado e salvo com sucesso.")
 
-                else:
-                    
-                    self.logger.info(f"Arquivo '{filename}' já existe. Nenhuma ação necessária.")
 
                 # Grava o checkpoint de sucesso para a etapa transform_1.
                 self._gravar_checkpoint_transform_1(
@@ -156,7 +141,9 @@ class TransformCVMFormularioDemonstracoesFinanceirasPadronizadasStep1:
                 )
                 
                 self.logger.error(f"Erro no transform_1 para '{dfp_name}': {e}", exc_info=True)
-                
+        
+        
+        self.logger.info(f"Transform_1 do pipeline '{self.pipeline}' concluído para o período 2011-{year_now}.")   
         
     def main(self, ctx) -> None:
 
@@ -171,3 +158,4 @@ class TransformCVMFormularioDemonstracoesFinanceirasPadronizadasStep1:
         
         # Executa a etapa de transformação 1 do pipeline.
         self._transform_1(ctx)
+        

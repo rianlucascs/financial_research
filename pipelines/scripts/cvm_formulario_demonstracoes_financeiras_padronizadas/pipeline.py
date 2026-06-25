@@ -3,7 +3,7 @@
 from pipelines.shared.context import PipelineContext
 from .extract import ExtractCVMFormularioDemonstracoesFinanceirasPadronizadas
 from .transform_1 import TransformCVMFormularioDemonstracoesFinanceirasPadronizadasStep1
-
+from .transform_2 import TransformCVMFormularioDemonstracoesFinanceirasPadronizadasStep2
 
 class PipelineCVMFormularioDemonstracoesFinanceirasPadronizadas:
 
@@ -23,6 +23,10 @@ class PipelineCVMFormularioDemonstracoesFinanceirasPadronizadas:
         # Responsável pela transformação dos formulários de demonstrações financeiras padronizadas da CVM.  
         transform_1 = TransformCVMFormularioDemonstracoesFinanceirasPadronizadasStep1(pipeline=self.pipeline)
         transform_1.main(ctx=self.ctx)
+        
+        # Responsável pela transformação dos formulários de demonstrações financeiras padronizadas da CVM.
+        transform_2 = TransformCVMFormularioDemonstracoesFinanceirasPadronizadasStep2(pipeline=self.pipeline)
+        transform_2.main(ctx=self.ctx)
         
 
 def main(env: str = "dev", run_id: str | None = None):

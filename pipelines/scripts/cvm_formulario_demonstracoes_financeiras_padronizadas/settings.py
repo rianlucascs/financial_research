@@ -30,7 +30,7 @@ DFPS = ['BPA_con', 'BPA_ind', 'BPP_con', 'BPP_ind',
 # Constantes de checkpoint para o pipeline CVM demonstracoes financeiras padronizadas.
 CHECKPOINT_STAGE_EXTRACT = "extract"
 CHECKPOINT_STEP_DOWNLOAD_ZIP = "download_zip"
-CHECKPOINT_STAGE_EXTRACT_ZIP = "extract_zip"
+CHECKPOINT_STEP_EXTRACT_ZIP = "extract_zip"
 
 
 # Constantes de checkpoint para o pipeline CVM demonstracoes financeiras padronizadas.
