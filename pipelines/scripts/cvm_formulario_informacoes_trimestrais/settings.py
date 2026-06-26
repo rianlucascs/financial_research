@@ -3,11 +3,11 @@
 from datetime import date
 
 
-URL = "https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/DFP/DADOS/"
+URL = "https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/ITR/DADOS/"
 
 
 # Lista de arquivos zip a serem baixados, um para cada ano de 2011 até o ano atual.
-ARCHIVES_ZIP = [f'dfp_cia_aberta_{year_now}.zip' for year_now in range(2011, date.today().year + 1)]
+ARCHIVES_ZIP = [f'itr_cia_aberta_{year_now}.zip' for year_now in range(2011, date.today().year + 1)]
 
 
 # Lista de demonstracoes financeiras padronizadas (DFPs) a serem processadas.
@@ -27,7 +27,6 @@ CHECKPOINT_STEP_EXTRACT_ZIP = "extract_zip"
 CHECKPOINT_STAGE_PROCESSED = "processed"
 CHECKPOINT_STEP_PROCESSED_1 = "transform_1"
 CHECKPOINT_STEP_PROCESSED_2 = "transform_2"
-CHECKPOINT_STEP_PROCESSED_3 = "transform_3"
 
 
 # Constantes de checkpoint para o pipeline CVM demonstracoes financeiras padronizadas.

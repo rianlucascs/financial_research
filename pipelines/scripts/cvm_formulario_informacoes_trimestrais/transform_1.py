@@ -19,8 +19,8 @@ from datetime import date
 from pandas import DataFrame, concat, read_csv
 
 
-class TransformCVMFormularioDemonstracoesFinanceirasPadronizadasStep1:
-    """Concatena os CSVs brutos anuais (2011 até o ano corrente) de cada tipo de demonstração DFP (CVM),
+class TransformCVMFormularioInformacoesTrimestraisStep1:
+    """Concatena os CSVs brutos anuais (2011 até o ano corrente) de cada tipo de demonstração ITR (CVM),
     salvando o resultado consolidado na camada interim e gravando checkpoint de sucesso ou falha."""
     
     
@@ -68,13 +68,13 @@ class TransformCVMFormularioDemonstracoesFinanceirasPadronizadasStep1:
         
         self.logger.info(f"Iniciando transform_1 do pipeline '{self.pipeline}' para o período 2011-{year_now}.")
 
-        for dfp_name in DEMONSTRACOES:
+        for itr_name in DEMONSTRACOES:
             try:
                 
                 df = DataFrame()
 
                 # Define o nome do arquivo CSV consolidado para cada tipo de demonstração financeira (DFP).
-                filename = f"dfp_cia_aberta_{dfp_name}_2011-{year_now}.csv"
+                filename = f"itr_cia_aberta_{itr_name}_2011-{year_now}.csv"
                 raw_path, interim_path = ctx.prepare_interim_path(self.pipeline)
                 path_iterim_csv = interim_path / filename
 
@@ -84,7 +84,7 @@ class TransformCVMFormularioDemonstracoesFinanceirasPadronizadasStep1:
                 for for_year in range(2011, year_now + 1):
                         
                     try:
-                        name_raw_csv = f"dfp_cia_aberta_{dfp_name}_{for_year}.csv"
+                        name_raw_csv = f"itr_cia_aberta_{itr_name}_{for_year}.csv"
                         path_raw_csv = raw_path / "csv" / name_raw_csv
 
                         df_raw_csv = read_csv(path_raw_csv, sep=";", decimal=",", encoding="iso-8859-1")
@@ -119,31 +119,32 @@ class TransformCVMFormularioDemonstracoesFinanceirasPadronizadasStep1:
                 # Grava o checkpoint de sucesso para a etapa transform_1.
                 self._gravar_checkpoint_transform_1(
                     CHECKPOINT_STEP_PROCESSED_1,
-                    dfp_name,
+                    itr_name,
                     STATUS_SUCCESSFUL,
                     None,
                     ctx,
-                    extra={"dfp_name": dfp_name},
+                    extra={"itr_name": itr_name},
                 )
 
-                self.logger.info(f"Sucesso no transform_1 para {dfp_name}")
+                self.logger.info(f"Sucesso no transform_1 para {itr_name}")
 
             except Exception as e:
                 
                 # Grava o checkpoint de falha para a etapa transform_1.
                 self._gravar_checkpoint_transform_1(
                     CHECKPOINT_STEP_PROCESSED_1,
-                    dfp_name,
+                    itr_name,
                     STATUS_FAILED,
                     FAILURE_PROCESSED_EXCEPTION,
                     ctx,
-                    extra={"dfp_name": dfp_name},
+                    extra={"itr_name": itr_name},
                 )
                 
-                self.logger.error(f"Erro no transform_1 para '{dfp_name}': {e}", exc_info=True)
+                self.logger.error(f"Erro no transform_1 para '{itr_name}': {e}", exc_info=True)
         
         
         self.logger.info(f"Transform_1 do pipeline '{self.pipeline}' concluído para o período 2011-{year_now}.")   
+        
         
     def main(self, ctx) -> None:
 

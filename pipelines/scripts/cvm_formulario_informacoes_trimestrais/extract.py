@@ -24,8 +24,8 @@ import wget
 from zipfile import ZipFile
 
 
-class ExtractCVMFormularioDemonstracoesFinanceirasPadronizadas:
-    """Orquestra o download e a extração dos ZIPs de demonstrações financeiras padronizadas (DFP) da CVM."""
+class ExtractCVMFormularioInformacoesTrimestrais:
+    """Orquestra o download e a extração dos ZIPs de informações trimestrais (ITR) da CVM."""
     
     
     def __init__(self, pipeline: str):
@@ -57,7 +57,7 @@ class ExtractCVMFormularioDemonstracoesFinanceirasPadronizadas:
 
 
 class DownloadZipFiles:
-    """Realiza o download dos arquivos ZIP da CVM com reprocessamento por checkpoint e controle de tentativas."""
+    """Realiza o download dos arquivos ZIP de informações trimestrais (ITR) da CVM com reprocessamento por checkpoint e controle de tentativas."""
 
 
     def __init__(self, pipeline: str):
@@ -168,7 +168,7 @@ class DownloadZipFiles:
 
 
     def _limpar_arquivo_anterior_download_zip_file(self, filename: str, ctx) -> None:
-        """Remove o arquivo ZIP anterior registrado no checkpoint para garantir um download limpo."""
+        """Remove o arquivo ZIP de ITR anterior registrado no checkpoint para garantir um download limpo."""
         
         try:
             
@@ -211,7 +211,6 @@ class DownloadZipFiles:
             self.logger.critical(f"Erro ao limpar arquivo anterior '{filename}': {e}")
             
             raise
-
 
     def _download_zip_file(self, filename: str, raw_path_zip) -> str | None:
         
@@ -300,13 +299,12 @@ class DownloadZipFiles:
             
 
 class ExtractZipFiles:
-    """Extrai os arquivos ZIP da CVM para a camada raw/csv, com controle de reprocessamento via checkpoint."""
+    """Extrai os arquivos ZIP de informações trimestrais (ITR) da CVM para a camada raw/csv, com controle de reprocessamento via checkpoint."""
     
     
     def __init__(self, pipeline: str):
         self.pipeline = pipeline
         self.logger = None
-    
     
     def _gravar_checkpoint_extract(self, filename: str, status: str, failure_point: str, attempts: int, extracted_files: list[str], ctx) -> None:
         
@@ -340,7 +338,7 @@ class ExtractZipFiles:
 
 
     def _atualiza_ultimo_extract_zip_file(self, filename: str, ctx) -> None:
-        """Remove os CSVs extraídos do último e penúltimo ZIP para garantir que a extração seja refeita do zero."""
+        """Remove os CSVs extraídos do último e penúltimo ZIP de ITR para garantir que a extração seja refeita do zero."""
         
         ultimo = ARCHIVES_ZIP[-1]
         penultimo = ARCHIVES_ZIP[-2]
