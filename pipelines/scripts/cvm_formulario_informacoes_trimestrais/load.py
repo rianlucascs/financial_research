@@ -1,5 +1,4 @@
 
-
 from pipelines.shared.checkpoint_values import (
     FAILURE_PROCESSED_EXCEPTION,
     STATUS_FAILED,
@@ -19,7 +18,7 @@ import sqlite3
 import gc
 
 
-class LoadCVMFormularioDemonstracoesFinanceirasPadronizadas:
+class LoadCVMFormularioInformacoesTrimestrais:
     """Carrega os CSVs processados pelo transform_2 em um banco SQLite,
     criando uma tabela por tipo de demonstração financeira."""
 
@@ -67,7 +66,7 @@ class LoadCVMFormularioDemonstracoesFinanceirasPadronizadas:
         path_load = ctx.path_load(self.pipeline)
         path_load.mkdir(parents=True, exist_ok=True)
 
-        db_path = path_load / "dfp.db"
+        db_path = path_load / "itr.db"
 
         self.logger.info(f"Iniciando load do pipeline '{self.pipeline}' para o banco '{db_path}'.")
 
@@ -86,12 +85,10 @@ class LoadCVMFormularioDemonstracoesFinanceirasPadronizadas:
                 for ticker_dir in ticker_dirs:
                     ticker = ticker_dir.name
 
-                    matching = list(ticker_dir.glob(f"{ticker}_dfp_cia_aberta_{demonstracao}_*.csv"))
+                    matching = list(ticker_dir.glob(f"{ticker}_itr_cia_aberta_{demonstracao}_*.csv"))
 
                     if not matching:
-                        
                         self.logger.debug(f"Nenhum arquivo para ticker '{ticker}' / demonstração '{demonstracao}'. Pulando.")
-                        
                         continue
 
                     csv_path = matching[0]
@@ -102,9 +99,7 @@ class LoadCVMFormularioDemonstracoesFinanceirasPadronizadas:
                         frames.append(df)
 
                     except Exception:
-                        
                         self.logger.exception(f"Erro ao ler '{csv_path}'.")
-                        
                         self._gravar_checkpoint_load(
                             item_name=f"{demonstracao}_{ticker}",
                             status=STATUS_FAILED,
@@ -114,16 +109,13 @@ class LoadCVMFormularioDemonstracoesFinanceirasPadronizadas:
                         )
 
                 if not frames:
-                    
                     self.logger.warning(f"Nenhum dado encontrado para a demonstração '{demonstracao}'. Pulando.")
-                    
                     continue
 
                 df_all = concat(frames, ignore_index=True)
                 df_all.to_sql(demonstracao, conn, if_exists="replace", index=False)
 
                 rows = len(df_all)
-                
                 self.logger.info(f"Demonstração '{demonstracao}' carregada com sucesso ({rows} linhas).")
 
                 self._gravar_checkpoint_load(
@@ -136,7 +128,6 @@ class LoadCVMFormularioDemonstracoesFinanceirasPadronizadas:
 
                 del df_all
                 del frames
-                
                 gc.collect()
 
         self.logger.info(f"Load do pipeline '{self.pipeline}' concluído. Banco: '{db_path}'.")
@@ -146,7 +137,7 @@ class LoadCVMFormularioDemonstracoesFinanceirasPadronizadas:
 
         ctx.configure_logging(pipeline=self.pipeline, process=self.process)
         self.logger = ctx.logger
-        
+
         if ctx.env == "dev":
             pass
         
@@ -155,3 +146,4 @@ class LoadCVMFormularioDemonstracoesFinanceirasPadronizadas:
         
         # Responsável pelo carregamento dos dados processados em banco SQLite.
         self.load(ctx)
+

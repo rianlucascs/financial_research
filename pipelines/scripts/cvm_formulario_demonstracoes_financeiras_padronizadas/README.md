@@ -1,6 +1,6 @@
 # Pipeline: CVM — Formulário de Demonstrações Financeiras Padronizadas (DFP)
 
-Extrai, consolida e filtra as demonstrações financeiras anuais de companhias abertas publicadas pela CVM.
+Extrai, consolida, filtra e carrega as demonstrações financeiras anuais de companhias abertas publicadas pela CVM em um banco de dados SQLite.
 
 **Fonte:** [Portal de Dados Abertos da CVM](https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/DFP/DADOS/)  
 **Periodicidade da fonte:** anual (atualizada pela CVM ao longo do ano corrente)  
@@ -15,8 +15,9 @@ Extrai, consolida e filtra as demonstrações financeiras anuais de companhias a
 | `extract` | ZIPs e CSVs dos **2 anos mais recentes** (ano atual + anterior) | Anos anteriores com checkpoint de sucesso e arquivo presente |
 | `transform_1` | **Todos** os 16 arquivos interim são sempre recriados do zero | — |
 | `transform_2` | **Todos** os arquivos por ticker são sempre recriados do zero | Em `development_mode`: arquivos que já existem no disco |
+| `load` | Todas as 16 tabelas do banco SQLite são sempre recriadas do zero | — |
 
-> Em produção, `transform_1` e `transform_2` sempre reprocessam tudo. O custo de re-execução está principalmente no `extract`, que é incremental.
+> Em produção, `transform_1`, `transform_2` e `load` sempre reprocessam tudo. O custo de re-execução está principalmente no `extract`, que é incremental.
 
 ---
 
@@ -79,3 +80,40 @@ Filtra os arquivos consolidados da camada `interim` por empresa, salvando os dad
 - Em `development_mode`, arquivos já existentes são pulados para acelerar testes.
 - Se nenhum dado for encontrado para um ticker após os três critérios de filtro, um checkpoint de falha (`FAILURE_VALIDATION`) é gravado e o ticker é ignorado.
 - Checkpoints gravados em: `state/checkpoints/.../processed/transform_2/{TICKER}/`.
+
+---
+
+### 4. `load`
+
+Carrega os CSVs processados pelo `transform_2` em um banco de dados SQLite, criando uma tabela por tipo de demonstração financeira.
+
+**Entrada:** `processed/transform_2/{TICKER}/{TICKER}_dfp_cia_aberta_{demonstracao}_2011-{ano_atual}.csv`  
+**Saída:** `load/dfp.db` (banco SQLite com 16 tabelas)
+
+**Schema das tabelas:**
+
+| Coluna | Descrição |
+|---|---|
+| `TICKER` | Código do ticker (adicionado no load, ex: `ABEV3`) |
+| `CNPJ_CIA` | CNPJ da companhia |
+| `DT_REFER` | Data de referência do documento |
+| `VERSAO` | Versão do documento |
+| `DENOM_CIA` | Denominação da companhia |
+| `CD_CVM` | Código CVM |
+| `GRUPO_DFP` | Grupo da demonstração |
+| `MOEDA` | Moeda dos valores |
+| `ESCALA_MOEDA` | Escala da moeda (ex: MIL) |
+| `ORDEM_EXERC` | Ordem do exercício (ÚLTIMO / PENÚLTIMO) |
+| `DT_FIM_EXERC` | Data de fim do exercício |
+| `CD_CONTA` | Código da conta contábil |
+| `DS_CONTA` | Descrição da conta contábil |
+| `VL_CONTA` | Valor da conta |
+| `ST_CONTA_FIXA` | Indica se a conta é fixa |
+
+**Nomes das tabelas:** equivalentes à sigla da demonstração — `BPA_con`, `BPA_ind`, `BPP_con`, `BPP_ind`, `DFC_MD_con`, `DFC_MD_ind`, `DFC_MI_con`, `DFC_MI_ind`, `DMPL_con`, `DMPL_ind`, `DRA_con`, `DRA_ind`, `DRE_con`, `DRE_ind`, `DVA_con`, `DVA_ind`.
+
+**Comportamento:**
+- Cada tabela é recriada do zero a cada execução (`if_exists="replace"`).
+- Se um CSV não puder ser lido, um checkpoint de falha é gravado para o par `{demonstracao}_{ticker}` e o processamento continua.
+- Se nenhum ticker possuir dados para uma demonstração, ela é ignorada com aviso em log.
+- Checkpoints gravados em: `state/checkpoints/.../load/load/`.

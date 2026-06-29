@@ -54,6 +54,11 @@ class PipelineContext:
         return self.base_data / "pipelines" / pipeline / "processed" / process
 
 
+    def path_load(self, pipeline: str) -> Path:
+        """Retorna o caminho dos artefatos de load de um pipeline (ex.: banco SQLite)."""
+        return self.base_data / "pipelines" / pipeline / "load"
+
+
     def prepare_raw_path(self, pipeline: str, type_file: str = None) -> Path:
         """Retorna o caminho raw e garante que ele exista."""
         raw_path = self.path_raw(pipeline, type_file)

@@ -30,6 +30,11 @@ CHECKPOINT_STEP_PROCESSED_2 = "transform_2"
 CHECKPOINT_STEP_PROCESSED_3 = "transform_3"
 
 
+# Constantes de checkpoint para o estágio de load do pipeline CVM demonstracoes financeiras padronizadas.
+CHECKPOINT_STAGE_LOAD = "load"
+CHECKPOINT_STEP_LOAD = "load"
+
+
 # Constantes de checkpoint para o pipeline CVM demonstracoes financeiras padronizadas.
 DOWNLOAD_MAX_ATTEMPTS = 3
 

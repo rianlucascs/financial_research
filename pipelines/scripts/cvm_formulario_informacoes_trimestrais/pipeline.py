@@ -4,8 +4,11 @@ from pipelines.shared.context import PipelineContext
 from .extract import ExtractCVMFormularioInformacoesTrimestrais
 from .transform_1 import TransformCVMFormularioInformacoesTrimestraisStep1
 from .transform_2 import TransformCVMFormularioInformacoesTrimestraisStep2
+from .load import LoadCVMFormularioInformacoesTrimestrais
+
 
 class PipelineCVMFormularioInformacoesTrimestrais:
+
 
     def __init__(self, env: str = "dev", run_id: str | None = None):
 
@@ -27,6 +30,10 @@ class PipelineCVMFormularioInformacoesTrimestrais:
         # Responsável pela transformação dos formulários de informações trimestrais da CVM.
         transform_2 = TransformCVMFormularioInformacoesTrimestraisStep2(pipeline=self.pipeline)
         transform_2.main(ctx=self.ctx)
+
+        # Responsável pelo carregamento dos dados processados em banco SQLite.
+        load = LoadCVMFormularioInformacoesTrimestrais(pipeline=self.pipeline)
+        load.main(ctx=self.ctx)
         
 
 def main(env: str = "dev", run_id: str | None = None):
