@@ -64,3 +64,6 @@ logs/**
 
 # Ignore state folder
 state/**
+
+# Ignore jobs folder
+notas.txt

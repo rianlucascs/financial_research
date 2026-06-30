@@ -7,8 +7,9 @@ from pipelines.shared.checkpoint_values import (
     STATUS_SUCCESSFUL,
 )
 
+from pipelines.shared.carteiras import CARTEIRA_INDICE_BRASIL_IBEP
+
 from .settings import (
-    CARTEIRA_INDICE_BRASIL_IBEP,
     CHECKPOINT_STAGE_PROCESSED,
     CHECKPOINT_STEP_PROCESSED_2,
 )
