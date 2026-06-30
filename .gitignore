@@ -67,3 +67,6 @@ state/**
 
 # Ignore jobs folder
 notas.txt
+
+# Ignore egg-info folder
+financial_research.egg-info
