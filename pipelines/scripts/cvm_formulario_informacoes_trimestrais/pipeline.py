@@ -8,6 +8,7 @@ from .load import LoadCVMFormularioInformacoesTrimestrais
 
 
 class PipelineCVMFormularioInformacoesTrimestrais:
+    """Pipeline responsável pela extração, transformação e carregamento dos formulários de informações trimestrais da CVM."""
 
 
     def __init__(self, env: str = "dev", run_id: str | None = None):

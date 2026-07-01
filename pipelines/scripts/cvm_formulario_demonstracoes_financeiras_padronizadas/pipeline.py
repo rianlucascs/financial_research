@@ -8,6 +8,7 @@ from .load import LoadCVMFormularioDemonstracoesFinanceirasPadronizadas
 
 
 class PipelineCVMFormularioDemonstracoesFinanceirasPadronizadas:
+    """Pipeline responsável pela extração, transformação e carregamento dos formulários de demonstrações financeiras pad"""
 
 
     def __init__(self, env: str = "dev", run_id: str | None = None):
