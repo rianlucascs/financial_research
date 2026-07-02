@@ -14,8 +14,8 @@ from pathlib import Path
 from selenium.common.exceptions import TimeoutException
 from typing import List, Optional, Union, Literal, Any, Callable
 from selenium.webdriver.remote.webdriver import WebDriver, WebElement
-
-
+    
+    
 USER_AGENT_ALIASES = {
     "agente_1": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
 }
@@ -46,75 +46,7 @@ class SeleniumUtils:
         
         # Reutiliza o logger do processo atual, mas com namespace próprio do Selenium.
         self.logger = ctx.logger.getChild("selenium")
-
-
-    def retry(self, retries: int = 3, delay: int = 1,
-              backoff: int = 1, raise_last: bool = False,
-              retry_on: tuple[type[Exception], ...] = (Exception,)) -> Callable:
-        """
-        Decorator de retry para funções instáveis (selenium, download, scraping).
-
-        Args:
-            retries: Número máximo de tentativas
-            delay: Delay inicial entre tentativas (segundos)
-            backoff: Multiplicador de delay progressivo
-            raise_last: Se True, levanta última exceção após todas tentativas
-            retry_on: Tupla de exceções que devem acionar retry
-
-        Returns:
-            Função decorada com retry automático
-        """
         
-        if retries < 1:
-            raise ValueError("retries deve ser >= 1")
-
-        if delay < 0:
-            raise ValueError("delay deve ser >= 0")
-
-        if backoff < 1:
-            raise ValueError("backoff deve ser >= 1")
-
-        if not retry_on:
-            raise ValueError("retry_on não pode ser vazio")
-
-        if not all(isinstance(exc_type, type) and issubclass(exc_type, Exception) for exc_type in retry_on):
-            raise ValueError("retry_on deve conter apenas tipos de exceção (subclasses de Exception)")
-
-        def decorator(func: Callable) -> Callable:
-
-            @functools.wraps(func)
-            def wrapper(*args, **kwargs) -> Any:
-                last_exception = None
-                current_delay = delay
-
-                for attempt in range(1, retries + 1):
-
-                    try:
-                        return func(*args, **kwargs)
-
-                    except Exception as e:
-
-                        # Exceções fora de retry_on são reerguidas imediatamente
-                        if not isinstance(e, retry_on):
-                            self.logger.warning(f"{func.__name__} falhou com exceção não retryável: {e}")
-                            raise
-
-                        last_exception = e
-                        self.logger.warn ing(f"{func.__name__} retry {attempt}/{retries} falhou: {e}")
-
-                    if attempt < retries and current_delay > 0:
-                        sleep(current_delay)
-                        current_delay *= backoff
-
-                if raise_last and last_exception:
-                    raise last_exception
-
-                return None
-
-            return wrapper
-
-        return decorator
-
 
     def chrome_options(self, config: ChromeDriverConfig | None = None, **overrides) -> Options:
         """
@@ -263,8 +195,6 @@ class SeleniumUtils:
             element = WebDriverWait(driver, wait).until(
                 condition((by, selector))
             )
-            
-            self.logger.info(f"Elemento(s) encontrado(s) com sucesso: {selector}")
 
             return element
             
@@ -315,10 +245,7 @@ class SeleniumUtils:
                 element
             )
 
-            element.click()
-            
-            self.logger.debug(f"Clique bem-sucedido (normal) em: {selector}")
-
+            element.click() 
 
         except Exception as e:
 
@@ -332,8 +259,6 @@ class SeleniumUtils:
                     element
                 )
                 
-                self.logger.debug(f"Clique bem-sucedido (JavaScript) em: {selector}")
-                
             except Exception as e2:
 
                 self.logger.warning(
@@ -342,7 +267,6 @@ class SeleniumUtils:
                     f"Fallback JavaScript falhou com: {e2}",
                     exc_info=True,
                 )
-
 
 
     def close_window(self, driver: WebDriver) -> None:
