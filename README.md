@@ -1,8 +1,20 @@
 # **Financial Research**
 
+## Sobre o projeto
+
+Repositório para coleta, processamento e análise de dados financeiros públicos brasileiros.
+Os pipelines (ETL) alimentam os notebooks de pesquisa quantitativa com dados de mercado, balanços e indicadores macroeconômicos.
+
 ## Como usar
 
 ### Research (notebooks)
+
+Os notebooks ficam em `research/` e consomem os dados gerados pelos pipelines.
+Execute localmente após instalar as dependências abaixo.
+
+Exemplos disponíveis:
+- (...)
+- (...)
 
 ## Instalação no Ubuntu Server
 
@@ -60,16 +72,10 @@ Baixa, consolida e carrega as demonstrações financeiras anuais de companhias a
 
 # Topologia
 
-- Ubuntu Server LTS
-
-- Openssh-server
-
-- Docker e Compose
-
-- VS Code Remote-SSH
-
-- Pasta Samba
-/srv/data
-
-- Agende tarefas:
-systemd timers → [README.systemd.md](README.systemd.md)
+| Componente | Detalhe |
+|---|---|
+| OS | Ubuntu Server LTS |
+| Acesso remoto | OpenSSH + VS Code Remote-SSH |
+| Execução | Docker e Compose |
+| Armazenamento compartilhado | Samba — `/srv/data` |
+| Agendamento | systemd timers → [README.systemd.md](README.systemd.md) |
