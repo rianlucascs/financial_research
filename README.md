@@ -38,7 +38,25 @@ python -m pip install -e .
 
 ### Pipelines (ETL)
 
-(...)
+Os pipelines coletam e processam dados financeiros públicos e são executados via Docker. Veja também: [README.Docker.md](README.Docker.md)
+
+#### BCB — Histórico de Taxas de Juros
+
+Extrai o histórico de reuniões do COPOM e as taxas Selic (meta e over) diretamente da página do Banco Central do Brasil via Selenium, salvando em CSV.
+
+→ [pipelines/scripts/bcb_historico_taxas_juros/README.md](pipelines/scripts/bcb_historico_taxas_juros/README.md)
+
+#### CVM — Formulário de Informações Trimestrais (ITR)
+
+Baixa, consolida e carrega as informações trimestrais de companhias abertas publicadas pela CVM, organizando por empresa em um banco de dados SQLite.
+
+→ [pipelines/scripts/cvm_formulario_informacoes_trimestrais/README.md](pipelines/scripts/cvm_formulario_informacoes_trimestrais/README.md)
+
+#### CVM — Formulário de Demonstrações Financeiras Padronizadas (DFP)
+
+Baixa, consolida e carrega as demonstrações financeiras anuais de companhias abertas publicadas pela CVM, organizando por empresa em um banco de dados SQLite.
+
+→ [pipelines/scripts/cvm_formulario_demonstracoes_financeiras_padronizadas/README.md](pipelines/scripts/cvm_formulario_demonstracoes_financeiras_padronizadas/README.md)
 
 # Topologia
 
@@ -54,4 +72,4 @@ python -m pip install -e .
 /srv/data
 
 - Agende tarefas:
-cron ou systemd timers
+systemd timers → [README.systemd.md](README.systemd.md)

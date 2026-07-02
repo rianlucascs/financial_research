@@ -1,13 +1,13 @@
 services:
-  # Pipeline 1: B3 Índices Segmentos Setoriais
-  b3-indices-pipeline:
+  # Pipeline 1: BCB Histórico Taxas de Juros
+  bcb-historico-taxas-juros-pipeline:
     build:
       context: ..
       dockerfile: docker/Dockerfile.pipelines
-    container_name: b3-indices-pipeline
+    container_name: bcb-historico-taxas-juros-pipeline
     environment:
       - PYTHONUNBUFFERED=1
-      - PIPELINE_NAME=b3_indices_segmentos_setoriais
+      - PIPELINE_NAME=bcb_historico_taxas_juros
       - PIPELINE_ENV=prod
     volumes:
       - ../data:/app/data

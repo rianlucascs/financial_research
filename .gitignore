@@ -70,3 +70,6 @@ notas.txt
 
 # Ignore egg-info folder
 financial_research.egg-info
+
+# Ignore quant_test folder
+quant_test/
