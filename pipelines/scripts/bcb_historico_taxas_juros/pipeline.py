@@ -6,6 +6,7 @@ from .load import LoadBCBHistoricoTaxasJuros
 
 
 class PipelineBCBHistoricoTaxasJuros:
+    """Pipeline para extração e carga do histórico de taxas de juros do Banco Central do Brasil."""
     
     
     def __init__(self, env: str = "dev", run_id: str | None = None):

@@ -14,7 +14,8 @@ from pathlib import Path
 from selenium.common.exceptions import TimeoutException
 from typing import List, Optional, Union, Literal, Any, Callable
 from selenium.webdriver.remote.webdriver import WebDriver, WebElement
-    
+from random import randint
+
     
 USER_AGENT_ALIASES = {
     "agente_1": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
@@ -300,3 +301,17 @@ class SeleniumUtils:
         except Exception as e:
             
             self.logger.error(f"Erro ao encerrar driver: {e}")
+
+
+    @property
+    def random_delay(self) -> int:
+        """Retorna um valor aleatório de atraso em segundos."""
+        
+        time = randint(5, 20)
+        
+        if type(time) is not int:
+            
+            return 5
+
+        return time
+    

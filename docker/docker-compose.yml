@@ -40,9 +40,6 @@ services:
     restart: "no"
     tmpfs:
       - /tmp
-    depends_on:
-      b3-indices-pipeline:
-        condition: service_completed_successfully
     deploy:
       resources:
         limits:
@@ -67,9 +64,6 @@ services:
     restart: "no"
     tmpfs:
       - /tmp
-    depends_on:
-      cvm-itr-pipeline:
-        condition: service_completed_successfully
     deploy:
       resources:
         limits:
