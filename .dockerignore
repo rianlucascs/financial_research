@@ -7,6 +7,16 @@ __pycache__/
 *.pyo
 *.pyd
 *.log
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+financial_research.egg-info/
+*.db
+*.sqlite
+*.sqlite3
 
 *.ipynb
 **/.ipynb_checkpoints/
@@ -17,6 +27,11 @@ state/
 jobs/
 
 docker/
+
+.vscode/
+.idea/
+
+research/
 
 README.md
 README.Docker.md

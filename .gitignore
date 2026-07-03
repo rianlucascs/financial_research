@@ -2,7 +2,6 @@
 __pycache__/
 *.py[cod]
 *$py.class
-.Python
 
 # Virtual environments
 .venv/
@@ -31,45 +30,31 @@ htmlcov/
 Thumbs.db
 desktop.ini
 
-# Project runtime artifacts
-Pipelines/data/**
-Pipelines/logs/**
-Pipelines/state/**
-Pipelines/jobs/**
-
-# Keep folder structure in Git
-!Pipelines/data/.gitkeep
-!Pipelines/data/**/.gitkeep
-!Pipelines/logs/.gitkeep
-!Pipelines/logs/**/.gitkeep
-!Pipelines/state/.gitkeep
-!Pipelines/state/**/.gitkeep
-!Pipelines/jobs/.gitkeep
-!Pipelines/jobs/**/.gitkeep
-
 # Excel files
-.xlsx
-.xls
+*.xlsx
+*.xls
 
 # Configurações locais (não versionadas)
 config_local.py
 *.local.py
+.env
 .env.local
 
-# Ignore data/pipelines folder
+# Runtime artifacts — ignorar arquivos mas preservar estrutura de pastas via .gitkeep
 data/**
+!data/**/
+!data/**/.gitkeep
 
-# Ignore logs folder
 logs/**
+!logs/**/
+!logs/**/.gitkeep
 
-# Ignore state folder
 state/**
+!state/**/
+!state/**/.gitkeep
 
-# Ignore jobs folder
+# Arquivos locais não versionados
 notas.txt
-
-# Ignore egg-info folder
-financial_research.egg-info
 
 # Ignore quant_test folder
 quant_test/

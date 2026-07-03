@@ -13,8 +13,9 @@ Extrai o histórico de decisões do COPOM e as taxas de juros Selic (meta e over
 | Processo | O que é atualizado | O que é pulado |
 |---|---|---|
 | `extract` | Tabela completa da página do BCB é sempre re-extraída | Nenhum — o arquivo CSV é sempre recriado do zero |
+| `load` | O CSV bruto é carregado em um banco SQLite único | Nenhum — a tabela é recriada do zero |
 
-> O `extract` sempre recria o CSV com os dados mais recentes da página. Não há etapas de transform ou load neste pipeline.
+> O `extract` sempre recria o CSV com os dados mais recentes da página. O `load` lê esse CSV bruto e recria uma tabela SQLite única.
 
 ---
 
@@ -46,3 +47,16 @@ Acessa a página do Banco Central via Selenium, lê a tabela de histórico de re
 - Se a tabela retornar menos de 20 linhas, considera falha de carregamento e lança erro.
 - O CSV é sempre recriado do zero a cada execução.
 - Checkpoints gravados em: `state/checkpoints/.../extract/download/`.
+
+### 2. `load`
+
+Lê o CSV bruto gerado pelo `extract`, normaliza datas e taxas e grava os dados em um banco SQLite.
+
+**Entrada:** `raw/bcb_historico_taxas_juros.csv`  
+**Saída:** `load/bcb.db` (tabela `bcb_historico_taxas_juros`)
+
+**Comportamento:**
+- Valida a existência do CSV bruto antes de carregar.
+- Converte datas e colunas numéricas para tipos adequados.
+- Recria a tabela SQLite do zero a cada execução.
+- Checkpoints gravados em: `state/checkpoints/.../load/load/`.

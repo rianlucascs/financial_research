@@ -54,7 +54,7 @@ Os pipelines coletam e processam dados financeiros públicos e são executados v
 
 #### BCB — Histórico de Taxas de Juros
 
-Extrai o histórico de reuniões do COPOM e as taxas Selic (meta e over) diretamente da página do Banco Central do Brasil via Selenium, salvando em CSV.
+Extrai o histórico de reuniões do COPOM e as taxas Selic (meta e over) diretamente da página do Banco Central do Brasil via Selenium, salvando em CSV e carregando os dados em um banco SQLite.
 
 → [pipelines/scripts/bcb_historico_taxas_juros/README.md](pipelines/scripts/bcb_historico_taxas_juros/README.md)
 
