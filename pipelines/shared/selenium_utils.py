@@ -268,6 +268,8 @@ class SeleniumUtils:
                     f"Fallback JavaScript falhou com: {e2}",
                     exc_info=True,
                 )
+                
+                raise 
 
 
     def close_window(self, driver: WebDriver) -> None:

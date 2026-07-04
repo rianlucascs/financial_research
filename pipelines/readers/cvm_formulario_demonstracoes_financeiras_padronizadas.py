@@ -3,11 +3,11 @@
 from pipelines.shared.context import PipelineContext
 
 from datetime import date
-from os.path import exists
-from pandas import read_csv
+import sqlite3
+from pandas import read_csv, read_sql_query
 
 
-class ReaderCVMFormularioDemonstracoesFinanceirasPadronizadas:
+class ReaderCSVCVMFormularioDemonstracoesFinanceirasPadronizadas:
     """Classe para leitura do Formulário de Demonstrações Financeiras Padronizadas (DFP) da CVM."""
 
 
@@ -42,6 +42,45 @@ class ReaderCVMFormularioDemonstracoesFinanceirasPadronizadas:
         
         # Lendo o arquivo CSV
         df = read_csv(path_file)
+
+        return df
+
+
+class ReaderSQLCVMFormularioDemonstracoesFinanceirasPadronizadas:
+    """Classe para leitura do DFP da CVM a partir do SQLite de load."""
+
+
+    def __init__(self):
+
+        ctx = PipelineContext()
+
+        self.pipeline = "cvm_formulario_demonstracoes_financeiras_padronizadas"
+        self.tipo_demonstracao = "dfp"
+        self.tipo_empresa = "cia_aberta"
+
+        repo_root = ctx.repo_root / "financial_research"
+        if not repo_root.exists():
+            repo_root = ctx.repo_root
+
+        self.path = repo_root / "data" / "pipelines" / self.pipeline / "load" / "dfp.db"
+
+
+    def read(self, ticker: str = "VALE3", tipo_arquivo: str = "BPA_con"):
+        """Lê o DFP da CVM do SQLite para um ticker e tipo de arquivo."""
+
+        if "." in ticker:
+            raise ValueError("O ticker não deve conter pontos (ex.: 'VALE3' e não 'VALE3.SA').")
+
+        if not self.path.exists():
+            raise FileNotFoundError(f"O banco SQLite não foi encontrado no caminho {self.path}.")
+
+        query = f'SELECT * FROM "{tipo_arquivo}" WHERE TICKER = ?'
+
+        with sqlite3.connect(self.path) as conn:
+            df = read_sql_query(query, conn, params=[ticker.upper()])
+
+        if df.empty:
+            raise ValueError(f"Nenhum dado encontrado no SQLite para ticker '{ticker}' e tipo '{tipo_arquivo}'.")
 
         return df
     

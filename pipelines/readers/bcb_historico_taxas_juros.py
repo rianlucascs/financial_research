@@ -3,10 +3,11 @@
 from pipelines.shared.context import PipelineContext
 
 from datetime import date
-from pandas import DataFrame, read_csv, to_datetime
+import sqlite3
+from pandas import DataFrame, read_csv, read_sql_query, to_datetime
 
 
-class ReaderBCBHistoricoTaxasJuros:
+class ReaderCSVBCBHistoricoTaxasJuros:
     """Leitor do histórico de taxas de juros do BCB a partir do CSV bruto."""
 
 
@@ -73,6 +74,63 @@ class ReaderBCBHistoricoTaxasJuros:
         if end_date is not None:
             end_date = to_datetime(end_date, errors="coerce")
             df = df[df["Data da Reunião"] <= end_date]
+
+        df = df.sort_values("Data da Reunião").reset_index(drop=True)
+
+        return df
+
+
+class ReaderSQLBCBHistoricoTaxasJuros:
+    """Leitor do histórico de taxas de juros do BCB a partir do SQLite de load."""
+
+
+    def __init__(self):
+
+        ctx = PipelineContext()
+
+        self.pipeline = "bcb_historico_taxas_juros"
+        repo_root = ctx.repo_root / "financial_research"
+        if not repo_root.exists():
+            repo_root = ctx.repo_root
+
+        self.path = repo_root / "data" / "pipelines" / self.pipeline / "load" / "bcb.db"
+        self.table_name = "bcb_historico_taxas_juros"
+
+
+    def read(self, start_date: str | date | None = None, end_date: str | date | None = None) -> DataFrame:
+        """Lê o histórico do BCB a partir do SQLite e retorna um DataFrame tratado."""
+
+        if not self.path.exists():
+            raise FileNotFoundError(f"O banco SQLite não foi encontrado no caminho {self.path}.")
+
+        query = f'SELECT * FROM "{self.table_name}"'
+        conditions = []
+        params = []
+
+        if start_date is not None:
+            start_date = to_datetime(start_date, errors="coerce")
+            conditions.append('"Data da Reunião" >= ?')
+            params.append(start_date.strftime("%Y-%m-%d %H:%M:%S"))
+
+        if end_date is not None:
+            end_date = to_datetime(end_date, errors="coerce")
+            conditions.append('"Data da Reunião" <= ?')
+            params.append(end_date.strftime("%Y-%m-%d %H:%M:%S"))
+
+        if conditions:
+            query = f"{query} WHERE {' AND '.join(conditions)}"
+
+        with sqlite3.connect(self.path) as conn:
+            df = read_sql_query(query, conn, params=params)
+
+        for column in [
+            "Data da Reunião",
+            "Data da Divulgação",
+            "Início da Vigência",
+            "Fim da Vigência",
+        ]:
+            if column in df.columns:
+                df[column] = to_datetime(df[column], errors="coerce")
 
         df = df.sort_values("Data da Reunião").reset_index(drop=True)
 

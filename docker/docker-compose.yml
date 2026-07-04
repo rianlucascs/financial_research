@@ -1,4 +1,28 @@
 services:
+  # Pipeline 0: B3 Índices e Segmentos Setoriais
+  b3-indices-segmentos-setoriais-pipeline:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.pipelines
+    container_name: b3-indices-segmentos-setoriais-pipeline
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PIPELINE_NAME=b3_indices_segmentos_setoriais
+      - PIPELINE_ENV=prod
+    volumes:
+      - ../data:/app/data
+      - ../logs:/app/logs
+      - ../state:/app/state
+    restart: "no"
+    tmpfs:
+      - /tmp
+    deploy:
+      resources:
+        limits:
+          memory: 6G
+        reservations:
+          memory: 4G
+
   # Pipeline 1: BCB Histórico Taxas de Juros
   bcb-historico-taxas-juros-pipeline:
     build:

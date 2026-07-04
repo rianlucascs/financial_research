@@ -22,6 +22,18 @@ docker run --rm -it \
   financial_pipelines
 ```
 
+### B3 Indices e Segmentos Setoriais
+
+```bash
+docker run --rm -it \
+  -e PIPELINE_NAME=b3_indices_segmentos_setoriais \
+  -e PIPELINE_ENV=dev \
+  -v "$PWD/data:/app/data" \
+  -v "$PWD/logs:/app/logs" \
+  -v "$PWD/state:/app/state" \
+  financial_pipelines
+```
+
 ### CVM Formulario Informacoes Trimestrais (ITR)
 
 ```bash
@@ -56,6 +68,12 @@ docker run --rm -it \
 docker compose -f docker/docker-compose.yml run --rm bcb-historico-taxas-juros-pipeline
 ```
 
+### B3 Indices e Segmentos Setoriais
+
+```bash
+docker compose -f docker/docker-compose.yml run --rm b3-indices-segmentos-setoriais-pipeline
+```
+
 ### CVM ITR
 
 ```bash
@@ -86,5 +104,6 @@ docker compose -f docker/docker-compose.yml up
 Valores validos para PIPELINE_NAME:
 
 - `bcb_historico_taxas_juros`
+- `b3_indices_segmentos_setoriais`
 - `cvm_formulario_informacoes_trimestrais`
 - `cvm_formulario_demonstracoes_financeiras_padronizadas`

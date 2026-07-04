@@ -16,6 +16,19 @@ Exemplos disponíveis:
 - (...)
 - (...)
 
+### Readers
+
+As classes de leitura para consumo dos dados gerados pelos pipelines ficam em `pipelines/readers/`.
+Há readers para acesso via CSV e via SQLite, dependendo do pipeline.
+
+→ [pipelines/readers/README.md](pipelines/readers/README.md)
+
+### Operacao
+
+Existe um checklist operacional separado para validacao do servidor, Docker, timers e logs apos reboot ou manutencao.
+
+→ [README.operations.md](README.operations.md)
+
 ## Instalação no Ubuntu Server
 
 ```bash
@@ -54,19 +67,25 @@ Os pipelines coletam e processam dados financeiros públicos e são executados v
 
 #### BCB — Histórico de Taxas de Juros
 
-Extrai o histórico de reuniões do COPOM e as taxas Selic (meta e over) diretamente da página do Banco Central do Brasil via Selenium, salvando em CSV e carregando os dados em um banco SQLite.
+Extrai o histórico de reuniões do COPOM e as taxas Selic (meta e over) diretamente da página do Banco Central do Brasil via Selenium, salvando em CSV e carregando os dados em um banco SQLite para consumo por readers CSV e SQL.
 
 → [pipelines/scripts/bcb_historico_taxas_juros/README.md](pipelines/scripts/bcb_historico_taxas_juros/README.md)
 
+#### B3 — Índices e Segmentos Setoriais
+
+Baixa as carteiras diárias dos índices da B3, salva os CSVs brutos por índice e consolida os dados em um banco SQLite para consumo por readers CSV e SQL.
+
+→ [pipelines/scripts/b3_indices_segmentos_setoriais/README.md](pipelines/scripts/b3_indices_segmentos_setoriais/README.md)
+
 #### CVM — Formulário de Informações Trimestrais (ITR)
 
-Baixa, consolida e carrega as informações trimestrais de companhias abertas publicadas pela CVM, organizando por empresa em um banco de dados SQLite.
+Baixa, consolida e carrega as informações trimestrais de companhias abertas publicadas pela CVM, organizando por empresa em um banco de dados SQLite para consumo por readers CSV e SQL.
 
 → [pipelines/scripts/cvm_formulario_informacoes_trimestrais/README.md](pipelines/scripts/cvm_formulario_informacoes_trimestrais/README.md)
 
 #### CVM — Formulário de Demonstrações Financeiras Padronizadas (DFP)
 
-Baixa, consolida e carrega as demonstrações financeiras anuais de companhias abertas publicadas pela CVM, organizando por empresa em um banco de dados SQLite.
+Baixa, consolida e carrega as demonstrações financeiras anuais de companhias abertas publicadas pela CVM, organizando por empresa em um banco de dados SQLite para consumo por readers CSV e SQL.
 
 → [pipelines/scripts/cvm_formulario_demonstracoes_financeiras_padronizadas/README.md](pipelines/scripts/cvm_formulario_demonstracoes_financeiras_padronizadas/README.md)
 
