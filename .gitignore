@@ -57,4 +57,7 @@ state/**
 notas.txt
 
 # Ignore quant_test folder
-quant_test/
+quant_tests/
+
+# Ignore notebooks_tests folder
+notebooks_tests
