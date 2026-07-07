@@ -61,6 +61,19 @@ python -m pip install -r requirements.research.txt
 python -m pip install -e .
 ```
 
+### Configurar fuso horário do servidor
+
+```bash
+# Verificar data/hora atual
+date
+
+# Definir fuso horário
+sudo timedatectl set-timezone America/Sao_Paulo
+
+# Confirmar configuração aplicada
+timedatectl status
+```
+
 ### Pipelines (ETL)
 
 Os pipelines coletam e processam dados financeiros públicos e são executados via Docker. Veja também: [README.Docker.md](README.Docker.md)
