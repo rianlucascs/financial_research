@@ -13,8 +13,9 @@ Os notebooks ficam em `research/` e consomem os dados gerados pelos pipelines.
 Execute localmente após instalar as dependências abaixo.
 
 Exemplos disponíveis:
-- (...)
-- (...)
+- [research/notebooks/01.01 selic.ipynb](research/notebooks/01.01%20selic.ipynb) - visão geral da série histórica da Selic.
+- [research/notebooks/01.06 beta+segmentos_setoriais.ipynb](research/notebooks/01.06%20beta%2Bsegmentos_setoriais.ipynb) - cálculo de beta por ativo versus IBOVESPA e análise por segmento.
+- [research/notebooks/02.01 mapa.ipynb](research/notebooks/02.01%20mapa.ipynb) - consolidação de indicadores (drawdown, beta, regressão e retorno mensal) em um mapa único.
 
 ### Readers
 
