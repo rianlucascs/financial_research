@@ -61,3 +61,6 @@ quant_tests/
 
 # Ignore notebooks_tests folder
 notebooks_tests
+
+# Ignore estrategias folder
+quant/

@@ -1,4 +1,0 @@
-
-
-def A():
-    print("ASDASDASDA")

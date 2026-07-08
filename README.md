@@ -30,6 +30,12 @@ Existe um checklist operacional separado para validacao do servidor, Docker, tim
 
 → [README.operations.md](README.operations.md)
 
+### Backup
+
+Existe um guia separado para backup do projeto em outro computador da mesma rede com `rsync`, `ssh` e `systemd timer`.
+
+→ [README.backup.md](README.backup.md)
+
 ## Instalação no Ubuntu Server
 
 ```bash
