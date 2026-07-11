@@ -17,6 +17,14 @@ Exemplos disponíveis:
 - [research/notebooks/01.06 beta+segmentos_setoriais.ipynb](research/notebooks/01.06%20beta%2Bsegmentos_setoriais.ipynb) - cálculo de beta por ativo versus IBOVESPA e análise por segmento.
 - [research/notebooks/02.01 mapa.ipynb](research/notebooks/02.01%20mapa.ipynb) - consolidação de indicadores (drawdown, beta, regressão e retorno mensal) em um mapa único.
 
+### Research (Streamlit)
+
+Existe um dashboard inicial em `research/streamlit_app/app.py` para navegar pelas análises dos notebooks 01.07 e 01.08 com troca de ativo na sidebar.
+
+```bash
+python -m streamlit run research/streamlit_app/app.py
+```
+
 ### Readers
 
 As classes de leitura para consumo dos dados gerados pelos pipelines ficam em `pipelines/readers/`.
