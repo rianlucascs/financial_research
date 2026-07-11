@@ -67,13 +67,13 @@ python3.10 -m venv .venv
 source .venv/bin/activate
 
 # 7. Atualize as ferramentas de empacotamento
-python -m pip install --upgrade pip setuptools wheel
+.venv/bin/python3.10 -m pip install --upgrade pip setuptools wheel
 
 # 8. Instale as dependências
-python -m pip install -r requirements.research.txt
+.venv/bin/python3.10 -m pip install -r requirements.research.txt
 
 # 9. Instale o pacote local em modo editável
-python -m pip install -e .
+.venv/bin/python3.10 -m -m pip install -e .
 ```
 
 ### Configurar fuso horário do servidor
