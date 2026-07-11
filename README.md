@@ -19,7 +19,7 @@ Exemplos disponíveis:
 
 ### Research (Streamlit)
 
-Existe um dashboard inicial em `research/streamlit_app/app.py` para navegar pelas análises dos notebooks 01.07 e 01.08 com troca de ativo na sidebar.
+Existe um dashboard inicial em `research/streamlit_app/app.py` para navegar pelas análises dos notebooks.
 
 ```bash
 python -m streamlit run research/streamlit_app/app.py
