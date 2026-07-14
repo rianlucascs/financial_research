@@ -7,7 +7,11 @@ from components.charts import build_balanco_patrimonial_map_bar, build_drawdown_
 import streamlit as st
 
 
-def render_market_overview_view() -> None:
+def render_market_overview_view(selected_market_overview_asset) -> None:
+    
+    
+    st.sidebar.caption(f"Indice selecionado: {selected_market_overview_asset.label}")
+    
     
     overview_tab, mapa_tab, balanco_patrimonial_tab, drawdown_atual_tab = st.tabs(
         [
@@ -20,17 +24,28 @@ def render_market_overview_view() -> None:
     
     with overview_tab:
         
-        st.markdown("### O que este painel reúne")
-        st.write(
-            "- Notebook 02.01: tabela consolidada com dados setoriais, CVM e métricas de mercado.\n"
-            "- Notebook 01.03: balanço patrimonial consolidado com dados setoriais.\n"
-            "- Notebook 01.04: drawdown atual consolidado com dados setoriais.\n"
-        )
+        left, right = st.columns([1.1, 1])
         
+        with left:
+            
+            st.markdown("### O que este painel reúne")
+            st.write(
+                "- Notebook 02.01: tabela consolidada com dados setoriais, CVM e métricas de mercado.\n"
+                "- Notebook 01.03: balanço patrimonial consolidado com dados setoriais.\n"
+                "- Notebook 01.04: drawdown atual consolidado com dados setoriais.\n"
+            )
+        
+        with right:
+            
+            st.markdown("### Período")
+            st.write("10 anos de dados diários via Yahoo Finance.")
+            
+            st.markdown("### Indice")
+            st.code(selected_market_overview_asset.ticker)
     
     with mapa_tab:
         
-        df_mapa = build_market_map_dataframe(indice="IBEP")
+        df_mapa = build_market_map_dataframe(indice=selected_market_overview_asset.ticker)
         
         format_columns = {"Beta": "{:.3f}"}
         for column in df_mapa.columns:
@@ -71,7 +86,7 @@ def render_market_overview_view() -> None:
         
         tipo_arquivo, cd_conta = opcoes[conta]
 
-        df_balanco = build_balanco_patrimonial_map_dataframe(indice="IBEP", tipo_arquivo=tipo_arquivo, cd_conta=cd_conta)
+        df_balanco = build_balanco_patrimonial_map_dataframe(indice=selected_market_overview_asset.ticker, tipo_arquivo=tipo_arquivo, cd_conta=cd_conta)
         
         fig_balanco = build_balanco_patrimonial_map_bar(df_balanco)
         st.plotly_chart(fig_balanco, use_container_width=True)
@@ -86,7 +101,7 @@ def render_market_overview_view() -> None:
         
         st.write("Drawdown Atual")
         
-        df_drawdown = build_market_map_dataframe(indice="IBEP")
+        df_drawdown = build_market_map_dataframe(indice=selected_market_overview_asset.ticker)
         
         fig_drawdown = build_drawdown_map_bar(df_drawdown, value_column="Drawdown Atual")
         st.plotly_chart(fig_drawdown, use_container_width=True)

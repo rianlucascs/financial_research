@@ -108,8 +108,14 @@ def build_market_map_dataframe(indice: str = "IBEP"):
         next_month = (date.today() + relativedelta(months=1)).month
         
         df_b3.loc[df_b3["Código"] == codigo, f"Média Ret. Mês{current_month}"] = tabela[current_month].mean(skipna=True)
-        df_b3.loc[df_b3["Código"] == codigo, f"Média Ret. Mês{next_month}"] = tabela[next_month].mean(skipna=True)
         
+        if next_month in tabela.columns:
+            
+            df_b3.loc[df_b3["Código"] == codigo, f"Média Ret. Mês{next_month}"] = tabela[next_month].mean(skipna=True)
+            
+        else:
+            
+            df_b3.loc[df_b3["Código"] == codigo, f"Média Ret. Mês{next_month}"] = nan    
     
         df_b3 = df_b3.sort_values(by="Drawdown Atual", ascending=False)
     

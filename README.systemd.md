@@ -178,7 +178,7 @@ sudo tee /etc/systemd/system/financial-research-cvm-dfp.timer > /dev/null <<'EOF
 Description=Timer - CVM DFP
 
 [Timer]
-OnCalendar=*-*-* 09:40:00
+OnCalendar=*-*-* 09:00:00
 Persistent=true
 Unit=financial-research-cvm-dfp.service
 

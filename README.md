@@ -22,7 +22,7 @@ Exemplos disponíveis:
 Existe um dashboard inicial em `research/streamlit_app/app.py` para navegar pelas análises dos notebooks.
 
 ```bash
-python -m streamlit run research/streamlit_app/app.py
+.venv/bin/python3.10 -m streamlit run research/streamlit_app/app.py
 ```
 
 ### Readers

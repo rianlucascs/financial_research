@@ -1,7 +1,7 @@
 
 
 from numpy import polyfit, polyval, arange
-from pandas import DataFrame
+from pandas import DataFrame, concat, offsets
 
 
 def build_tabela_retorno_mensal(df: DataFrame) -> DataFrame:
@@ -39,3 +39,27 @@ def build_reg_lin(df: DataFrame) -> tuple:
     
     return tendencia, residuo
 
+
+def build_serie_retorno_mensal(df: DataFrame) -> DataFrame:
+    df_month = df.resample("ME").last()
+
+    ultimo = df.iloc[[-1]]
+
+    if ultimo.index[0] != ultimo.index[0] + offsets.MonthEnd(0):
+        ultimo.index = [ultimo.index[0] + offsets.MonthEnd(0)]
+        df_month = concat([df_month, ultimo])
+
+    df_month = df_month[~df_month.index.duplicated(keep="last")]
+
+    return df_month
+
+
+def build_reg_ma(df: DataFrame, window: int = 21) -> tuple:
+
+    adj_close = df["Adj Close"].dropna()
+    
+    tendencia = adj_close.rolling(window=window).mean()
+
+    residuo = ((adj_close - tendencia) / tendencia) * 100
+    
+    return tendencia, residuo

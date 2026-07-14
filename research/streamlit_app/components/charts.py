@@ -1,4 +1,5 @@
 
+
 import numpy as np
 import pandas as pd
 import plotly.express as px
@@ -8,6 +9,7 @@ import plotly.graph_objects as go
 def build_retorno_vs_volatilidade(df: pd.DataFrame, ticker: str) -> go.Figure:
     
     window = 21
+
     retorno = df["Adj Close"].pct_change(fill_method=None)
 
     x = retorno.rolling(window).std().dropna()
@@ -96,7 +98,7 @@ def build_retorno_vs_volatilidade(df: pd.DataFrame, ticker: str) -> go.Figure:
         yref="paper",
         text=f"R² = {r2:.2f}",
         showarrow=False,
-        bgcolor="darkorange",
+        bgcolor="black",
     )
 
     fig.add_hline(y=y.mean(), line_dash="dot", line_color="gray")
@@ -155,7 +157,10 @@ def build_heatmap(tabela: pd.DataFrame, ticker: str) -> go.Figure:
     return fig
 
 
-def build_reg_lin_serie(df, residuo):
+def build_reg_lin_serie(df, residuo, media_hline=False):
+
+    media = residuo.mean()
+    desvio = residuo.std()
 
     fig = go.Figure()
 
@@ -164,18 +169,59 @@ def build_reg_lin_serie(df, residuo):
         y=residuo,
         name="Resíduo (%)"
     )
+    
+    # ±1 desvio padrão
+    fig.add_hline(
+        y=media + desvio,
+        line_color="gray",
+        line_dash="dot",
+        annotation_text="+1σ",
+    )
 
+    fig.add_hline(
+        y=media - desvio,
+        line_color="gray",
+        line_dash="dot",
+        annotation_text="-1σ",
+    )
+
+    # ±2 desvio padrão
+    fig.add_hline(
+        y=media + 2 * desvio,
+        line_color="purple",
+        line_dash="dot",
+        annotation_text="+2σ",
+    )
+
+    fig.add_hline(
+        y=media - 2 * desvio,
+        line_color="purple",
+        line_dash="dot",
+        annotation_text="-2σ",
+    )
+
+    # Linha da média
     fig.add_hline(
         y=0,
         line_color="red",
         line_width=1.5,
         line_dash="dash"
     )
+    
+    # Linha da média do resíduo
+    if media_hline:
+        fig.add_hline(
+            y=media,
+            line_color="blue",
+            line_dash="dot",
+            annotation_text="Média",
+        )
+        
 
     return fig
 
 
-def build_reg_lin_residuo_histograma(residuo, ticker):
+def build_reg_lin_residuo_histograma(residuo, ticker, titulo="Distribuição da distância para a tendência (%)"):
 
     atual = residuo.iloc[-1]
 
@@ -195,7 +241,7 @@ def build_reg_lin_residuo_histograma(residuo, ticker):
     fig = px.histogram(
         x=residuo,
         nbins=50,
-        title=f"{ticker} - Distribuição da distância para a tendência (%)",
+        title=titulo,
         labels={
             "x": "Distância para a tendência (%)",
             "count": "Frequência"
@@ -207,15 +253,17 @@ def build_reg_lin_residuo_histograma(residuo, ticker):
         x=media,
         line_color="blue",
         line_width=2,
+        annotation_text=" Média",
+        
     )
 
-    # Mediana
-    fig.add_vline(
-        x=mediana,
-        line_color="green",
-        line_dash="dash",
-        line_width=2,
-    )
+    # # Mediana
+    # fig.add_vline(
+    #     x=mediana,
+    #     line_color="green",
+    #     line_dash="dash",
+    #     line_width=2,
+    # )
 
     # ±1 desvio padrão
     fig.add_vline(
@@ -274,7 +322,7 @@ def build_reg_lin_residuo_histograma(residuo, ticker):
         yanchor="top",
         showarrow=False,
         align="left",
-        bgcolor="white",
+        bgcolor="black",
         bordercolor="black",
         text=(
             f"<b>Média:</b> {media:.2f}%<br>"

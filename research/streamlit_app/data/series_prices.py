@@ -4,8 +4,6 @@ from pandas import DataFrame, MultiIndex
 import streamlit as st
 from yfinance import download
 
-from config.assets import AssetOption
-
 
 def _normalize_download(df: DataFrame) -> DataFrame:
     if df.empty:
@@ -32,7 +30,7 @@ def load_price_data(ticker: str, interval: str = "1d") -> DataFrame:
 
 
 @st.cache_data(ttl=60 * 30)
-def load_all_price_data(assets: tuple[AssetOption, ...]) -> dict[str, DataFrame]:
+def load_all_price_data(assets: tuple) -> dict[str, DataFrame]:
     
     prices_by_ticker: dict[str, DataFrame] = {}
     

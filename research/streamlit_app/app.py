@@ -1,5 +1,7 @@
 
-from config.assets import get_assets
+
+from config.single_assets import get_single_assets
+from config.market_overview_assets import get_market_overview_assets
 from screens.single_asset import render_single_asset_view
 from screens.market_overview import render_market_overview_view
 
@@ -24,24 +26,35 @@ def main() -> None:
         index=0,
     )
 
-    assets = list(get_assets(indice="IBEP"))
+    # Seleciona o indice de visão geral de ativos
+    market_overview_assets = get_market_overview_assets()
+    if not market_overview_assets:
+        st.warning("Nenhum ativo disponível para o índice IBEP.")
+        return
+    selected_market_overview_asset = st.sidebar.selectbox(
+        "Indice", 
+        market_overview_assets,
+        format_func=lambda asset: asset.label
+        )
     
+    # Seleciona o ativo individual
+    single_assets = list(get_single_assets(indice=selected_market_overview_asset.ticker))
+    if not single_assets:
+        st.warning("Nenhum ativo disponível para o índice IBEP.")
+        return 
+    selected_single_asset = st.sidebar.selectbox(
+        "Ativo", 
+        single_assets,
+        format_func=lambda asset: asset.label
+        )
+        
     if mode == "Ativo individual":
-        if not assets:
-            st.warning("Nenhum ativo disponível para o índice IBEP.")
-            return
         
-        selected_asset = st.sidebar.selectbox(
-            "Ativo", 
-            assets,
-            format_func=lambda asset: asset.label
-            )
-        
-        render_single_asset_view(selected_asset)
+        render_single_asset_view(selected_single_asset)
         
     else:
         
-        render_market_overview_view()
+        render_market_overview_view(selected_market_overview_asset)
         
         
 if __name__ == "__main__":

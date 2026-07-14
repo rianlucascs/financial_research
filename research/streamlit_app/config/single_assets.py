@@ -9,22 +9,14 @@ from data.b3_indices_segmentos_setoriais import load_b3_indices_segmentos_setori
 
 
 @dataclass(frozen=True)
-class AssetOption:
+class SingleAssetOption:
     label: str
     acao: str
     ticker: str
-
-
-DEFAULT_ASSETS = [
-    AssetOption("TAEE11 - Taesa", "TAEE11", "TAEE11.SA"),
-    AssetOption("KLBN11 - Klabin", "KLBN11", "KLBN11.SA"),
-    AssetOption("PETR4 - Petrobras", "PETR4", "PETR4.SA"),
-    AssetOption("VALE3 - Vale", "VALE3", "VALE3.SA"),
-]
-
+    
 
 @lru_cache(maxsize=8)
-def get_assets(indice: str = "IBEP") -> tuple[AssetOption, ...]:
+def get_single_assets(indice: str) -> tuple[SingleAssetOption, ...]:
      
     df_b3 = load_b3_indices_segmentos_setoriais(indice=indice)
 
@@ -35,7 +27,7 @@ def get_assets(indice: str = "IBEP") -> tuple[AssetOption, ...]:
 
     df_b3 = df_b3.drop_duplicates(subset=["Código"]).copy()
 
-    assets: list[AssetOption] = []
+    assets: list[SingleAssetOption] = []
     
     for _, row in df_b3.iterrows():
         
@@ -47,8 +39,9 @@ def get_assets(indice: str = "IBEP") -> tuple[AssetOption, ...]:
         acao = row.get("Ação", codigo)
         acao = codigo if isna(acao) else str(acao).strip()
 
-        assets.append(AssetOption(label=f"{codigo} - {acao}", acao=acao, ticker=f"{codigo}.SA"))
+        assets.append(SingleAssetOption(label=f"{codigo} - {acao}", acao=acao, ticker=f"{codigo}.SA"))
 
-    assets = [*assets, AssetOption("IBOV - Ibovespa", acao="Ibovespa", ticker="^BVSP")]
+    assets = [*assets, SingleAssetOption("IBOV - Ibovespa", acao="Ibovespa", ticker="^BVSP")]
 
     return tuple(assets)
+
