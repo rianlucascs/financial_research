@@ -221,10 +221,14 @@ def build_reg_lin_serie(df, residuo, media_hline=False):
     return fig
 
 
-def build_reg_lin_residuo_histograma(residuo, ticker, titulo="Distribuição da distância para a tendência (%)"):
+def build_reg_lin_residuo_histograma(residuo, titulo="Distribuição da distância para a tendência (%)", x_label="Distância para a tendência (%)"):
 
-    atual = residuo.iloc[-1]
-
+    
+    if residuo.iloc[-1] is None or np.isnan(residuo.iloc[-1]):
+        atual = residuo.iloc[-2]
+    else:
+        atual = residuo.iloc[-1]
+        
     # Estatísticas
     media = residuo.mean()
     mediana = residuo.median()
@@ -243,7 +247,7 @@ def build_reg_lin_residuo_histograma(residuo, ticker, titulo="Distribuição da 
         nbins=50,
         title=titulo,
         labels={
-            "x": "Distância para a tendência (%)",
+            "x": x_label,
             "count": "Frequência"
         }
     )
@@ -423,5 +427,30 @@ def build_drawdown_map_bar(df, value_column="drawdown"):
     ]
         
     fig.update_traces(marker_color=cores)
+
+    return fig
+
+
+def build_serie_retorno_acumulado_estrategia(df):
+    
+    fig = go.Figure()
+
+    fig.add_trace(
+        go.Scatter(
+            x=df.index,
+            y=df["resultado_estrategia_acumulado"],
+            mode="lines",
+            name="Retorno Acumulado da Estratégia",
+            line=dict(color="blue", width=2),
+        )
+    )
+
+    fig.update_layout(
+        title="Série de Retorno Acumulado da Estratégia",
+        xaxis_title="Data",
+        yaxis_title="Retorno Acumulado",
+        template="plotly_white",
+        height=600,
+    )
 
     return fig

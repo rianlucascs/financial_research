@@ -116,7 +116,7 @@ def render_single_asset_view(selected_single_asset: SingleAssetOption) -> None:
             tendencia, residuo = build_reg_lin(df)
             
             fig_105 = build_reg_lin_serie(df, residuo)
-            fig_105_hist = build_reg_lin_residuo_histograma(residuo, ticker, titulo=f"{ticker} - Distribuição da distância para a tendência (%)")
+            fig_105_hist = build_reg_lin_residuo_histograma(residuo, titulo=f"{ticker} - Distribuição da distância para a tendência (%)")
             
             st.plotly_chart(fig_105, width="stretch")
             st.plotly_chart(fig_105_hist, width="stretch")
@@ -141,7 +141,7 @@ def render_single_asset_view(selected_single_asset: SingleAssetOption) -> None:
             tendencia_ma, residuo_ma = build_reg_ma(df, window)
             
             fig_110 = build_reg_lin_serie(df, residuo_ma)
-            fig_110_hist = build_reg_lin_residuo_histograma(residuo_ma, ticker, titulo=f"{ticker} - Distribuição da distância para a tendência (%)")
+            fig_110_hist = build_reg_lin_residuo_histograma(residuo_ma, titulo=f"{ticker} - Distribuição da distância para a tendência (%)")
             
             st.plotly_chart(fig_110, width="stretch")
             st.plotly_chart(fig_110_hist, width="stretch")
