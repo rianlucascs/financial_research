@@ -52,8 +52,6 @@ class RetentionPolicyWorkerA(RetentionPolicyWorkersInterface):
     def _select_snapshots_to_remove(self, snapshots: list[tuple[Path, str]]) -> list[Path]:
         """Seleciona os snapshots que devem ser removidos com base na política de retenção."""
         
-        datas = [snapshot[1] for snapshot in snapshots]
-        
         # Define a política de retenção: manter os últimos 3 dias de snapshots
         manter = {
             date.today() - timedelta(days=i)
