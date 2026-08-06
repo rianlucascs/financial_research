@@ -1,5 +1,6 @@
 """
 Worker:
+    loader_worker_a
 
 Responsabilidades:
     ...

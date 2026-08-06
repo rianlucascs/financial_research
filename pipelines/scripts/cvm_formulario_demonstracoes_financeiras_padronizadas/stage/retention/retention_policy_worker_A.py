@@ -1,6 +1,6 @@
 """
 Worker:
-    Aplica a política de retenção de snapshots.
+    retention_policy_workers_a.
 
 Responsabilidades:
     - Identificar snapshots expirados.

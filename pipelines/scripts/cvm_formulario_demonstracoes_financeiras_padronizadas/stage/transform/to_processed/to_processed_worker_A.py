@@ -1,8 +1,9 @@
 """
 Worker:
+    to_processed_worker_a
 
 Responsabilidades:
-    Concatena os CSVs brutos anuais (2011 até o ano corrente) de cada tipo de demonstração DFP (CVM)
+    Concatena os CSVs brutos anuais (2011 até o ano corrente) de cada tipo de demonstração DFP (CVM).
     
 Notas:
     ...
