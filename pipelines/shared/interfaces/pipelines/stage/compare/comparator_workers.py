@@ -14,7 +14,6 @@ from pipelines.shared.interfaces.stage_interface import RawData, StageTypes, Dif
 from pipelines.shared.checkpoint_writer_mixin import CheckpointWriterMixin
 
 from abc import ABC, abstractmethod
-from pandas import DataFrame
 
 
 class ComparatorWorkersInterface(CheckpointWriterMixin, ABC, StageTypes[RawData, DiffResult]):
