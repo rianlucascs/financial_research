@@ -1,0 +1,239 @@
+
+
+from dataclasses import dataclass
+from pathlib import Path
+import os
+import uuid
+import logging
+from json import dump
+from logging.handlers import RotatingFileHandler
+from typing import Literal
+from pandas import NA, NaT
+from numpy import generic
+
+@dataclass
+class PipelineContext:
+    """
+    Contexto do pipeline, contendo informações sobre o ambiente, run_id e diretórios do projeto.
+    """
+
+
+    env: str | None = None
+    run_id: str | None = None
+
+
+    def __post_init__(self) -> None:
+        
+        if self.env is None:
+            self.env = os.getenv("PIPELINE_ENV", "dev")
+    
+        if self.run_id is None:
+            self.run_id = uuid.uuid4().hex[:10]
+            
+        self.project_root = Path(__file__).resolve().parents[2]
+        
+        self.pipelines_dir = self.project_root / "pipelines"
+        
+        self.data_dir = self.pipelines_dir / "data"
+        self.logs_dir = self.pipelines_dir / "logs"
+        self.state_dir = self.pipelines_dir / "state"
+        self.checkpoints_dir = self.pipelines_dir / "checkpoints"
+    
+    
+    def build_raw_path(self, pipeline: str, subdir_format: Literal["csv", "html", "text", "zip", "parquet"] | None = None) -> Path:
+        """Constrói o caminho para o diretório ``raw`` de um pipeline.
+
+        Returns:
+            pipelines/data/<pipeline>/raw/`<subdir_format>`
+            ou 
+            pipelines/data/<pipeline>/raw quando subdir_format é None.
+        """
+        
+        base = self.data_dir / pipeline / "raw"
+
+        if subdir_format is None:
+            return base
+        
+        else:
+            return base / subdir_format
+        
+    
+    def build_transformed_path(self, pipeline: str, subdir_stage: Literal["to_interim", "to_processed"], 
+                               subdir_format: Literal["csv", "html", "text"] | None = None) -> Path:
+        """Constrói o caminho para o diretório ``transformed`` de um pipeline.
+        
+        Returns:
+            pipelines/data/<pipeline>/transformed/<subdir_stage>/`<subdir_format>`
+            ou
+            pipelines/data/<pipeline>/transformed/<subdir_stage> quando subdir_format é None.
+        """
+        
+        base = self.data_dir / pipeline / "transformed"
+        
+        if subdir_stage not in ["to_interim", "to_processed"]:
+            raise ValueError(f"subdir_stage must be 'to_interim' or 'to_processed', got '{subdir_stage}'")
+        
+        base = base / subdir_stage
+
+        if subdir_format is None:
+            return base
+        
+        else:
+            return base / subdir_format
+    
+    
+    def build_load_path(self, pipeline: str) -> Path:
+        """Constrói o caminho para o diretório ``load`` de um pipeline.
+        
+        Returns:
+            pipelines/data/<pipeline>/load
+        """
+        
+        return self.data_dir / pipeline / "load"
+    
+    
+    def build_logs_path(self, pipeline: str) -> Path:
+        """Constrói o caminho para o diretório ``logs`` de um pipeline.
+        
+        Returns:
+            pipelines/logs/<pipeline>
+        """
+        
+        return self.logs_dir / pipeline / self.run_id
+    
+    
+    def  prepare_raw_path(self, pipeline: str, subdir_format: Literal["csv", "html", "text", "zip"] | None = None) -> Path:
+        """Prepara o diretório ``raw`` de um pipeline.
+
+        Returns:
+            O caminho para o diretório ``raw`` preparado.
+        """
+        
+        path = self.build_raw_path(pipeline, subdir_format)
+        path.mkdir(parents=True, exist_ok=True)
+        
+        return path
+
+
+    def prepare_transformed_path(self, pipeline: str, subdir_stage: Literal["to_interim", "to_processed"], 
+                                 subdir_format: Literal["csv", "html", "text", "parquet"] | None = None) -> Path:
+        """Prepara o diretório ``transformed`` de um pipeline.
+
+        Returns:
+            O caminho para o diretório ``transformed`` preparado.
+        """
+        
+        path = self.build_transformed_path(pipeline, subdir_stage, subdir_format)
+        path.mkdir(parents=True, exist_ok=True)
+        
+        return path
+    
+    
+    def prepare_load_path(self, pipeline: str) -> Path:
+        """Prepara o diretório ``load`` de um pipeline.
+
+        Returns:
+            O caminho para o diretório ``load`` preparado.
+        """
+        
+        path = self.build_load_path(pipeline)
+        path.mkdir(parents=True, exist_ok=True)
+        
+        return path
+    
+    
+    def prepare_checkpoint_path(self, pipeline: str, stage: str, step: str) -> Path:
+        """Prepara o diretório ``checkpoints`` de um pipeline.
+
+        Returns:
+            O caminho para o diretório ``checkpoints`` preparado.
+        """
+        
+        path = self.checkpoints_dir / pipeline / stage / step
+        path.mkdir(parents=True, exist_ok=True)
+        
+        return path
+    
+    
+    def prepare_checkpoint_file(self, pipeline: str, stage: str, step: str, filename: str) -> Path:
+        """Prepara o arquivo de checkpoint de um pipeline.
+
+        Returns:
+            O caminho para o arquivo de checkpoint preparado.
+        """
+        
+        if not filename.endswith(".json"):
+            filename += ".json"
+        
+        return self.prepare_checkpoint_path(pipeline, stage, step) / f"{filename}"
+    
+    
+    def prepare_logs_path(self, pipeline: str) -> Path:
+        """Prepara o diretório ``logs`` de um pipeline.
+
+        Returns:
+            O caminho para o diretório ``logs`` preparado.
+        """
+        
+        path = self.build_logs_path(pipeline)
+        path.mkdir(parents=True, exist_ok=True)
+        
+        return path
+
+
+    def _json_default(self, o):
+        """Converte tipos numpy/pandas para tipos nativos do Python antes de serializar."""
+        if o is NA or o is NaT:
+            return None
+        if isinstance(o, generic):
+            return o.item()
+        raise TypeError(f'Object of type {o.__class__.__name__} is not JSON serializable')
+
+    
+    def write_checkpoint(self, pipeline: str, stage: str, step: str, filename: str, data: dict) -> None:
+        """Escreve um arquivo de checkpoint de um pipeline."""
+        
+        checkpoint_file = self.prepare_checkpoint_file(pipeline, stage, step, filename)
+        tmp_file = checkpoint_file.with_suffix(".tmp")
+        
+        with open(tmp_file, "w") as f:
+            dump(data, f, indent=4, default=self._json_default)
+            
+        tmp_file.replace(checkpoint_file)
+            
+    
+    def configure_logging(self, pipeline: str, process: str, level: int = logging.INFO,
+                          max_bytes: int = 5 * 1024 * 1024, backup_count: int = 5):
+        """Configura o logger para o pipeline/processo atual."""
+        
+        logger_name = f"{pipeline}.{process}"
+        logger = logging.getLogger(logger_name)
+
+        # avoid re-configuring the same logger
+        if getattr(logger, "_configured", False):
+            self.logger = logger
+            return logger
+
+        logger.setLevel(level)
+
+        log_dir = self.prepare_logs_path(pipeline)
+        file_path = log_dir / f"{pipeline}.{process}.{self.run_id}.log"
+
+        fh = RotatingFileHandler(filename=str(file_path), maxBytes=max_bytes,
+                                 backupCount=backup_count, encoding="utf-8")
+        
+        fmt = logging.Formatter("%(asctime)s | %(name)s | %(levelname)s | %(message)s")
+        
+        fh.setFormatter(fmt)
+        logger.addHandler(fh)
+
+        sh = logging.StreamHandler()
+        sh.setFormatter(fmt)
+        logger.addHandler(sh)
+
+        logger.propagate = False
+        logger._configured = True
+
+        self.logger = logger
+        
+        return logger

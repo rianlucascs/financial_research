@@ -1,0 +1,71 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Build / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Tool caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Excel files
+*.xlsx
+*.xls
+
+# Configurações locais (não versionadas)
+config_local.py
+*.local.py
+.env
+.env.local
+
+# Runtime artifacts — ignorar arquivos mas preservar estrutura de pastas via .gitkeep
+pipelines/data/**
+!pipelines/data/**/
+!pipelines/data/**/.gitkeep
+
+pipelines/logs/**
+!pipelines/logs/**/
+!pipelines/logs/**/.gitkeep
+
+pipelines/state/**
+!pipelines/state/**/
+!pipelines/state/**/.gitkeep
+
+pipelines/checkpoints/**
+!pipelines/checkpoints/**/
+!pipelines/checkpoints/**/.gitkeep
+
+
+# Arquivos locais não versionados
+notas.txt
+
+# Ignore quant_test folder
+quant_tests/
+
+# Ignore notebooks_tests folder
+notebooks_tests
+
+# Ignore estrategias folder
+quant/
