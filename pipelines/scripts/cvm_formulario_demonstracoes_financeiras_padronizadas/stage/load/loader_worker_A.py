@@ -9,12 +9,10 @@ Notas:
 """
 
 
-from pipelines.scripts.cvm_formulario_demonstracoes_financeiras_padronizadas.stage.pipeline_settings import current_snapshot_path, demonstration_codes
+from pipelines.scripts.cvm_formulario_demonstracoes_financeiras_padronizadas.stage.pipeline_settings import current_snapshot_path
 from pipelines.shared.interfaces.pipelines.stage.load.loader_workers import LoaderWorkersInterface
 from pipelines.shared.context import PipelineContext
-from pipelines.shared.checkpoint_values import Stage, Step, Status, FailurePoint, Severity
-from pipelines.shared.interfaces.stage_interface import StageTypes, ProcessedData, LoadData
-
+from pipelines.shared.checkpoint_values import Stage, Step, Status
 import sqlite3
 from pandas import read_parquet
 
