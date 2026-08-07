@@ -35,12 +35,15 @@ demonstration_codes: list[str] = [
     ]
 
 
-def current_snapshot_path(pipeline) -> Path:
+def current_snapshot_path(pipeline, current_date: str | None = None) -> Path:
     """Retorna o caminho do snapshot atual.
     
     Returns:
         Path(pipeline) / date.today().strftime("%Y-%m-%d"): Caminho do snapshot atual.
     """
     
-    return Path(pipeline) / date.today().strftime("%Y-%m-%d")
+    if current_date is None:
+        current_date = date.today().strftime("%Y-%m-%d")
+        
+    return Path(pipeline) / current_date
 
