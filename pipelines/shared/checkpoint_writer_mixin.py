@@ -21,7 +21,7 @@ class CheckpointWriterMixin:
         ctx: PipelineContext,
         stage: Stage,
         step: Step,
-        filename: str,
+        filename: str, # f"{step}_{worker}.{status}.json",
         status: Status,
         failure_point: FailurePoint | None = None,
         reason: ReasonCode | None = None,

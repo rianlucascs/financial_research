@@ -1,5 +1,6 @@
 
 
+
 from dataclasses import dataclass
 from pathlib import Path
 import os
@@ -13,8 +14,26 @@ from numpy import generic
 
 @dataclass
 class PipelineContext:
-    """
-    Contexto do pipeline, contendo informações sobre o ambiente, run_id e diretórios do projeto.
+    """Contexto do pipeline, com informações sobre ambiente, execução e diretórios.
+
+    Diretórios de dados e estado são resolvidos em `__post_init__` a partir de
+    `project_root`, então não devem ser passados no construtor.
+
+    Attributes:
+        env: Ambiente de execução (`dev`, `prod`, etc). Lido de `PIPELINE_ENV`
+            se não informado.
+        run_id: Identificador único da execução. Gerado automaticamente se
+            não informado.
+        project_root: Raiz do projeto, resolvida a partir da localização deste arquivo.
+        pipelines_dir: Diretório raiz dos pipelines.
+        data_dir: Diretório de snapshots do pipeline (raw/interim/processed),
+            sujeitos a política de retenção — podem ser removidos com o tempo.
+        historical_data_dir: Diretório da série histórica de mudanças entre
+            snapshots (drift). Não sujeito a retenção: cada entrada é um
+            evento único, não reconstruível a partir de outra pasta.
+        logs_dir: Diretório de logs de execução.
+        state_dir: Diretório de estado do pipeline.
+        checkpoints_dir: Diretório de checkpoints (`CheckpointPayload`).
     """
 
 
@@ -35,9 +54,11 @@ class PipelineContext:
         self.pipelines_dir = self.project_root / "pipelines"
         
         self.data_dir = self.pipelines_dir / "data"
+        self.historical_data_dir = self.pipelines_dir / "historical_data"
         self.logs_dir = self.pipelines_dir / "logs"
         self.state_dir = self.pipelines_dir / "state"
         self.checkpoints_dir = self.pipelines_dir / "checkpoints"
+        
     
     
     def build_raw_path(self, pipeline: str, subdir_format: Literal["csv", "html", "text", "zip", "parquet"] | None = None) -> Path:
@@ -100,6 +121,19 @@ class PipelineContext:
         """
         
         return self.logs_dir / pipeline / self.run_id
+    
+    
+    def build_snapshot_drift_path(self, pipeline: str, subdir: str | None = None) -> Path:
+        """Constrói o caminho para o diretório ``compare_history`` de um pipeline.
+
+        Returns:
+            pipelines/data/<pipeline>/compare_history
+        """
+
+        if subdir is None:
+            return self.historical_data_dir / pipeline / "snapshot_drift"
+        else:
+            return self.historical_data_dir / pipeline / "snapshot_drift" / subdir
     
     
     def  prepare_raw_path(self, pipeline: str, subdir_format: Literal["csv", "html", "text", "zip"] | None = None) -> Path:
@@ -176,6 +210,19 @@ class PipelineContext:
         """
         
         path = self.build_logs_path(pipeline)
+        path.mkdir(parents=True, exist_ok=True)
+        
+        return path
+    
+    
+    def prepare_snapshot_drift_path(self, pipeline: str, subdir: str | None = None) -> Path:
+        """Prepara o diretório ``snapshot_drift`` de um pipeline.
+
+        Returns:
+            O caminho para o diretório ``snapshot_drift`` preparado.
+        """
+        
+        path = self.build_snapshot_drift_path(pipeline, subdir)
         path.mkdir(parents=True, exist_ok=True)
         
         return path

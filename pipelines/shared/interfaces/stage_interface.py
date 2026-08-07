@@ -66,7 +66,7 @@ class LoadData:
 
 
 @dataclass(frozen=True)
-class DiffResult:
+class SnapshotDrift:
     """Resultado da comparação entre dois DataFrames.
 
     Contém três DataFrames: added, removed e changed.
@@ -79,7 +79,7 @@ class DiffResult:
     added: DataFrame
     removed: DataFrame
     changed: DataFrame
-
+    
 
 TIn = TypeVar("TIn")
 TOut = TypeVar("TOut")

@@ -27,7 +27,9 @@ class LoaderWorkersInterface(CheckpointWriterMixin, ABC):
 
     Métodos que a subclasse deve implementar:
         ``_worker``: define a lógica do worker de carregamento.
-        
+    
+    Fluxo do pipeline: 
+        `Extract` → `Transform` → `Load` → `Compare`
     """
 
     process: str  # subclasse deve declarar (ex: process = "loader_workers_a")

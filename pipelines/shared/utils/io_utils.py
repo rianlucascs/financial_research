@@ -21,8 +21,15 @@ def remove_file(zip_path: Path, logger) -> None:
         logger.warning(f"Falha ao excluir o arquivo ZIP {zip_path}: {e}")
 
 
-def clear_directory(path: Path, logger) -> None:
-    """Remove um diretório e todo o seu conteúdo."""
+def clear_directory(path: Path, logger, remove_root: bool = True) -> None:
+    """Remove o conteúdo de um diretório e, opcionalmente, o próprio diretório.
+
+    Args:
+        path: Diretório a ser limpo.
+        logger: Logger para registrar avisos e erros.
+        remove_root: Se True (padrão), remove também `path` ao final.
+            Se False, apenas esvazia `path`, mantendo-o no lugar.
+    """
 
     if not path.exists():
         
@@ -37,23 +44,27 @@ def clear_directory(path: Path, logger) -> None:
         return
 
     for item in path.iterdir():
-        
         try:
             
             if item.is_file():
+                
                 item.unlink()
-
+                
             elif item.is_dir():
-                clear_directory(item, logger)
+                # Subdiretórios são sempre removidos por completo,
+                # independente do valor de remove_root no nível raiz.
+                
+                clear_directory(item, logger, remove_root=True)
                 
         except OSError as e:
             
             logger.error(f"Falha ao remover '{item}': {e}")
 
-    try:
+    if remove_root:
         
-        path.rmdir()
-        
-    except OSError as e:
-        
-        logger.error(f"Falha ao remover o diretório '{path}': {e}")
+        try:
+            path.rmdir()
+            
+        except OSError as e:
+            
+            logger.error(f"Falha ao remover o diretório '{path}': {e}")

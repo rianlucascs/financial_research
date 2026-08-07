@@ -26,6 +26,7 @@ class Stage(str, Enum):
     QUALITY = "quality"
     PUBLISH = "publish"
     RETENTION = "retention"
+    COMPARE = "compare"
 
 
 class Step(str, Enum):

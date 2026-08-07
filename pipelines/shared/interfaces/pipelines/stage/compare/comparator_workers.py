@@ -10,13 +10,13 @@ Notas:
 
 
 from pipelines.shared.context import PipelineContext
-from pipelines.shared.interfaces.stage_interface import ProcessedData, StageTypes, DiffResult
+from pipelines.shared.interfaces.stage_interface import ProcessedData, StageTypes, SnapshotDrift
 from pipelines.shared.checkpoint_writer_mixin import CheckpointWriterMixin
 
 from abc import ABC, abstractmethod
 
 
-class ComparatorWorkersInterface(CheckpointWriterMixin, ABC, StageTypes[ProcessedData, DiffResult]):
+class ComparatorWorkersInterface(CheckpointWriterMixin, ABC, StageTypes[ProcessedData, SnapshotDrift]):
     """
     Esta é a interface para os comparadores de DataFrames.
 
@@ -50,14 +50,14 @@ class ComparatorWorkersInterface(CheckpointWriterMixin, ABC, StageTypes[Processe
         self.logger = None
         
         
-    def _get_previous_data(self) -> RawData:
+    def _get_previous_data(self) -> ProcessedData:
         """
         Método que implementa a lógica para obter o DataFrame anterior.
         """
         ...
     
     
-    def _get_current_data(self) -> RawData:
+    def _get_current_data(self) -> ProcessedData:
         """
         Método que implementa a lógica para obter o DataFrame atual.
         """

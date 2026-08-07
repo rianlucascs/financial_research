@@ -57,6 +57,10 @@ pipelines/checkpoints/**
 !pipelines/checkpoints/**/
 !pipelines/checkpoints/**/.gitkeep
 
+pipelines/historical_data/**
+!pipelines/historical_data/**/
+!pipelines/historical_data/**/.gitkeep
+
 
 # Arquivos locais não versionados
 notas.txt
