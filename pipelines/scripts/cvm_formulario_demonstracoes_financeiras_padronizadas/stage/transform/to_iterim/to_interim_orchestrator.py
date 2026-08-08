@@ -22,7 +22,7 @@ class ToInterimOrchestrator(ToInterimOrchestratorInterface):
         super().__init__(pipeline=pipeline)
 
 
-    def _build_workers(self) -> list[ToInterimWorkersInterface]:
+    def _build_workers(self, ctx: PipelineContext) -> list[ToInterimWorkersInterface]:
         
         return [
             ToInterimWorkerA(pipeline=self.pipeline),

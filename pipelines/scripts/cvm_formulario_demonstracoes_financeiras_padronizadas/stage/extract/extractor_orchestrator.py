@@ -22,7 +22,7 @@ class ExtractorOrchestrator(ExtractorOrchestratorInterface):
         super().__init__(pipeline=pipeline)
 
 
-    def _build_workers(self) -> list[ExtractorWorkersInterface]:
+    def _build_workers(self, ctx: PipelineContext) -> list[ExtractorWorkersInterface]:
         
         return [
             ExtractorWorkerA(pipeline=self.pipeline),

@@ -22,7 +22,7 @@ class RetentionPolicyOrchestrator(RetentionPolicyOrchestratorInterface):
         self.logger = None
 
 
-    def _build_workers(self) -> list[RetentionPolicyWorkersInterface]:
+    def _build_workers(self, ctx: PipelineContext) -> list[RetentionPolicyWorkersInterface]:
         """
         Método responsável por construir os workers de retenção.
         """

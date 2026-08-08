@@ -22,7 +22,7 @@ class ToProcessedOrchestrator(ToProcessedOrchestratorInterface):
         super().__init__(pipeline=pipeline)
 
 
-    def _build_workers(self) -> list[ToProcessedWorkersInterface]:
+    def _build_workers(self, ctx: PipelineContext) -> list[ToProcessedWorkersInterface]:
         
         return [
             ToProcessedWorkerA(pipeline=self.pipeline),

@@ -70,7 +70,7 @@ class ExtractorWorkerB(ExtractorWorkersInterface):
         raw_zip_path = ctx.build_raw_path(current_snapshot_path(self.pipeline), subdir_format="zip")
         raw_csv_path = ctx.build_raw_path(current_snapshot_path(self.pipeline), subdir_format="csv")
         
-        clear_directory(path=raw_csv_path, logger=self.logger)
+        clear_directory(path=raw_csv_path, logger=self.logger, remove_root=False)
             
         for filename in build_archives_zip:
             

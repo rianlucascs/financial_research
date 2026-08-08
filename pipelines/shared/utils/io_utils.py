@@ -32,15 +32,9 @@ def clear_directory(path: Path, logger, remove_root: bool = True) -> None:
     """
 
     if not path.exists():
-        
-        logger.info(f"O diretório '{path}' não existe. Nenhuma ação necessária.")
-        
         return
 
     if not path.is_dir():
-        
-        logger.warning(f"'{path}' não é um diretório.")
-        
         return
 
     for item in path.iterdir():

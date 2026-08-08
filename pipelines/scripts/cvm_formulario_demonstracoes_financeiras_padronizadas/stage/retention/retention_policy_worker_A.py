@@ -74,7 +74,7 @@ class RetentionPolicyWorkerA(RetentionPolicyWorkersInterface):
 
             if snapshot.exists():
                 
-                clear_directory(snapshot, logger=self.logger)
+                clear_directory(snapshot, logger=self.logger, remove_root=True)
                 removed_snapshots.append(snapshot)
                 
             else:
