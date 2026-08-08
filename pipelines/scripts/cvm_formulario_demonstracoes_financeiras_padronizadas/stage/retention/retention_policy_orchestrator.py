@@ -3,8 +3,10 @@
 from pipelines.shared.context import PipelineContext
 from pipelines.shared.interfaces.pipelines.stage.retention.retention_policy_workers import RetentionPolicyWorkersInterface
 from pipelines.shared.interfaces.pipelines.stage.retention.retention_policy_orchestrator import RetentionPolicyOrchestratorInterface
+
 from pipelines.scripts.cvm_formulario_demonstracoes_financeiras_padronizadas.stage.retention.retention_policy_worker_A import RetentionPolicyWorkerA
 from pipelines.scripts.cvm_formulario_demonstracoes_financeiras_padronizadas.stage.retention.retention_policy_worker_B import RetentionPolicyWorkerB
+
 
 class RetentionPolicyOrchestrator(RetentionPolicyOrchestratorInterface):
 

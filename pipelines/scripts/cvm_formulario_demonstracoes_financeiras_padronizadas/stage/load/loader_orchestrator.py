@@ -1,8 +1,8 @@
 
 
+from pipelines.shared.context import PipelineContext
 from pipelines.shared.interfaces.pipelines.stage.load.loader_orchestrator import LoaderOrchestratorInterface
 from pipelines.shared.interfaces.pipelines.stage.load.loader_workers import LoaderWorkersInterface
-from pipelines.shared.context import PipelineContext
 
 from pipelines.scripts.cvm_formulario_demonstracoes_financeiras_padronizadas.stage.load.loader_worker_A import LoaderWorkerA
 

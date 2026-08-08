@@ -1,8 +1,8 @@
 
 
+from pipelines.shared.context import PipelineContext
 from pipelines.shared.interfaces.pipelines.stage.transform.to_processed.to_processed_orchestrator import ToProcessedOrchestratorInterface
 from pipelines.shared.interfaces.pipelines.stage.transform.to_processed.to_processed_workers import ToProcessedWorkersInterface
-from pipelines.shared.context import PipelineContext
 
 from pipelines.scripts.cvm_formulario_demonstracoes_financeiras_padronizadas.stage.transform.to_processed.to_processed_worker_A import ToProcessedWorkerA
 

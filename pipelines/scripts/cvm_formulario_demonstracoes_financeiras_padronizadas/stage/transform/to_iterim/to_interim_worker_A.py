@@ -12,12 +12,13 @@ Notas:
 """
 
 
-from pipelines.shared.interfaces.pipelines.stage.transform.to_interim.to_interim_workers import ToInterimWorkersInterface
 from pipelines.shared.context import PipelineContext
-from pipelines.shared.checkpoint_values import Stage, Step, Status
-from pipelines.scripts.cvm_formulario_demonstracoes_financeiras_padronizadas.stage.pipeline_settings import current_snapshot_path
+from pipelines.shared.interfaces.pipelines.stage.transform.to_interim.to_interim_workers import ToInterimWorkersInterface
 from pipelines.shared.interfaces.stage_interface import RawData, InterimData
+from pipelines.shared.checkpoint_values import Stage, Step, Status
 from pipelines.shared.utils.io_utils import clear_directory
+
+from pipelines.scripts.cvm_formulario_demonstracoes_financeiras_padronizadas.stage.pipeline_settings import current_snapshot_path
 
 from os import listdir
 from pandas import read_csv, DataFrame, to_datetime, to_numeric

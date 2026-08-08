@@ -11,12 +11,13 @@ Notas:
 """
 
 
-from pipelines.shared.interfaces.pipelines.stage.extract.extractor_workers import ExtractorWorkersInterface
 from pipelines.shared.context import PipelineContext
+from pipelines.shared.interfaces.pipelines.stage.extract.extractor_workers import ExtractorWorkersInterface
 from pipelines.shared.checkpoint_values import Stage, Step, Status, FailurePoint, Severity
 from pipelines.shared.utils.formatting_utils import format_size
 from pipelines.shared.utils.io_utils import remove_file
 from pipelines.shared.utils.http_utils import url_is_accessible
+
 from pipelines.scripts.cvm_formulario_demonstracoes_financeiras_padronizadas.stage.pipeline_settings import build_archives_zip
 
 from pathlib import Path

@@ -12,9 +12,10 @@ Notas:
 
 from pipelines.shared.context import PipelineContext
 from pipelines.shared.interfaces.pipelines.stage.compare.comparator_workers import ComparatorWorkersInterface
-from pipelines.scripts.cvm_formulario_demonstracoes_financeiras_padronizadas.stage.pipeline_settings import current_snapshot_path
 from pipelines.shared.utils.io_utils import clear_directory
 from pipelines.shared.checkpoint_values import Stage, Step, Status
+
+from pipelines.scripts.cvm_formulario_demonstracoes_financeiras_padronizadas.stage.pipeline_settings import current_snapshot_path
 
 from datetime import date, timedelta
 from pathlib import Path

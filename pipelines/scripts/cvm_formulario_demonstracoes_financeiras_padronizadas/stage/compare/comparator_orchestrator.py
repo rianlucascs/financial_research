@@ -1,9 +1,10 @@
 
 
+from pipelines.shared.context import PipelineContext
 from pipelines.shared.interfaces.pipelines.stage.compare.comparator_orchestrator import ComparatorOrchestratorInterface
 from pipelines.shared.interfaces.pipelines.stage.compare.comparator_workers import ComparatorWorkersInterface
+
 from pipelines.scripts.cvm_formulario_demonstracoes_financeiras_padronizadas.stage.compare.comparator_worker_A import ComparatorWorkerA
-from pipelines.shared.context import PipelineContext
 
 
 class ComparatorOrchestrator(ComparatorOrchestratorInterface):

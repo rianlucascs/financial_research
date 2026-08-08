@@ -1,8 +1,9 @@
 
 
+from pipelines.shared.context import PipelineContext
 from pipelines.shared.interfaces.pipelines.stage.extract.extractor_orchestrator import ExtractorOrchestratorInterface
 from pipelines.shared.interfaces.pipelines.stage.extract.extractor_workers import ExtractorWorkersInterface
-from pipelines.shared.context import PipelineContext
+
 from pipelines.scripts.cvm_formulario_demonstracoes_financeiras_padronizadas.stage.extract.extractor_worker_A import ExtractorWorkerA
 from pipelines.scripts.cvm_formulario_demonstracoes_financeiras_padronizadas.stage.extract.extractor_worker_B import ExtractorWorkerB
 
