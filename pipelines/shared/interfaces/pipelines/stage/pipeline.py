@@ -2,7 +2,6 @@
 Pipeline base para orquestração de estágios.
 
 Responsabilidades:
-
     Executar o fluxo principal na ordem: ``extract`` -> ``to_interim`` -> ``to_processed`` -> ``load`` -> ``compare`` -> ``retention``.
     Executar ``compare`` e ``retention`` somente quando implementados pela subclasse.
     Centralizar contexto de execução (env, run_id, paths e logging).
