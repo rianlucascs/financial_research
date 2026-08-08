@@ -44,16 +44,18 @@ class RetentionPolicyWorkerB(RetentionPolicyWorkersInterface):
         return date.fromtimestamp(creation_time)
     
     
-    def _list_logs(self, ctx: PipelineContext) -> list[tuple[Path, str, str]]:
+    def _list_logs(self, ctx: PipelineContext) -> list[tuple[Path, str, date]]:
         """Lista todos os logs disponíveis no caminho de origem."""
 
-        directories = [
-            (log_path_dir := ctx.logs_dir / self.pipeline / path.name, path.name, self._get_creation_time(log_path_dir))
-            for path in (ctx.logs_dir / self.pipeline).iterdir()
+        logs_root = ctx.logs_dir / self.pipeline
+        if not logs_root.exists():
+            return []
+
+        return [
+            (path, path.name, self._get_creation_time(path))
+            for path in logs_root.iterdir()
             if path.is_dir()
         ]
-        
-        return directories
 
 
     def _select_logs_to_remove(self, logs: list[tuple[Path, str, date]]) -> list[Path]:

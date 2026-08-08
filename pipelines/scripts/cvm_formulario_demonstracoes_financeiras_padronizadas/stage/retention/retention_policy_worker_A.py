@@ -39,14 +39,16 @@ class RetentionPolicyWorkerA(RetentionPolicyWorkersInterface):
     
     def _list_snapshots(self, ctx: PipelineContext) -> list[tuple[Path, str]]:
         """Lista todos os snapshots disponíveis no caminho de origem."""
-    
-        directories = [
-            (ctx.data_dir / self.pipeline / path.name, path.name)
-            for path in (ctx.data_dir / self.pipeline).iterdir()
+
+        snapshots_root = ctx.data_dir / self.pipeline
+        if not snapshots_root.exists():
+            return []
+
+        return [
+            (path, path.name)
+            for path in snapshots_root.iterdir()
             if path.is_dir()
         ]
-        
-        return directories
         
         
     def _select_snapshots_to_remove(self, snapshots: list[tuple[Path, str]]) -> list[Path]:
