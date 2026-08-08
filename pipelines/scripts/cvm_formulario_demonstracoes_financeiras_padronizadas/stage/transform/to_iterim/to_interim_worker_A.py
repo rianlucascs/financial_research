@@ -8,7 +8,7 @@ Responsabilidades:
     Tratar nulos técnicos (ausência de valor por limitação da fonte, não por regra de negócio).
     
 Notas:
-    ...
+    Caso o pipelines seja executado no mesmo dia em que os arquivos RawData foram gerados, o worker irá sobrescrever os arquivos InterimData existentes.
 """
 
 

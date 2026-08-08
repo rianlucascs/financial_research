@@ -6,7 +6,7 @@ Responsabilidades:
     Concatena os CSVs brutos anuais (2011 até o ano corrente) de cada tipo de demonstração DFP (CVM).
     
 Notas:
-    ...
+    Caso o pipelines seja executado no mesmo dia em que os arquivos InterimData foram gerados, o worker irá sobrescrever os arquivos Parquet processados existentes.
 """
 
 
