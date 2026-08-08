@@ -31,7 +31,6 @@ class ToInterimWorkersInterface(CheckpointWriterMixin, ABC, StageTypes[RawData, 
 
     Métodos que a subclasse deve implementar:
         ``_worker``: define a lógica do worker de to_interim.
-        
     """
     
        

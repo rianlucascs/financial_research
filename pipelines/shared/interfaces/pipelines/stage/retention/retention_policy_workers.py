@@ -37,10 +37,6 @@ class RetentionPolicyWorkersInterface(CheckpointWriterMixin, ABC, StageTypes[Raw
     Métodos auxiliares que a subclasse pode sobrescrever:
         ``_list_snapshots``: lista todos os snapshots disponíveis no caminho de origem.
         ``_select_snapshots_to_remove``: seleciona os snapshots que devem ser removidos com base na política de retenção.
-
-    Fluxo do pipeline: 
-        ``Extract`` → ``Transform`` → ``Load`` → ``Compare`` → ``Retention``
-        
     """
     
     

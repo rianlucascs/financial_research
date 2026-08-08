@@ -30,10 +30,6 @@ class ComparatorWorkersInterface(CheckpointWriterMixin, ABC, StageTypes[Processe
         ``_get_previous_data``: define a lógica para obter o DataFrame anterior.
         ``_get_current_data``: define a lógica para obter o DataFrame atual.
         ``_worker``: define a lógica do worker de extração.
-
-    Fluxo do pipeline: 
-        `Extract` → `Transform` → `Load` → `Compare`
-        
     """
     
     

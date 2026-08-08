@@ -29,7 +29,6 @@ class ToProcessedWorkersInterface(CheckpointWriterMixin, ABC, StageTypes[Interim
 
     Métodos que a subclasse deve implementar:
         ``_worker``: define a lógica do worker de to_processed.
-        
     """
     
        
