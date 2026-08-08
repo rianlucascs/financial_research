@@ -6,7 +6,7 @@ Responsabilidades:
     ...
     
 Notas:
-    Os dados
+    
 """
 
 

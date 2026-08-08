@@ -1,5 +1,6 @@
 """
 Worker:
+    ...
 
 Responsabilidades:
     Concatenar dados, aplicar filtros, renomear colunas, aplicar tipos corretos (Decimal, date, etc.), 

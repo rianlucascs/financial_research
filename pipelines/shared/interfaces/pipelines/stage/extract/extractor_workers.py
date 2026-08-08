@@ -1,8 +1,10 @@
 """
 Worker:
+    ...
 
 Responsabilidades:
-    ...
+    Extrai os dados de uma fonte externa, como um banco de dados ou uma API, e os transforma em um formato estruturado (DataFrame) 
+    para processamento posterior.
     
 Notas:
     ...
@@ -27,7 +29,7 @@ class ExtractorWorkersInterface(CheckpointWriterMixin, ABC, StageTypes[None, Raw
         ``main``: ponto de entrada, sempre configura logging e chama o método ``_worker``.
 
     Métodos que a subclasse deve implementar:
-        ``_worker``: define a lógica do worker de extração.
+        ``_worker``: define a lógica do worker de extração de dados.
     """
     
        

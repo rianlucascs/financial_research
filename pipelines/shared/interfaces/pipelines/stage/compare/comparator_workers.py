@@ -1,8 +1,9 @@
 """
 Worker:
+    ...
 
 Responsabilidades:
-    ...
+    Compara os arquivos de dados do snapshot atual com o snapshot anterior, identificando adições, remoções e alterações nos dados.
     
 Notas:
     ...
@@ -29,7 +30,7 @@ class ComparatorWorkersInterface(CheckpointWriterMixin, ABC, StageTypes[Processe
     Métodos que a subclasse deve implementar:
         ``_get_previous_data``: define a lógica para obter o DataFrame anterior.
         ``_get_current_data``: define a lógica para obter o DataFrame atual.
-        ``_worker``: define a lógica do worker de extração.
+        ``_worker``: define a lógica do worker de comparação.
     """
     
     
