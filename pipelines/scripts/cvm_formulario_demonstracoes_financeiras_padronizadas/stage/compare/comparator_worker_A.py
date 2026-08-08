@@ -12,10 +12,9 @@ Notas:
 
 from pipelines.shared.context import PipelineContext
 from pipelines.shared.interfaces.pipelines.stage.compare.comparator_workers import ComparatorWorkersInterface
-from pipelines.shared.interfaces.pipelines.stage.compare.comparator_workers import SnapshotDrift
 from pipelines.scripts.cvm_formulario_demonstracoes_financeiras_padronizadas.stage.pipeline_settings import current_snapshot_path
 from pipelines.shared.utils.io_utils import clear_directory
-from pipelines.shared.checkpoint_values import Stage, Step, Status, FailurePoint, Severity
+from pipelines.shared.checkpoint_values import Stage, Step, Status
 
 from datetime import date, timedelta
 from pathlib import Path
@@ -141,8 +140,10 @@ class ComparatorWorkerA(ComparatorWorkersInterface):
                 removed = self._find_removed_rows(previous_df, current_df)
                 changed = self._find_changed_rows(previous_df, current_df)
                 
-                filename_folder_path = prepare_snapshot_drift_path / filename.removesuffix(".parquet")
-                filename_folder_path.mkdir(parents=True, exist_ok=True) 
+                if not (added.empty and removed.empty and changed.empty):
+                    
+                    filename_folder_path = prepare_snapshot_drift_path / filename.removesuffix(".parquet")
+                    filename_folder_path.mkdir(parents=True, exist_ok=True) 
                 
                 _filename = filename.removesuffix(".parquet")
                 

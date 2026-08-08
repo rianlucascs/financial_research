@@ -16,7 +16,7 @@ from pipelines.shared.interfaces.pipelines.stage.transform.to_interim.to_interim
 from pipelines.shared.context import PipelineContext
 from pipelines.shared.checkpoint_values import Stage, Step, Status
 from pipelines.scripts.cvm_formulario_demonstracoes_financeiras_padronizadas.stage.pipeline_settings import current_snapshot_path
-from pipelines.shared.interfaces.stage_interface import RawData, InterimData, StageTypes
+from pipelines.shared.interfaces.stage_interface import RawData, InterimData
 from pipelines.shared.utils.io_utils import clear_directory
 
 from os import listdir
