@@ -1,5 +1,6 @@
 """
 Worker:
+    ...
 
 Responsabilidades:
     Transformar RawData em InterimData: dado estruturalmente validado e tipado.

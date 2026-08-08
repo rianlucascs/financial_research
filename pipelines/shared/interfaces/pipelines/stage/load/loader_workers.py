@@ -1,6 +1,7 @@
 """
 Worker:
-
+...
+    
 Responsabilidades:
     ...
     
@@ -29,7 +30,7 @@ class LoaderWorkersInterface(CheckpointWriterMixin, ABC):
         ``_worker``: define a lógica do worker de carregamento.
     
     Fluxo do pipeline: 
-        `Extract` → `Transform` → `Load` → `Compare`
+        ``Extract`` → ``Transform`` → ``Load`` → ``Compare``
     """
 
     process: str  # subclasse deve declarar (ex: process = "loader_workers_a")

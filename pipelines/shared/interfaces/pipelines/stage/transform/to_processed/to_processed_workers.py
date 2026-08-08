@@ -2,7 +2,8 @@
 Worker:
 
 Responsabilidades:
-    ...
+    Concatenar dados, aplicar filtros, renomear colunas, aplicar tipos corretos (Decimal, date, etc.), 
+    tratar nulos técnicos (ausência de valor por limitação da fonte, não por regra de negócio), e gerar ProcessedData.
     
 Notas:
     ...

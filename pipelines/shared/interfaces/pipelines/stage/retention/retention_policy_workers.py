@@ -3,7 +3,8 @@ Worker:
     ...
     
 Responsabilidades:
-    Retenção de snapshots antigos, de acordo com a política definida na subclasse.
+    - Retenção de snapshots antigos, de acordo com a política definida na subclasse.
+    - Retenção de logs de execução, de acordo com a política definida na subclasse.
     
 Notas:
     ...
@@ -38,7 +39,7 @@ class RetentionPolicyWorkersInterface(CheckpointWriterMixin, ABC, StageTypes[Raw
         ``_select_snapshots_to_remove``: seleciona os snapshots que devem ser removidos com base na política de retenção.
 
     Fluxo do pipeline: 
-        `Extract` → `Transform` → `Load` → `Compare` → `Retention`
+        ``Extract`` → ``Transform`` → ``Load`` → ``Compare`` → ``Retention``
         
     """
     
