@@ -8,8 +8,8 @@ Notas:
     ...
 """
 
-from pipelines.shared.interfaces.pipelines.stage.compare.comparator_workers import ComparatorWorkersInterface
 from pipelines.shared.context import PipelineContext
+from pipelines.shared.interfaces.pipelines.stage.compare.comparator_workers import ComparatorWorkersInterface
 
 from abc import ABC, abstractmethod
 

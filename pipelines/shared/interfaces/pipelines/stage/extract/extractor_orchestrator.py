@@ -1,7 +1,7 @@
 
 
-from pipelines.shared.interfaces.pipelines.stage.extract.extractor_workers import ExtractorWorkersInterface
 from pipelines.shared.context import PipelineContext
+from pipelines.shared.interfaces.pipelines.stage.extract.extractor_workers import ExtractorWorkersInterface
 
 from abc import ABC, abstractmethod
 

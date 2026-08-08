@@ -1,7 +1,7 @@
 
 
-from pipelines.shared.interfaces.pipelines.stage.transform.to_processed.to_processed_workers import ToProcessedWorkersInterface
 from pipelines.shared.context import PipelineContext
+from pipelines.shared.interfaces.pipelines.stage.transform.to_processed.to_processed_workers import ToProcessedWorkersInterface
 
 from abc import ABC, abstractmethod
 

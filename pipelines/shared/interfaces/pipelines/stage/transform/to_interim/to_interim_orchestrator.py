@@ -1,7 +1,7 @@
 
 
-from pipelines.shared.interfaces.pipelines.stage.transform.to_interim.to_interim_workers import ToInterimWorkersInterface
 from pipelines.shared.context import PipelineContext
+from pipelines.shared.interfaces.pipelines.stage.transform.to_interim.to_interim_workers import ToInterimWorkersInterface
 
 from abc import ABC, abstractmethod
 

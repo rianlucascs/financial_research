@@ -1,7 +1,7 @@
 
 
-from pipelines.shared.interfaces.pipelines.stage.load.loader_workers import LoaderWorkersInterface
 from pipelines.shared.context import PipelineContext
+from pipelines.shared.interfaces.pipelines.stage.load.loader_workers import LoaderWorkersInterface
 
 from abc import ABC, abstractmethod
 

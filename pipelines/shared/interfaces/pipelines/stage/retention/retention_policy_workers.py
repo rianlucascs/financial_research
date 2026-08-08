@@ -11,8 +11,8 @@ Notas:
 """
 
 
-from pipelines.shared.checkpoint_writer_mixin import CheckpointWriterMixin
 from pipelines.shared.context import PipelineContext
+from pipelines.shared.checkpoint_writer_mixin import CheckpointWriterMixin
 from pipelines.shared.interfaces.stage_interface import RawData, StageTypes
 
 from abc import ABC, abstractmethod
