@@ -32,7 +32,7 @@ class ToInterimOrchestratorInterface(ABC):
     
     
     @abstractmethod
-    def _build_workers(self, ctx: PipelineContext) -> list[ToInterimWorkersInterface]:
+    def _build_workers(self) -> list[ToInterimWorkersInterface]:
         """
         Método responsável por construir os workers de to_interim.
         """

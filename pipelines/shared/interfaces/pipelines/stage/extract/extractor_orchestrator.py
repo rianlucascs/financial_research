@@ -32,7 +32,7 @@ class ExtractorOrchestratorInterface(ABC):
         
     
     @abstractmethod
-    def _build_workers(self, ctx: PipelineContext) -> list[ExtractorWorkersInterface]:
+    def _build_workers(self) -> list[ExtractorWorkersInterface]:
         """
         Método responsável por construir os workers de extração.
         """

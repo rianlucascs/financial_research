@@ -32,7 +32,7 @@ class ToProcessedOrchestratorInterface(ABC):
     
     
     @abstractmethod
-    def _build_workers(self, ctx: PipelineContext) -> list[ToProcessedWorkersInterface]:
+    def _build_workers(self) -> list[ToProcessedWorkersInterface]:
         """
         Método responsável por construir os workers de to_processed.
         """

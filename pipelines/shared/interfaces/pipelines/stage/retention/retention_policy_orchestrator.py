@@ -32,7 +32,7 @@ class RetentionPolicyOrchestratorInterface(ABC):
 
 
     @abstractmethod
-    def _build_workers(self, ctx: PipelineContext) -> list[RetentionPolicyWorkersInterface]:
+    def _build_workers(self) -> list[RetentionPolicyWorkersInterface]:
         """
         Método responsável por construir os workers de retenção.
         """

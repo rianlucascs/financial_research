@@ -31,7 +31,7 @@ class ComparatorOrchestratorInterface(ABC):
     
     
     @abstractmethod
-    def _build_workers(self, ctx: PipelineContext) -> list[ComparatorWorkersInterface]:
+    def _build_workers(self) -> list[ComparatorWorkersInterface]:
         """
         Método responsável por construir os workers de comparação.
         """

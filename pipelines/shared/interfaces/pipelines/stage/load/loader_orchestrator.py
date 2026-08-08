@@ -32,7 +32,7 @@ class LoaderOrchestratorInterface(ABC):
 
 
     @abstractmethod
-    def _build_workers(self, ctx: PipelineContext) -> list[LoaderWorkersInterface]:
+    def _build_workers(self) -> list[LoaderWorkersInterface]:
         """
         Método responsável por construir os workers de carga.
         """
