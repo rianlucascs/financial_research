@@ -62,7 +62,7 @@ class ExtractorWorkerB(ExtractorWorkersInterface):
 
     def _step_dynamic_folder(self, step: Step, zipname: str) -> str:
         """Cada zipname contem um chekpoint diferente, então o nome do arquivo de checkpoint é dinâmico"""
-        return f"{step.value}/{zipname}"
+        return str(step) + "/" + zipname
     
     
     def _worker(self, ctx: PipelineContext) -> None:
@@ -139,3 +139,8 @@ class ExtractorWorkerB(ExtractorWorkersInterface):
                 )
                 
                 self.logger.error(f"Arquivo ZIP '{filename}' não encontrado no caminho '{raw_zip_path}'")
+                
+
+if __name__ == "__main__":
+    worker = ExtractorWorkerB(pipeline="cvm_formulario_demonstracoes_financeiras_padronizadas")
+    worker.main(ctx=PipelineContext())
