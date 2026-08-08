@@ -1,6 +1,5 @@
 
 
-
 from pipelines.shared.interfaces.pipelines.stage.extract.extractor_workers import ExtractorWorkersInterface
 from pipelines.shared.context import PipelineContext
 from pipelines.shared.checkpoint_values import Stage, Step, Status, FailurePoint, Severity
