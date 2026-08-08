@@ -161,14 +161,14 @@ class ToInterimWorkerA(ToInterimWorkersInterface):
         raw_csv_path = ctx.build_raw_path(current_snapshot_path(self.pipeline), subdir_format="csv")
         interim_parquet_path = ctx.prepare_transformed_path(current_snapshot_path(self.pipeline), subdir_stage="to_interim", subdir_format="parquet")
         
-        clear_directory(interim_parquet_path, logger=self.logger)
+        clear_directory(interim_parquet_path, logger=self.logger, remove_root=False)
         
-        for file_name in listdir(raw_csv_path):
+        for filename in listdir(raw_csv_path):
             
-            if file_name.endswith(".csv"):
+            if filename.endswith(".csv"):
                 
-                raw_file_path = raw_csv_path / file_name
-                interim_file_path = interim_parquet_path / file_name.replace('.csv', '.parquet')
+                raw_file_path = raw_csv_path / filename
+                interim_file_path = interim_parquet_path / filename.replace('.csv', '.parquet')
 
                 df = self._read_raw_csv(raw_file_path)
                 
@@ -177,12 +177,14 @@ class ToInterimWorkerA(ToInterimWorkersInterface):
                 df, dict_cast_failed_vl_conta = self._cast_column_vl_conta(df)
 
                 df.to_parquet(interim_file_path, index=False, engine="pyarrow")
-            
+
+                _filename = filename.removesuffix('.csv')
+                
                 self._write_checkpoint(
                     ctx=ctx,
                     stage=Stage.TO_INTERIM,
                     step=Step.PARSE,
-                    filename=f"to_interim_worker_a.success.{file_name.removesuffix('.csv')}.json",
+                    filename=f"to_interim_worker_a.success.{_filename}.json",
                     status=Status.SUCCESSFUL,
                     source="cvm_formulario_demonstracoes_financeiras_padronizadas",
                     extra={

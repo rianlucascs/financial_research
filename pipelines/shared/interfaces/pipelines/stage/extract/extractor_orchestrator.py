@@ -18,7 +18,7 @@ class ExtractorOrchestratorInterface(ABC):
     """
     
     
-    process: str # subclasse deve declarar (ex: process = "extractor_orchestrator_a")
+    process: str # subclasse deve declarar (ex: process = "extractor_orchestrator")
     
     
     def __init__(

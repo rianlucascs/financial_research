@@ -18,7 +18,7 @@ class ToInterimOrchestratorInterface(ABC):
     """
     
     
-    process: str # subclasse deve declarar (ex: process = "to_interim_orchestrator_a")
+    process: str # subclasse deve declarar (ex: process = "to_interim_orchestrator")
     
     
     def __init__(

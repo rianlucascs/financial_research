@@ -18,7 +18,7 @@ class LoaderOrchestratorInterface(ABC):
     """
 
 
-    process: str # subclasse deve declarar (ex: process = "loader_orchestrator_a")
+    process: str # subclasse deve declarar (ex: process = "loader_orchestrator")
 
 
     def __init__(

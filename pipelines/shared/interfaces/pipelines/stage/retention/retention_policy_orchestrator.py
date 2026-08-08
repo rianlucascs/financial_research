@@ -18,7 +18,7 @@ class RetentionPolicyOrchestratorInterface(ABC):
     """
     
     
-    process: str # subclasse deve declarar (ex: process = "retention_policy_orchestrator_a")
+    process: str # subclasse deve declarar (ex: process = "retention_policy_orchestrator")
 
 
     def __init__(

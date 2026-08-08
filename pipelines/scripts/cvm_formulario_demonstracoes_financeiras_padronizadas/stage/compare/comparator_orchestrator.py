@@ -6,10 +6,10 @@ from pipelines.scripts.cvm_formulario_demonstracoes_financeiras_padronizadas.sta
 from pipelines.shared.context import PipelineContext
 
 
-class ComparatorOrchestratorInterface(ComparatorOrchestratorInterface):
+class ComparatorOrchestrator(ComparatorOrchestratorInterface):
     
     
-    process: str # subclasse deve declarar (ex: process = "comparator_orchestrator_a")
+    process: str = "comparator_orchestrator"
 
 
     def __init__(

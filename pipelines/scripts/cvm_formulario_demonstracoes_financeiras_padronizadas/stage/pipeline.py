@@ -5,7 +5,9 @@ from pipelines.scripts.cvm_formulario_demonstracoes_financeiras_padronizadas.sta
 from pipelines.scripts.cvm_formulario_demonstracoes_financeiras_padronizadas.stage.transform.to_iterim.to_interim_orchestrator import ToInterimOrchestrator
 from pipelines.scripts.cvm_formulario_demonstracoes_financeiras_padronizadas.stage.transform.to_processed.to_processed_orchestrator import ToProcessedOrchestrator
 from pipelines.scripts.cvm_formulario_demonstracoes_financeiras_padronizadas.stage.load.loader_orchestrator import LoaderOrchestrator
+from pipelines.scripts.cvm_formulario_demonstracoes_financeiras_padronizadas.stage.compare.comparator_orchestrator import ComparatorOrchestrator
 from pipelines.scripts.cvm_formulario_demonstracoes_financeiras_padronizadas.stage.retention.retention_policy_orchestrator import RetentionPolicyOrchestrator
+
 
 
 class PipelineTemplate(PipelineInterface):
@@ -30,6 +32,10 @@ class PipelineTemplate(PipelineInterface):
 		return LoaderOrchestrator(pipeline=self.pipeline)
 
 
+	def build_comparator_orchestrator(self) -> ComparatorOrchestrator:
+		return ComparatorOrchestrator(pipeline=self.pipeline)
+
+ 
 	def build_retention_policy_orchestrator(self) -> RetentionPolicyOrchestrator:
 		return RetentionPolicyOrchestrator(pipeline=self.pipeline)
 

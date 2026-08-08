@@ -18,7 +18,7 @@ class ToProcessedOrchestratorInterface(ABC):
     """
     
     
-    process: str # subclasse deve declarar (ex: process = "to_processed_orchestrator_a")
+    process: str # subclasse deve declarar (ex: process = "to_processed_orchestrator")
     
     
     def __init__(

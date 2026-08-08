@@ -81,15 +81,15 @@ class PipelineContext:
     
     def build_transformed_path(self, pipeline: str, subdir_stage: Literal["to_interim", "to_processed"], 
                                subdir_format: Literal["csv", "html", "text"] | None = None) -> Path:
-        """Constrói o caminho para o diretório ``transformed`` de um pipeline.
+        """Constrói o caminho para o diretório ``transform`` de um pipeline.
         
         Returns:
-            pipelines/data/<pipeline>/transformed/<subdir_stage>/`<subdir_format>`
+            pipelines/data/<pipeline>/transform/<subdir_stage>/`<subdir_format>`
             ou
-            pipelines/data/<pipeline>/transformed/<subdir_stage> quando subdir_format é None.
+            pipelines/data/<pipeline>/transform/<subdir_stage> quando subdir_format é None.
         """
         
-        base = self.data_dir / pipeline / "transformed"
+        base = self.data_dir / pipeline / "transform"
         
         if subdir_stage not in ["to_interim", "to_processed"]:
             raise ValueError(f"subdir_stage must be 'to_interim' or 'to_processed', got '{subdir_stage}'")
@@ -151,10 +151,10 @@ class PipelineContext:
 
     def prepare_transformed_path(self, pipeline: str, subdir_stage: Literal["to_interim", "to_processed"], 
                                  subdir_format: Literal["csv", "html", "text", "parquet"] | None = None) -> Path:
-        """Prepara o diretório ``transformed`` de um pipeline.
+        """Prepara o diretório ``transform`` de um pipeline.
 
         Returns:
-            O caminho para o diretório ``transformed`` preparado.
+            O caminho para o diretório ``transform`` preparado.
         """
         
         path = self.build_transformed_path(pipeline, subdir_stage, subdir_format)

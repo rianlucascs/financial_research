@@ -17,7 +17,7 @@ from abc import ABC, abstractmethod
 class ComparatorOrchestratorInterface(ABC):
     
     
-    process: str # subclasse deve declarar (ex: process = "comparator_orchestrator_a")
+    process: str # subclasse deve declarar (ex: process = "comparator_orchestrator")
 
 
     def __init__(

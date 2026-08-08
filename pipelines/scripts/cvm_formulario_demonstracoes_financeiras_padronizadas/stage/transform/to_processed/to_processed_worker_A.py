@@ -48,7 +48,7 @@ class ToProcessedWorkerA(ToProcessedWorkersInterface):
             processed_parquet_path = ctx.prepare_transformed_path(current_snapshot_path(self.pipeline), subdir_stage="to_processed", subdir_format="parquet")
             parquet_file_path = processed_parquet_path / filename
             
-            remove_file(parquet_file_path, logger=self.logger)
+            remove_file(parquet_file_path, logger=self.logger, remove_root=False)
             
             df = DataFrame()
             
