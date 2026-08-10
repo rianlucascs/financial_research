@@ -9,11 +9,6 @@ Tipos de dado entre estágios (a ordem real depende do Pipeline):
     ProcessedData -> dado com regra de negócio aplicada, pronto para carga.
     LoadData      -> dado final preparado para escrita no destino.
     SnapshotDrift -> delta entre snapshots (added, removed, changed).  
-
-Regra de ouro: cada Stage concreta declara explicitamente, via Generic,
-qual tipo ela aceita (TIn) e qual tipo ela produz (TOut). Isso permite
-que um type checker (mypy/pyright) acuse erro se você montar a lista
-de stages fora de ordem.
 """
 
 
@@ -30,6 +25,7 @@ class RawData:
     Não deve ser modificado após criado (frozen). Serve como registro
     para auditoria e reprocessamento sem precisar re-extrair da fonte.
     """
+    
     df: DataFrame
     
     
@@ -43,6 +39,7 @@ class InterimData:
     NÃO contém: agregações, joins, cálculo de indicadores, ou qualquer
     regra que dependa de conhecimento de negócio.
     """
+    
     df: DataFrame
     
 
@@ -53,6 +50,7 @@ class ProcessedData:
     Contém: agregações, joins entre fontes, indicadores calculados,
     enriquecimento com metadados. Pronto para load no destino final.
     """
+    
     df: DataFrame
     
     
@@ -63,6 +61,7 @@ class LoadData:
     Contém: DataFrame com dados finais, pronto para ser carregado
     no banco de dados ou outro destino.
     """
+    
     df: DataFrame
 
 
@@ -77,6 +76,7 @@ class SnapshotDrift:
         `removed` (DataFrame): Linhas que estão no DataFrame antigo, mas não no novo.
         `changed` (DataFrame): Linhas que estão em ambos os DataFrames, mas com valores diferentes.
     """
+    
     added: DataFrame
     removed: DataFrame
     changed: DataFrame
