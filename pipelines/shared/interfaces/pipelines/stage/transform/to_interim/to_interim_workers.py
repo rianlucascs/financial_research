@@ -13,7 +13,7 @@ Notas:
 
 
 from pipelines.shared.context import PipelineContext
-from pipelines.shared.interfaces.stage_interface import StageTypes, RawData, InterimData
+from pipelines.shared.interfaces.pipelines.stage_interface import StageTypes, RawData, InterimData
 from pipelines.shared.checkpoint_writer_mixin import CheckpointWriterMixin
 
 from abc import ABC, abstractmethod
