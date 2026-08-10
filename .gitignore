@@ -73,3 +73,5 @@ notebooks_tests
 
 # Ignore estrategias folder
 quant/
+
+docs/
