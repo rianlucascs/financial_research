@@ -8,7 +8,7 @@ Tipos de dado entre estágios (a ordem real depende do Pipeline):
                      sem regra de negócio.
     ProcessedData -> dado com regra de negócio aplicada, pronto para carga.
     LoadData      -> dado final preparado para escrita no destino.
-    SnapshotDrift -> delta entre snapshots (added, removed, changed).
+    SnapshotDrift -> delta entre snapshots (added, removed, changed).  
 
 Regra de ouro: cada Stage concreta declara explicitamente, via Generic,
 qual tipo ela aceita (TIn) e qual tipo ela produz (TOut). Isso permite
