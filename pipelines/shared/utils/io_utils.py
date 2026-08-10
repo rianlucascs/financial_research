@@ -12,9 +12,9 @@ def remove_file(zip_path: Path, logger) -> None:
             
             zip_path.unlink(missing_ok=True)
         
-        else:
+        # else:
             
-            logger.info(f"O arquivo ZIP {zip_path} não existe. Nenhuma ação necessária.")
+        #     logger.info(f"O arquivo ZIP {zip_path} não existe. Nenhuma ação necessária.")
         
     except Exception as e:
         
