@@ -84,10 +84,10 @@ class SnapshotDrift:
 
 TIn = TypeVar("TIn")
 TOut = TypeVar("TOut")
-
-
-class StageInterface(Generic[TIn, TOut], ABC):
-    """Contrato genérico de uma etapa do pipeline.
+        
+        
+class StageTypes(Generic[TIn, TOut]):
+    """Apenas marca TIn/TOut para leitura humana e type checker. Sem contrato de execução.
 
     TIn  = tipo de dado que esta Stage espera receber.
     TOut = tipo de dado que esta Stage produz.
@@ -95,12 +95,4 @@ class StageInterface(Generic[TIn, TOut], ABC):
     A primeira Stage da lista (extract) tem TIn = None, pois não
     recebe dado de nenhuma etapa anterior.
     """
-
-    @abstractmethod
-    def main(self, data: TIn) -> TOut:
-        ...
-        
-        
-class StageTypes(Generic[TIn, TOut]):
-    """Apenas marca TIn/TOut para leitura humana e type checker. Sem contrato de execução."""
 
