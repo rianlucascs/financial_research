@@ -35,7 +35,17 @@ class ToProcessedWorkerA(ToProcessedWorkersInterface):
     ) -> None:
         
         super().__init__(pipeline=pipeline)
-
+    
+    
+    def _add_derived_columns(self, df: DataFrame) -> DataFrame:
+        
+        df["ORIGEM_FORMULARIO"] = "DFP"
+        
+        if ("DT_INI_EXERC" in df.columns) and ("DT_FIM_EXERC" in df.columns):
+            df["INTERVALO_EXERC"] = (df["DT_FIM_EXERC"] - df["DT_INI_EXERC"]).dt.days
+            
+        return df
+    
 
     def _worker(self, ctx: PipelineContext) -> None:
         
@@ -59,6 +69,7 @@ class ToProcessedWorkerA(ToProcessedWorkersInterface):
                 interim_file_path = interim_parquet_path / f"dfp_cia_aberta_{demonstration_code}_{year}.parquet"
                 
                 df_interim = read_parquet(interim_file_path, engine="pyarrow")
+                df_interim = self._add_derived_columns(df_interim)
                 
                 df = concat([df, df_interim])
 
