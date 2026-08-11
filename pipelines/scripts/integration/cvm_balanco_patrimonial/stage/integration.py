@@ -7,7 +7,7 @@ from pipelines.scripts.integration.cvm_balanco_patrimonial.stage.integration_set
 from pipelines.scripts.integration.cvm_balanco_patrimonial.stage.loader_workers import LoaderWorkers
 
 from datetime import date
-
+import gc
 
 class Integration(IntegrationInterface):
     
@@ -44,6 +44,9 @@ class Integration(IntegrationInterface):
             ]
         
             dataframes = [worker.main(self.ctx) for worker in workers]
+            
+            del dataframes
+            gc.collect()
         
 
 def main(env: str = "dev", run_id: str | None = None):

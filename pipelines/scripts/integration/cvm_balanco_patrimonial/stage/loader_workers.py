@@ -10,7 +10,7 @@ Notas:
 """
 
 
-from pipelines.shared.interfaces.integration.stage.load.loader_workers import LoaderWorkersInterface
+from pipelines.shared.interfaces.integration.stage.loader_workers import LoaderWorkersInterface
 
 
 class LoaderWorkers(LoaderWorkersInterface):
