@@ -1,6 +1,5 @@
 
 
-
 from dataclasses import dataclass
 from pathlib import Path
 import os
@@ -11,6 +10,8 @@ from logging.handlers import RotatingFileHandler
 from typing import Literal
 from pandas import NA, NaT
 from numpy import generic
+from datetime import date
+
 
 @dataclass
 class PipelineContext:
@@ -80,7 +81,7 @@ class PipelineContext:
         
     
     def build_transformed_path(self, pipeline: str, subdir_stage: Literal["to_interim", "to_processed"], 
-                               subdir_format: Literal["csv", "html", "text"] | None = None) -> Path:
+                               subdir_format: Literal["csv", "html", "text", "zip", "parquet"] | None = None) -> Path:
         """Constrói o caminho para o diretório ``transform`` de um pipeline.
         
         Returns:
@@ -248,7 +249,22 @@ class PipelineContext:
             
         tmp_file.replace(checkpoint_file)
             
-    
+            
+    def current_snapshot_path(self, pipeline: str, current_date: str | None = None) -> Path:
+        """Retorna o caminho do snapshot atual.
+        
+        Pode-se passar a data do snapshot atual como string no formato YYYY-MM-DD. Se não for passado, será usado o dia atual.
+        
+        Returns:
+            Path(pipeline) / date.today().strftime("%Y-%m-%d"): Caminho do snapshot atual.
+        """
+        
+        if current_date is None:
+            current_date = date.today().strftime("%Y-%m-%d")
+            
+        return Path(pipeline) / current_date
+
+
     def configure_logging(self, pipeline: str, process: str, level: int = logging.INFO,
                           max_bytes: int = 5 * 1024 * 1024, backup_count: int = 5):
         """Configura o logger para o pipeline/processo atual."""
@@ -284,3 +300,4 @@ class PipelineContext:
         self.logger = logger
         
         return logger
+    

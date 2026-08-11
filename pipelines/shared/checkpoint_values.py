@@ -45,6 +45,7 @@ class Step(str, Enum):
     UNZIP = "unzip"
     CONCATENATE = "concatenate"
     DB_CREATE = "db_create"
+    READER = "reader"
     
 
 class Status(str, Enum):
