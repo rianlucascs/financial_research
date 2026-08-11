@@ -39,7 +39,7 @@ class ToProcessedWorkerA(ToProcessedWorkersInterface):
     
     def _add_derived_columns(self, df: DataFrame) -> DataFrame:
         
-        df["ORIGEM_FORMULARIO"] = "ITR"
+        df["ORIGEM_FORMULARIO"] = "ITR" 
         
         if ("DT_INI_EXERC" in df.columns) and ("DT_FIM_EXERC" in df.columns):
             df["INTERVALO_EXERC"] = (df["DT_FIM_EXERC"] - df["DT_INI_EXERC"]).dt.days
