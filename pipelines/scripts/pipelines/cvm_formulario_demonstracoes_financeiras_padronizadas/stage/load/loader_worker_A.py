@@ -18,6 +18,7 @@ from pipelines.scripts.pipelines.cvm_formulario_demonstracoes_financeiras_padron
 
 import sqlite3
 from pandas import read_parquet
+import gc
 
 
 class LoaderWorkerA(LoaderWorkersInterface):
@@ -66,6 +67,9 @@ class LoaderWorkerA(LoaderWorkersInterface):
                         "db_path": str(db_path),
                     },
                 )
+                
+                del df_processed
+                gc.collect()
                 
             finally:
             

@@ -1,8 +1,9 @@
+from pandas import DataFrame
 
 from context import PipelineContext
 
 
-def test_pipeline_context():    
+def test_pipeline_context():
     ctx = PipelineContext()
     assert ctx.project_root.name == "financial_research"
     assert ctx.pipelines_dir.name == "pipelines"
@@ -11,6 +12,3 @@ def test_pipeline_context():
     assert ctx.state_dir.name == "state"
 
 
-
-if __name__ == "__main__":
-    test_pipeline_context()

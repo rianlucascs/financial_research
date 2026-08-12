@@ -56,6 +56,7 @@ class PipelineContext:
         
         self.data_dir = self.pipelines_dir / "data"
         self.historical_data_dir = self.pipelines_dir / "historical_data"
+        self.integration_data = self.pipelines_dir / "integration_data"
         self.logs_dir = self.pipelines_dir / "logs"
         self.state_dir = self.pipelines_dir / "state"
         self.checkpoints_dir = self.pipelines_dir / "checkpoints"
@@ -227,15 +228,6 @@ class PipelineContext:
         path.mkdir(parents=True, exist_ok=True)
         
         return path
-
-
-    def _json_default(self, o):
-        """Converte tipos numpy/pandas para tipos nativos do Python antes de serializar."""
-        if o is NA or o is NaT:
-            return None
-        if isinstance(o, generic):
-            return o.item()
-        raise TypeError(f'Object of type {o.__class__.__name__} is not JSON serializable')
 
     
     def write_checkpoint(self, pipeline: str, stage: str, step: str, filename: str, data: dict) -> None:

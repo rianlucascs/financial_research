@@ -11,8 +11,7 @@ from typing import Any
 class CheckpointWriterMixin:
     
     
-    pipeline: str | None = None
-    integration: str | None = None
+    pipeline: str 
     logger: Logger | None = None
 
 
@@ -31,13 +30,10 @@ class CheckpointWriterMixin:
         extra: dict[str, Any] | None = None,
     ) -> None:
 
-        if self.pipeline is None and self.integration is None:
-            raise ValueError("Atributo 'pipeline' ou 'integration' deve ser definido na classe que herda CheckpointWriterMixin.")
-        
         try:
 
             payload = build_checkpoint_payload(
-                pipeline=self.pipeline or self.integration,
+                pipeline=self.pipeline,
                 stage=stage,
                 step=step,
                 status=status,

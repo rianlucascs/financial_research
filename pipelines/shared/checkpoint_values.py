@@ -15,7 +15,8 @@ SCHEMA_VERSION = "v3"
 class Stage(str, Enum):
     """Estágios do pipeline.
 
-    Opções: `EXTRACT`, `TRANSFORM`, `TO_INTERIM`, `TO_PROCESSED`, `LOAD`, `QUALITY`, `PUBLISH`, `RETENTION`.
+    Opções: `EXTRACT`, `TRANSFORM`, `TO_INTERIM`, `TO_PROCESSED`, `LOAD`, `QUALITY`, `PUBLISH`, `RETENTION`,
+    `COMPARE`, `VALIDATION`, `INTEGRATION`.
     """
 
     EXTRACT = "extract"
@@ -27,12 +28,15 @@ class Stage(str, Enum):
     PUBLISH = "publish"
     RETENTION = "retention"
     COMPARE = "compare"
+    VALIDATION = "validation"
+    INTEGRATION = "integration"
 
 
 class Step(str, Enum):
     """Etapas de execução dentro de um estágio.
 
-    Opções: `DOWNLOAD`, `PARSE`, `TRANSFORM`, `UPLOAD`, `VALIDATE`, `PUBLISH`, `CLEANUP`, `UNZIP`, `CONCATENATE`.
+    Opções: `DOWNLOAD`, `PARSE`, `TRANSFORM`, `UPLOAD`, `VALIDATE`, `PUBLISH`, `CLEANUP`, `UNZIP`, `CONCATENATE`,
+    `DB_CREATE`, `READER`, `CHECKER`, `JOINER_WORKERS`.
     """
 
     DOWNLOAD = "download"
@@ -46,13 +50,16 @@ class Step(str, Enum):
     CONCATENATE = "concatenate"
     DB_CREATE = "db_create"
     READER = "reader"
+    CHECKER = "checker"
+    JOINER_WORKERS = "joiner_workers"
     
 
 class Status(str, Enum):
     """Status de execução de um checkpoint.
 
     Opções: `SUCCESSFUL`, `FAILED`, `NO_FILE_DETECTED`, `DRIVER_ERROR`, `PENDING`,
-    `RUNNING`, `PARTIAL_SUCCESS`, `SKIPPED`, `RETRYING`, `TIMEOUT`, `CANCELLED`.
+    `RUNNING`, `PARTIAL_SUCCESS`, `SKIPPED`, `RETRYING`, `TIMEOUT`, `CANCELLED`,
+    `WARNING`.
     """
 
     SUCCESSFUL = "successful"
@@ -66,6 +73,7 @@ class Status(str, Enum):
     RETRYING = "retrying"
     TIMEOUT = "timeout"
     CANCELLED = "cancelled"
+    WARNING = "warning"
 
 
 class FailurePoint(str, Enum):

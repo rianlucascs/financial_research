@@ -137,26 +137,36 @@ class ComparatorWorkerA(ComparatorWorkersInterface):
                 
                 previous_df = self._read_snapshot_parquet(ctx, previous_snapshot, filename)
                 current_df = self._read_snapshot_parquet(ctx, current_snapshot, filename)
-                
-                added = self._find_added_rows(previous_df, current_df)
-                removed = self._find_removed_rows(previous_df, current_df)
-                changed = self._find_changed_rows(previous_df, current_df)
-                
-                if not (added.empty and removed.empty and changed.empty):
-                    
-                    filename_folder_path = prepare_snapshot_drift_path / filename.removesuffix(".parquet")
-                    filename_folder_path.mkdir(parents=True, exist_ok=True) 
+
+                filename_folder_path = prepare_snapshot_drift_path / filename.removesuffix(".parquet")
+                filename_folder_path.mkdir(parents=True, exist_ok=True) 
                 
                 _filename = filename.removesuffix(".parquet")
                 
+                added = self._find_added_rows(previous_df, current_df)
                 if not added.empty:
                     added.to_parquet(filename_folder_path / f"{_filename}_added.parquet", engine="pyarrow", index=False)
-                
+                    len_added_rows = len(added)
+                    del added
+                    gc.collect()
+                    
+                removed = self._find_removed_rows(previous_df, current_df)
                 if not removed.empty:
                     removed.to_parquet(filename_folder_path / f"{_filename}_removed.parquet", engine="pyarrow", index=False)
+                    len_removed_rows = len(removed)
+                    del removed
+                    gc.collect()
                 
+                changed = self._find_changed_rows(previous_df, current_df)
                 if not changed.empty:
                     changed.to_parquet(filename_folder_path / f"{_filename}_changed.parquet", engine="pyarrow", index=False)
+                    len_changed_rows = len(changed)
+                    del changed
+                    gc.collect()
+
+                del previous_df
+                del current_df
+                gc.collect()
                     
                 self._write_checkpoint(
                     ctx=ctx,
@@ -172,14 +182,11 @@ class ComparatorWorkerA(ComparatorWorkersInterface):
                         "common_files": list(common_files),
                         "only_in_previous": list(only_in_previous),
                         "only_in_current": list(only_in_current),
-                        "len_added_rows": len(added),
-                        "len_removed_rows": len(removed),
-                        "len_changed_rows": len(changed),
+                        "len_added_rows": len_added_rows,
+                        "len_removed_rows": len_removed_rows,
+                        "len_changed_rows": len_changed_rows,
                     }
                 )
-                
-                del previous_df, current_df, added, removed, changed
-                gc.collect()
         
             except Exception as e:
                 

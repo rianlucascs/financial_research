@@ -61,6 +61,11 @@ pipelines/historical_data/**
 !pipelines/historical_data/**/
 !pipelines/historical_data/**/.gitkeep
 
+pipelines/integration_data/**
+!pipelines/integration_data/**/
+!pipelines/integration_data/**/.gitkeep
+
+
 
 # Arquivos locais não versionados
 notas.txt
