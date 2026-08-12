@@ -56,7 +56,6 @@ class PipelineContext:
         
         self.data_dir = self.pipelines_dir / "data"
         self.historical_data_dir = self.pipelines_dir / "historical_data"
-        self.integration_data = self.pipelines_dir / "integration_data"
         self.logs_dir = self.pipelines_dir / "logs"
         self.state_dir = self.pipelines_dir / "state"
         self.checkpoints_dir = self.pipelines_dir / "checkpoints"
