@@ -1,12 +1,26 @@
+"""
+reader_logs.py
 
+Responsabilidades:
+    - Listar diretórios de logs de pipelines.
+    - Listar arquivos de logs no diretório de logs mais recente.
+    - Leitura de logs de pipelines.
+"""
 
-from typing import Literal
 
 from pipelines.shared.context import PipelineContext
+
+from typing import Literal
 from pathlib import Path
 
 
 class ReaderLogs:
+    """
+    Classe para leitura de logs de pipelines.
+    
+    Attributes:
+        pipeline (str): Nome do pipeline para o qual os logs serão lidos.
+    """
     
     
     def __init__(
@@ -70,7 +84,7 @@ class ReaderLogs:
                            "retention_policy_orchestrator", "retention_policy_worker_a", "retention_policy_worker_b"
                         ] | None = None
         ) -> str:
-        
+        """Lê o conteúdo de um arquivo de log específico no diretório de log mais recente para o pipeline especificado."""
         
         for log_file in self._list_latest_log_files():
             
@@ -82,8 +96,6 @@ class ReaderLogs:
         
         raise FileNotFoundError(f"Nenhum arquivo de log encontrado com o nome '{log_file_name}' no diretório de logs mais recente.")
         
-    
-
 
 if __name__ == "__main__":
     
