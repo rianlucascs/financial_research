@@ -4,15 +4,7 @@ from typing import Literal
 
 from pipelines.shared.context import PipelineContext
 from pathlib import Path
-from dataclasses import dataclass
 
-
-@dataclass
-class LogIdentifier:
-    
-    log_id: str | None = None
-    stage: str | None = None
-    
 
 class ReaderLogs:
     
