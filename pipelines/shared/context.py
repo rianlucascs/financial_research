@@ -114,14 +114,20 @@ class PipelineContext:
         return self.data_dir / pipeline / "load"
     
     
-    def build_logs_path(self, pipeline: str) -> Path:
+    def build_logs_path(self, pipeline: str, run_id: str | None = None) -> Path:
         """Constrói o caminho para o diretório ``logs`` de um pipeline.
+        
+        - Se ``run_id`` for None, será usado o run_id do contexto atual.
+        - Se ``run_id`` for fornecido, será usado o run_id fornecido.
         
         Returns:
             pipelines/logs/<pipeline>
         """
         
-        return self.logs_dir / pipeline / self.run_id
+        if run_id is None:
+            return self.logs_dir / pipeline / self.run_id
+        
+        return self.logs_dir / pipeline / run_id
     
     
     def build_snapshot_drift_path(self, pipeline: str, subdir: str | None = None) -> Path:

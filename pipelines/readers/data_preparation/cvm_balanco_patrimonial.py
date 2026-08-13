@@ -24,7 +24,7 @@ class AccountIdentifier:
 
 class CVMDataValidator:
 
-
+ 
     @staticmethod
     def validate_equity(search_equity: EquityIdentifier) -> None:
         if not any([search_equity.denom_cia, search_equity.cnpj_cia, search_equity.cd_cvm]):
@@ -97,8 +97,7 @@ class DemonstrationValueAggregator:
         mask_dfp = df["ORIGEM_FORMULARIO"] == "DFP"
 
         df.loc[mask_dfp, "VL_CONTA_TRI"] = (
-            df.loc[mask_dfp, "VL_CONTA"]
-            - df.loc[mask_dfp, "VL_CONTA_ACUMULADO"]
+            df.loc[mask_dfp, "VL_CONTA"] - df.loc[mask_dfp, "VL_CONTA_ACUMULADO"]
         )
 
         return df.drop(columns=["VL_CONTA_ACUMULADO"])
