@@ -18,7 +18,9 @@ from pipelines.shared.utils.io_utils import remove_file
 from pipelines.scripts.pipelines.cvm_formulario_demonstracoes_financeiras_padronizadas.stage.pipeline_settings import current_snapshot_path, demonstration_codes
 
 from datetime import date
-from pandas import DataFrame, read_parquet, concat
+from pandas import DataFrame, read_parquet
+import pyarrow.parquet as pq
+import pyarrow as pa
 import gc
 
 
@@ -51,33 +53,62 @@ class ToProcessedWorkerA(ToProcessedWorkersInterface):
         
         current_year = date.today().year
         
+        processed_parquet_path = ctx.prepare_transformed_path(current_snapshot_path(self.pipeline), subdir_stage="to_processed", subdir_format="parquet")
+        interim_parquet_path = ctx.build_transformed_path(current_snapshot_path(self.pipeline), subdir_stage="to_interim", subdir_format="parquet")
+        
         for demonstration_code in demonstration_codes:
             
             # Monta o caminho do arquivo Parquet processado final
             filename = f"dfp_cia_aberta_{demonstration_code}_2011-{current_year}.parquet"
-            processed_parquet_path = ctx.prepare_transformed_path(current_snapshot_path(self.pipeline), subdir_stage="to_processed", subdir_format="parquet")
             parquet_file_path = processed_parquet_path / filename
             
             remove_file(parquet_file_path, logger=self.logger)
             
-            df = DataFrame()
+            writer = None
             
-            for year in range(2011, current_year + 1):
+            try:
                 
-                # Monta o caminho do arquivo Parquet intermediário
-                interim_parquet_path = ctx.build_transformed_path(current_snapshot_path(self.pipeline), subdir_stage="to_interim", subdir_format="parquet")
-                interim_file_path = interim_parquet_path / f"dfp_cia_aberta_{demonstration_code}_{year}.parquet"
-                
-                df_interim = read_parquet(interim_file_path, engine="pyarrow")
-                df_interim = self._add_derived_columns(df_interim)
-                
-                df = concat([df, df_interim])
+                for year in range(2011, current_year + 1):
+                    
+                    # Monta o caminho do arquivo Parquet intermediário
+                    interim_file_path = interim_parquet_path / f"dfp_cia_aberta_{demonstration_code}_{year}.parquet"
+                    
+                    df_interim = read_parquet(interim_file_path, engine="pyarrow")
+                    
+                    if df_interim.empty:
+                        
+                        del df_interim
+                        gc.collect()
+                        
+                        self.logger.error(f"Arquivo Parquet intermediário vazio: {interim_file_path}. Pulando este arquivo.")
+                        
+                        continue
+                    
+                    df_interim = self._add_derived_columns(df_interim)
+                    
+                    table = pa.Table.from_pandas(
+                        df_interim,
+                        preserve_index=False,
+                    )
+                    
+                    del df_interim
+                    gc.collect()
+                    
+                    if writer is None:
+                        writer = pq.ParquetWriter(
+                            parquet_file_path,
+                            table.schema,
+                        )
 
-            df.to_parquet(parquet_file_path, index=False, engine="pyarrow")
-            
-            del df
-            del df_interim
-            gc.collect()
+                    writer.write_table(table)
+                    
+                    del table
+                    gc.collect()
+             
+            finally:
+                
+                if writer is not None:
+                    writer.close()
             
             self._write_checkpoint(
                 ctx=ctx,

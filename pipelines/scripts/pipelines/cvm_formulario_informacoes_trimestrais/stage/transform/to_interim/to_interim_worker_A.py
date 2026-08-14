@@ -178,7 +178,10 @@ class ToInterimWorkerA(ToInterimWorkersInterface):
                 df, dict_cast_failed_vl_conta = self._cast_column_vl_conta(df)
 
                 df.to_parquet(interim_file_path, index=False, engine="pyarrow")
-
+                
+                del df
+                gc.collect()
+                
                 _filename = filename.removesuffix('.csv')
                 
                 self._write_checkpoint(
@@ -194,9 +197,6 @@ class ToInterimWorkerA(ToInterimWorkersInterface):
                         "cast_failed_vl_conta": dict_cast_failed_vl_conta,
                         }
                     )
-                
-                del df
-                gc.collect()
                 
                 
 if __name__ == "__main__":

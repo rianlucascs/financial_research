@@ -1,0 +1,34 @@
+x-pipeline-common: &pipeline-common
+  build:
+    context: ..
+    dockerfile: docker/Dockerfile.pipelines
+  environment:
+    - PYTHONUNBUFFERED=1
+    - PIPELINE_ENV=prod
+  volumes:
+    - ../pipelines/data:/app/pipelines/data
+    - ../pipelines/historical_data:/app/pipelines/historical_data
+    - ../pipelines/logs:/app/pipelines/logs
+    - ../pipelines/checkpoints:/app/pipelines/checkpoints
+  restart: "no"
+  tmpfs:
+    - /tmp
+  mem_limit: 7g
+  mem_reservation: 4g
+
+services:
+  cvm-itr-pipeline:
+    <<: *pipeline-common
+    container_name: cvm-itr-pipeline
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PIPELINE_NAME=cvm_formulario_informacoes_trimestrais
+      - PIPELINE_ENV=prod
+
+  cvm-dfp-pipeline:
+    <<: *pipeline-common
+    container_name: cvm-dfp-pipeline
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PIPELINE_NAME=cvm_formulario_demonstracoes_financeiras_padronizadas
+      - PIPELINE_ENV=prod

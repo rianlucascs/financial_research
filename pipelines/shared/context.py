@@ -234,6 +234,28 @@ class PipelineContext:
         
         return path
 
+
+    @staticmethod
+    def _json_default(value):
+        """Serializa tipos comuns do ecossistema pandas/numpy para JSON."""
+
+        if isinstance(value, Path):
+            return str(value)
+
+        if isinstance(value, generic):
+            return value.item()
+
+        if value is NA or value is NaT:
+            return None
+
+        if hasattr(value, "isoformat"):
+            try:
+                return value.isoformat()
+            except Exception:
+                pass
+
+        return str(value)
+
     
     def write_checkpoint(self, pipeline: str, stage: str, step: str, filename: str, data: dict) -> None:
         """Escreve um arquivo de checkpoint de um pipeline."""

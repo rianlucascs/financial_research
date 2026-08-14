@@ -82,3 +82,5 @@ quant/
 docs/
 
 teste_logica.py
+
+ystemctl list-timers --all | grep financial-research-

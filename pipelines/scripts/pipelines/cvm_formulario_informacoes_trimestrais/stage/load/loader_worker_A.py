@@ -17,7 +17,7 @@ from pipelines.shared.checkpoint_values import Stage, Step, Status
 from pipelines.scripts.pipelines.cvm_formulario_informacoes_trimestrais.stage.pipeline_settings import current_snapshot_path
 
 import sqlite3
-from pandas import read_parquet
+import pyarrow.parquet as pq
 import gc
 
 
@@ -50,8 +50,19 @@ class LoaderWorkerA(LoaderWorkersInterface):
             
             try:
                 
-                df_processed = read_parquet(parquet_path, engine="pyarrow")
-                df_processed.to_sql(name=table_name, con=conn, if_exists="replace", index=False)
+                first_batch = True
+
+                for batch in pq.ParquetFile(parquet_path).iter_batches(batch_size=50_000):
+                    df_batch = batch.to_pandas()
+                    df_batch.to_sql(
+                        name=table_name,
+                        con=conn,
+                        if_exists="replace" if first_batch else "append",
+                        index=False,
+                    )
+                    first_batch = False
+                    del df_batch
+                    gc.collect()
                 
                 conn.commit()
                 
@@ -67,9 +78,6 @@ class LoaderWorkerA(LoaderWorkersInterface):
                         "db_path": str(db_path),
                     },
                 )
-                
-                del df_processed
-                gc.collect()
                 
             finally:
             

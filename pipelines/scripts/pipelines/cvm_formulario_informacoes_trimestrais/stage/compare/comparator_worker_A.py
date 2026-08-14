@@ -20,8 +20,8 @@ from pipelines.scripts.pipelines.cvm_formulario_informacoes_trimestrais.stage.pi
 
 from datetime import date, timedelta
 from pathlib import Path
-from pandas import read_parquet
-from pandas import DataFrame
+from pandas import read_parquet, DataFrame
+import pandas as pd
 import gc
 
 
@@ -79,34 +79,28 @@ class ComparatorWorkerA(ComparatorWorkersInterface):
             )
     
     
-    def _find_added_rows(self, previous_df: DataFrame, current_df: DataFrame) -> DataFrame:
+    def _find_added_rows(self, curr_hashes: pd.Series, prev_hashes_set: set, current_indexed: DataFrame) -> DataFrame:
         """Linhas que estão no DataFrame novo, mas não no antigo."""
-        
-        return current_df[~current_df.apply(tuple, 1).isin(previous_df.apply(tuple, 1))]
+        return current_indexed[~curr_hashes.isin(prev_hashes_set).values].reset_index()
     
     
-    def _find_removed_rows(self, previous_df: DataFrame, current_df: DataFrame) -> DataFrame:
+    def _find_removed_rows(self, prev_hashes: pd.Series, curr_hashes_set: set, previous_indexed: DataFrame) -> DataFrame:
         """Linhas que estão no DataFrame antigo, mas não no novo."""
-        
-        return previous_df[~previous_df.apply(tuple, 1).isin(current_df.apply(tuple, 1))]
+        return previous_indexed[~prev_hashes.isin(curr_hashes_set).values].reset_index()
     
     
-    def _find_changed_rows(self, previous_df: DataFrame, current_df: DataFrame) -> DataFrame:
+    def _find_changed_rows(self, previous_indexed: DataFrame, current_indexed: DataFrame) -> DataFrame:
         """Linhas que estão em ambos os DataFrames, mas com valores diferentes."""
-        
-        _key_cols: list[str] = ["CD_CVM", "DT_REFER", "VERSAO", "GRUPO_DFP", "ORDEM_EXERC", "DT_FIM_EXERC", "CD_CONTA"]
-        _val_cols = [c for c in current_df.columns if c not in _key_cols]
-
-        current_indexed = current_df.set_index(_key_cols)
-        previous_indexed = previous_df.set_index(_key_cols)
-
+        _val_cols = list(current_indexed.columns)
         common_idx = current_indexed.index.intersection(previous_indexed.index)
         if common_idx.empty:
-            return current_df.iloc[:0]
+            return current_indexed.iloc[:0].reset_index()
 
         _new = current_indexed.loc[common_idx, _val_cols]
         _old = previous_indexed.loc[common_idx, _val_cols]
         _mask = ~(_new.eq(_old) | (_new.isna() & _old.isna())).all(axis=1)
+        del _new, _old
+        gc.collect()
 
         return current_indexed.loc[_mask[_mask].index].reset_index()
         
@@ -133,39 +127,56 @@ class ComparatorWorkerA(ComparatorWorkersInterface):
         
         for filename in common_files:
             
+            _filename = filename.removesuffix(".parquet")
+
+            len_added_rows, len_removed_rows, len_changed_rows = None, None, None
+            
             try:
                 
+                _key_cols = ["CD_CVM", "DT_REFER", "VERSAO", "GRUPO_DFP", "ORDEM_EXERC", "DT_FIM_EXERC", "CD_CONTA"]
+
                 previous_df = self._read_snapshot_parquet(ctx, previous_snapshot, filename)
+                prev_hashes = pd.util.hash_pandas_object(previous_df, index=False)
+                previous_indexed = previous_df.set_index(_key_cols)
+                del previous_df
+                gc.collect()
+
                 current_df = self._read_snapshot_parquet(ctx, current_snapshot, filename)
+                curr_hashes = pd.util.hash_pandas_object(current_df, index=False)
+                current_indexed = current_df.set_index(_key_cols)
+                del current_df
+                gc.collect()
 
                 filename_folder_path = prepare_snapshot_drift_path / filename.removesuffix(".parquet")
-                filename_folder_path.mkdir(parents=True, exist_ok=True) 
-                
-                _filename = filename.removesuffix(".parquet")
-                
-                added = self._find_added_rows(previous_df, current_df)
+                filename_folder_path.mkdir(parents=True, exist_ok=True)
+
+                prev_hashes_set = set(prev_hashes)
+                curr_hashes_set = set(curr_hashes)
+
+                added = self._find_added_rows(curr_hashes, prev_hashes_set, current_indexed)
+                del prev_hashes_set
                 if not added.empty:
                     added.to_parquet(filename_folder_path / f"{_filename}_added.parquet", engine="pyarrow", index=False)
                     len_added_rows = len(added)
-                    del added
-                    gc.collect()
-                    
-                removed = self._find_removed_rows(previous_df, current_df)
+                del added
+                gc.collect()
+
+                removed = self._find_removed_rows(prev_hashes, curr_hashes_set, previous_indexed)
+                del curr_hashes_set, prev_hashes, curr_hashes
                 if not removed.empty:
                     removed.to_parquet(filename_folder_path / f"{_filename}_removed.parquet", engine="pyarrow", index=False)
                     len_removed_rows = len(removed)
-                    del removed
-                    gc.collect()
-                
-                changed = self._find_changed_rows(previous_df, current_df)
+                del removed
+                gc.collect()
+
+                changed = self._find_changed_rows(previous_indexed, current_indexed)
+                del previous_indexed
+                gc.collect()
                 if not changed.empty:
                     changed.to_parquet(filename_folder_path / f"{_filename}_changed.parquet", engine="pyarrow", index=False)
                     len_changed_rows = len(changed)
-                    del changed
-                    gc.collect()
-
-                del previous_df
-                del current_df
+                del changed
+                del current_indexed
                 gc.collect()
                     
                 self._write_checkpoint(
