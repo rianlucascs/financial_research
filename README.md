@@ -41,7 +41,7 @@ A camada de Research é responsável pelo consumo e utilização dos dados produ
 | `research/` | Exploração e análise dos dados gerados pelos pipelines. |
 | `streamlit_apps/` | Consumo e visualização dos dados em interface analítica. |
 
-### **Topologia**
+# **Topologia**
 
 | Componente | Detalhe |
 |---|---|
