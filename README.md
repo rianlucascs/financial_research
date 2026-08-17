@@ -57,3 +57,4 @@ A camada de Research é responsável pelo consumo e utilização dos dados produ
 
 
 
+
