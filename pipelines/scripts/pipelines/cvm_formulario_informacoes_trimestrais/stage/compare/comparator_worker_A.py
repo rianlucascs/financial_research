@@ -11,6 +11,12 @@ Notas:
 """
 
 
+
+# Alto consumo de memória RAM, pois carrega os arquivos Parquet na memória para comparação.
+# Descontinuar o uso deste worker, pois a comparação de arquivos Parquet será feita no worker `comparator_workers_b`.
+# ------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 from pipelines.shared.context import PipelineContext
 from pipelines.shared.interfaces.pipelines.stage.compare.comparator_workers import ComparatorWorkersInterface
 from pipelines.shared.utils.io_utils import clear_directory
@@ -155,6 +161,7 @@ class ComparatorWorkerA(ComparatorWorkersInterface):
 
                 added = self._find_added_rows(curr_hashes, prev_hashes_set, current_indexed)
                 del prev_hashes_set
+                gc.collect()
                 if not added.empty:
                     added.to_parquet(filename_folder_path / f"{_filename}_added.parquet", engine="pyarrow", index=False)
                     len_added_rows = len(added)
@@ -163,6 +170,7 @@ class ComparatorWorkerA(ComparatorWorkersInterface):
 
                 removed = self._find_removed_rows(prev_hashes, curr_hashes_set, previous_indexed)
                 del curr_hashes_set, prev_hashes, curr_hashes
+                gc.collect()
                 if not removed.empty:
                     removed.to_parquet(filename_folder_path / f"{_filename}_removed.parquet", engine="pyarrow", index=False)
                     len_removed_rows = len(removed)

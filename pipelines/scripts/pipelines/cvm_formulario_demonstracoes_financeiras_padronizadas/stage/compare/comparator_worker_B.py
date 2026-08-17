@@ -1,6 +1,6 @@
 """
 Worker:
-    comparator_workers_a
+    comparator_workers_b
     
 Responsabilidades:
     ...
@@ -8,11 +8,6 @@ Responsabilidades:
 Notas:
     
 """
- 
-
-# Alto consumo de memória RAM, pois carrega os arquivos Parquet na memória para comparação.
-# Descontinuar o uso deste worker, pois a comparação de arquivos Parquet será feita no worker `comparator_workers_b`.
-# ------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 from pipelines.shared.context import PipelineContext
@@ -24,15 +19,13 @@ from pipelines.scripts.pipelines.cvm_formulario_demonstracoes_financeiras_padron
 
 from datetime import date, timedelta
 from pathlib import Path
-from pandas import read_parquet, DataFrame
-import pandas as pd
-import gc
+import duckdb
 
 
-class ComparatorWorkerA(ComparatorWorkersInterface):
+class ComparatorWorkerB(ComparatorWorkersInterface):
     
     
-    process: str = "comparator_workers_a"
+    process: str = "comparator_workers_b"
 
 
     def __init__(
@@ -75,38 +68,108 @@ class ComparatorWorkerA(ComparatorWorkersInterface):
         return to_processed_parquet_path
     
 
-    def _read_snapshot_parquet(self, ctx: PipelineContext, date_snapshot: str, file_name: str) -> DataFrame:
+    @staticmethod
+    def _quote_identifier(identifier: str) -> str:
+        escaped = identifier.replace('"', '""')
+        return '"' + escaped + '"'
+
+
+    @staticmethod
+    def _quote_literal(value: Path) -> str:
+        return str(value).replace("'", "''")
+
+
+    def _copy_query_if_not_empty(
+        self, con: duckdb.DuckDBPyConnection, query: str, output_path: Path
+    ) -> int:
+        output_literal = self._quote_literal(output_path)
+        copy_sql = f"COPY ({query}) TO '{output_literal}' (FORMAT PARQUET)"
+        try:
+            con.execute(copy_sql)
+        except Exception:
+            if self.logger:
+                self.logger.error(f"Falha ao executar query DuckDB:\n{copy_sql}")
+            raise
+        count = con.execute(
+            f"SELECT COUNT(*) FROM read_parquet('{output_literal}')"
+        ).fetchone()[0]
+        if count == 0:
+            output_path.unlink()
+        return count
+
+
+    def _find_snapshot_drift_duckdb(
+        self,
+        previous_path: Path,
+        current_path: Path,
+        output_dir: Path,
+        output_stem: str,
+        key_cols: list[str],
+    ) -> tuple[int, int, int]:
         
-        return read_parquet(
-            self._build_transform_path(ctx, date_snapshot) / file_name,
-            engine="pyarrow"
+        previous_file = self._quote_literal(previous_path)
+        current_file = self._quote_literal(current_path)
+
+        with duckdb.connect() as con:
+            con.execute("SET memory_limit = '3GB'")
+
+            current_relation = f"read_parquet('{current_file}')"
+            previous_relation = f"read_parquet('{previous_file}')"
+
+            columns = [row[0] for row in con.execute(f"DESCRIBE SELECT * FROM {current_relation}").fetchall()]
+
+            missing_key_cols = [column for column in key_cols if column not in columns]
+            if missing_key_cols:
+                raise ValueError(
+                    f"key_cols ausentes no parquet atual: {missing_key_cols}"
+                )
+            if not key_cols:
+                raise ValueError("key_cols não pode ser vazio")
+
+            key_join = " AND ".join(
+                f"c.{self._quote_identifier(column)} IS NOT DISTINCT FROM p.{self._quote_identifier(column)}"
+                for column in key_cols
             )
-    
-    
-    def _find_added_rows(self, curr_hashes: pd.Series, prev_hashes_set: set, current_indexed: DataFrame) -> DataFrame:
-        """Linhas que estão no DataFrame novo, mas não no antigo."""
-        return current_indexed[~curr_hashes.isin(prev_hashes_set).values].reset_index()
-    
-    
-    def _find_removed_rows(self, prev_hashes: pd.Series, curr_hashes_set: set, previous_indexed: DataFrame) -> DataFrame:
-        """Linhas que estão no DataFrame antigo, mas não no novo."""
-        return previous_indexed[~prev_hashes.isin(curr_hashes_set).values].reset_index()
-    
-    
-    def _find_changed_rows(self, previous_indexed: DataFrame, current_indexed: DataFrame) -> DataFrame:
-        """Linhas que estão em ambos os DataFrames, mas com valores diferentes."""
-        _val_cols = list(current_indexed.columns)
-        common_idx = current_indexed.index.intersection(previous_indexed.index)
-        if common_idx.empty:
-            return current_indexed.iloc[:0].reset_index()
 
-        _new = current_indexed.loc[common_idx, _val_cols]
-        _old = previous_indexed.loc[common_idx, _val_cols]
-        _mask = ~(_new.eq(_old) | (_new.isna() & _old.isna())).all(axis=1)
-        del _new, _old
-        gc.collect()
+            added_query = (
+                f"SELECT c.* FROM {current_relation} c "
+                f"WHERE NOT EXISTS ("
+                f"  SELECT 1 FROM {previous_relation} p WHERE {key_join}"
+                f")"
+            )
+            removed_query = (
+                f"SELECT p.* FROM {previous_relation} p "
+                f"WHERE NOT EXISTS ("
+                f"  SELECT 1 FROM {current_relation} c WHERE {key_join}"
+                f")"
+            )
 
-        return current_indexed.loc[_mask[_mask].index].reset_index()
+            added_count = self._copy_query_if_not_empty(
+                con, added_query, output_dir / f"{output_stem}_added.parquet"
+            )
+            removed_count = self._copy_query_if_not_empty(
+                con, removed_query, output_dir / f"{output_stem}_removed.parquet"
+            )
+
+            value_cols = [column for column in columns if column not in key_cols]
+            if not value_cols:
+                # sem colunas de valor, não há como haver linhas "changed"
+                changed_count = 0
+            else:
+                changed_condition = " OR ".join(
+                    f"c.{self._quote_identifier(column)} IS DISTINCT FROM p.{self._quote_identifier(column)}"
+                    for column in value_cols
+                )
+                changed_query = (
+                    f"SELECT c.* FROM {current_relation} AS c "
+                    f"JOIN {previous_relation} AS p ON {key_join} "
+                    f"WHERE {changed_condition}"
+                )
+                changed_count = self._copy_query_if_not_empty(
+                    con, changed_query, output_dir / f"{output_stem}_changed.parquet"
+                )
+
+        return added_count, removed_count, changed_count
         
         
     def _worker(self, ctx: PipelineContext) -> None:
@@ -137,60 +200,23 @@ class ComparatorWorkerA(ComparatorWorkersInterface):
             
             try:
 
-                filename_folder_path = prepare_snapshot_drift_path / filename.removesuffix(".parquet")
+                filename_folder_path = prepare_snapshot_drift_path / _filename
                 filename_folder_path.mkdir(parents=True, exist_ok=True)
-                
-                _key_cols = ["CD_CVM", "DT_REFER", "VERSAO", "GRUPO_DFP", "ORDEM_EXERC", "DT_FIM_EXERC", "CD_CONTA"]
+                key_cols = ["CD_CVM", "DT_REFER", "VERSAO", "GRUPO_DFP", "ORDEM_EXERC", "DT_FIM_EXERC", "CD_CONTA"]
 
-                previous_df = self._read_snapshot_parquet(ctx, previous_snapshot, filename)
-                prev_hashes = pd.util.hash_pandas_object(previous_df, index=False)
-                previous_indexed = previous_df.set_index(_key_cols)
-                del previous_df
-                gc.collect()
-
-                current_df = self._read_snapshot_parquet(ctx, current_snapshot, filename)
-                curr_hashes = pd.util.hash_pandas_object(current_df, index=False)
-                current_indexed = current_df.set_index(_key_cols)
-                del current_df
-                gc.collect()
-
-                prev_hashes_set = set(prev_hashes)
-
-                added = self._find_added_rows(curr_hashes, prev_hashes_set, current_indexed)
-                del prev_hashes_set
-                gc.collect()
-                if not added.empty:
-                    added.to_parquet(filename_folder_path / f"{_filename}_added.parquet", engine="pyarrow", index=False)
-                    len_added_rows = len(added)
-                del added
-                gc.collect()
-                
-                curr_hashes_set = set(curr_hashes)
-                
-                removed = self._find_removed_rows(prev_hashes, curr_hashes_set, previous_indexed)
-                del curr_hashes_set, prev_hashes, curr_hashes
-                gc.collect()
-                if not removed.empty:
-                    removed.to_parquet(filename_folder_path / f"{_filename}_removed.parquet", engine="pyarrow", index=False)
-                    len_removed_rows = len(removed)
-                del removed
-                gc.collect()
-
-                changed = self._find_changed_rows(previous_indexed, current_indexed)
-                del previous_indexed
-                gc.collect()
-                if not changed.empty:
-                    changed.to_parquet(filename_folder_path / f"{_filename}_changed.parquet", engine="pyarrow", index=False)
-                    len_changed_rows = len(changed)
-                del changed
-                del current_indexed
-                gc.collect()
+                len_added_rows, len_removed_rows, len_changed_rows = self._find_snapshot_drift_duckdb(
+                    previous_path=self._build_transform_path(ctx, previous_snapshot) / filename,
+                    current_path=self._build_transform_path(ctx, current_snapshot) / filename,
+                    output_dir=filename_folder_path,
+                    output_stem=_filename,
+                    key_cols=key_cols,
+                )
                 
                 self._write_checkpoint(
                     ctx=ctx,
                     stage=Stage.COMPARE,
                     step=Step.TRANSFORM,
-                    filename=f"comparator_workers_a.success.{_filename}.json",
+                    filename=f"comparator_workers_b.success.{_filename}.json",
                     status=Status.SUCCESSFUL,
                     source="cvm_formulario_demonstracoes_financeiras_padronizadas",
                     extra={
@@ -212,7 +238,7 @@ class ComparatorWorkerA(ComparatorWorkersInterface):
                     ctx=ctx,
                     stage=Stage.COMPARE,
                     step=Step.TRANSFORM,
-                    filename=f"comparator_workers_a.failure.{_filename}.json",
+                    filename=f"comparator_workers_b.failure.{_filename}.json",
                     status=Status.FAILED,
                     source="cvm_formulario_demonstracoes_financeiras_padronizadas",
                     extra={
@@ -229,5 +255,5 @@ class ComparatorWorkerA(ComparatorWorkersInterface):
                 
         
 if __name__ == "__main__":
-    worker = ComparatorWorkerA(pipeline="cvm_formulario_demonstracoes_financeiras_padronizadas")
+    worker = ComparatorWorkerB(pipeline="cvm_formulario_demonstracoes_financeiras_padronizadas")
     worker.main(ctx=PipelineContext())
