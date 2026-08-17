@@ -2,11 +2,11 @@
 
 ### Visão geral
 
-Plataforma de engenharia de dados para extração, processamento, validação e persistência de diferentes tipos de dados provenientes de diversas fontes. O projeto é estruturado para receber dados brutos, transformá-los em fluxos padronizados e disponibilizá-los para consumo em camadas posteriores de análise e exploração.
+O Financial Research é uma estrutura arquitetural reutilizável para organização e desenvolvimento de pipelines de dados. O projeto reúne interfaces, componentes compartilhados e convenções que orientam a extração, transformação, validação, persistência e operação dos dados. Os pipelines seguem uma estrutura comum, mas permanecem independentes para atender diferentes fontes, formatos e regras de negócio.
 
 ### Objetivo
 
-Organizar uma arquitetura reutilizável para ingestão, processamento e persistência de dados, com separação clara entre produção e consumo dos dados. A solução foi concebida para evoluir com novos pipelines e fontes sem depender de uma estrutura específica de origem.
+O objetivo é estabelecer uma base comum para desenvolver e manter pipelines de dados de forma consistente, reduzindo duplicação estrutural sem acoplar os pipelines às mesmas fontes ou regras de negócio. A arquitetura separa os componentes compartilhados das implementações específicas, permitindo a evolução dos pipelines existentes e a incorporação gradual de novos pipelines.
   
 # **Pipelines**
 
