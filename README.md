@@ -7,7 +7,9 @@ O Financial Research é uma estrutura arquitetural reutilizável para organizaç
 ### Objetivo
 
 O objetivo é estabelecer uma base comum para desenvolver e manter pipelines de dados de forma consistente, reduzindo duplicação estrutural sem acoplar os pipelines às mesmas fontes ou regras de negócio. A arquitetura separa os componentes compartilhados das implementações específicas, permitindo a evolução dos pipelines existentes e a incorporação gradual de novos pipelines.
-  
+
+---
+
 # **Pipelines**
 
 A camada de pipelines é responsável pela aquisição, preparação e persistência dos dados.
@@ -40,6 +42,8 @@ A camada de Research é responsável pelo consumo e utilização dos dados produ
 |---|---|
 | `research/` | Exploração e análise dos dados gerados pelos pipelines. |
 | `streamlit_apps/` | Consumo e visualização dos dados em interface analítica. |
+
+---
 
 # **Topologia**
 
