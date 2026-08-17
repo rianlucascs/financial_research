@@ -6,10 +6,24 @@ Plataforma de engenharia de dados para extração, processamento, validação e 
 
 ### Objetivo
 
-Organizar uma arquitetura reutilizável para ingestão, processamento e persistência de dados, mantendo uma separação clara entre a obtenção dos dados e a sua utilização em pesquisa e análise. Os dados produzidos pelos pipelines são utilizados por componentes de Research para exploração, consulta e consumo analítico.
- 
+Organizar uma arquitetura reutilizável para ingestão, processamento e persistência de dados, com separação clara entre produção e consumo dos dados. A solução foi concebida para evoluir com novos pipelines e fontes sem depender de uma estrutura específica de origem.
+  
 # **Pipelines**
+
 A camada de pipelines é responsável pela aquisição, preparação e persistência dos dados.
+
+### Processos ETL
+
+| Processo | Descrição |
+|---|---|
+| `extract` | Aquisição dos dados de origem e armazenamento dos arquivos brutos. |
+| `to_interim` | Padronização inicial dos dados e organização em uma camada intermediária. |
+| `to_processed` | Transformação e consolidação dos dados para a camada processada. |
+| `load` | Persistência dos dados no destino configurado do pipeline. |
+| `compare` | Comparação entre snapshots para identificar alterações e diferenças. |
+| `retention` | Aplicação da política de retenção de dados e logs do projeto. |
+
+### Pipelines disponíveis
 
 | Pipeline | Descrição |
 |---|---|
@@ -24,10 +38,10 @@ A camada de Research é responsável pelo consumo e utilização dos dados produ
 
 | Componente | Descrição |
 |---|---|
-| `research/` | Diretório de exploração e análise dos dados gerados pelos pipelines. |
-| `streamlit_apps/` | Aplicações para consumo e visualização dos dados em interface analítica. |
+| `research/` | Exploração e análise dos dados gerados pelos pipelines. |
+| `streamlit_apps/` | Consumo e visualização dos dados em interface analítica. |
 
-## **Topologia**
+### **Topologia**
 
 | Componente | Detalhe |
 |---|---|
