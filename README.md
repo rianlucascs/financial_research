@@ -1,14 +1,14 @@
 # **Financial Research**
 
-## Visão geral
+### Visão geral
 
 Plataforma de engenharia de dados para extração, processamento, validação e persistência de diferentes tipos de dados provenientes de diversas fontes. O projeto é estruturado para receber dados brutos, transformá-los em fluxos padronizados e disponibilizá-los para consumo em camadas posteriores de análise e exploração.
 
-## Objetivo
+### Objetivo
 
 Organizar uma arquitetura reutilizável para ingestão, processamento e persistência de dados, mantendo uma separação clara entre a obtenção dos dados e a sua utilização em pesquisa e análise. Os dados produzidos pelos pipelines são utilizados por componentes de Research para exploração, consulta e consumo analítico.
  
-## **Pipelines**
+# **Pipelines**
 A camada de pipelines é responsável pela aquisição, preparação e persistência dos dados.
 
 | Pipeline | Descrição |
@@ -18,7 +18,7 @@ A camada de pipelines é responsável pela aquisição, preparação e persistê
 
 ---
 
-## **Research**
+# **Research**
 
 A camada de Research é responsável pelo consumo e utilização dos dados produzidos pelos pipelines.
 
