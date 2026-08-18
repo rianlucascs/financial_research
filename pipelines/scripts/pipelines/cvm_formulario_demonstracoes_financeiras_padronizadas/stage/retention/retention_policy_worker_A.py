@@ -8,7 +8,7 @@ Responsabilidades:
 
 Regra de exclusão:
     - Mantém os snapshots dos últimos 3 dias (hoje, ontem e anteontem).
-    - Remove todos os snapshots mais antigos.
+    - Remove todos os snapshots mais antigos dos diretórios "data_dir" e "historical_data_dir".
 """
 
 
@@ -19,6 +19,7 @@ from pipelines.shared.checkpoint_values import Stage, Step, Status
 
 from datetime import date, timedelta
 from pathlib import Path
+from typing import Literal
 
 
 class RetentionPolicyWorkerA(RetentionPolicyWorkersInterface):
@@ -37,10 +38,19 @@ class RetentionPolicyWorkerA(RetentionPolicyWorkersInterface):
         self.logger = None
     
     
-    def _list_snapshots(self, ctx: PipelineContext) -> list[tuple[Path, str]]:
-        """Lista todos os snapshots disponíveis no caminho de origem."""
+    def _list_snapshots(self, ctx: PipelineContext, snapshots_root: Literal["data_dir", "historical_data_dir"]) -> list[tuple[Path, str]]:
+        """Lista todos os snapshots disponíveis no caminho de origem.
+        
+        Args:
+            ``snapshots_root`` (Literal["data_dir", "historical_data_dir"]): Caminho raiz dos snapshots.
+        """
 
-        snapshots_root = ctx.data_dir / self.pipeline
+        if snapshots_root == "data_dir":
+            snapshots_root = ctx.data_dir / self.pipeline
+            
+        elif snapshots_root == "historical_data_dir":
+            snapshots_root = ctx.historical_data_dir / self.pipeline / "snapshot_drift"
+
         if not snapshots_root.exists():
             return []
 
@@ -51,13 +61,13 @@ class RetentionPolicyWorkerA(RetentionPolicyWorkersInterface):
         ]
         
         
-    def _select_snapshots_to_remove(self, snapshots: list[tuple[Path, str]]) -> list[Path]:
+    def _select_snapshots_to_remove(self, snapshots: list[tuple[Path, str]], number_days: int = 3) -> list[Path]:
         """Seleciona os snapshots que devem ser removidos com base na política de retenção."""
         
         # Define a política de retenção: manter os últimos 3 dias de snapshots
         manter = {
             date.today() - timedelta(days=i)
-            for i in range(3)
+            for i in range(number_days)
         }
         
         # Datas que podem ser apagadas
@@ -90,23 +100,29 @@ class RetentionPolicyWorkerA(RetentionPolicyWorkersInterface):
         Método que implementa a lógica do worker de retenção.
         """
         
-        snapshots = self._list_snapshots(ctx)
-        snapshots_to_remove = self._select_snapshots_to_remove(snapshots)
-        removed_snapshots = self._remove_snapshots(snapshots_to_remove)
+        roots = [
+            {"name": "data_dir", "number_days": 3}, 
+            {"name": "historical_data_dir", "number_days": 3}
+        ]
         
-        self._write_checkpoint(
-            ctx=ctx,
-            stage=Stage.RETENTION,
-            step=Step.CLEANUP,
-            filename="retention_policy_workers_a.success.json",
-            status=Status.SUCCESSFUL,
-            source="cvm_formulario_demonstracoes_financeiras_padronizadas",
-            extra={
-                "removed_snapshots": [str(snapshot) for snapshot in removed_snapshots],
-                "remaining_snapshots": [str(snapshot[0]) for snapshot in snapshots if snapshot not in snapshots_to_remove],
-            }
-        )
+        for root in roots:
+            
+            snapshots = self._list_snapshots(ctx, snapshots_root=root["name"])
+            snapshots_to_remove = self._select_snapshots_to_remove(snapshots, number_days=root["number_days"])
+            removed_snapshots = self._remove_snapshots(snapshots_to_remove)
         
+            self._write_checkpoint(
+                ctx=ctx,
+                stage=Stage.RETENTION,
+                step=f"{Step.CLEANUP.value}/{root['name']}",
+                filename="retention_policy_workers_a.success.json",
+                status=Status.SUCCESSFUL,
+                source="cvm_formulario_demonstracoes_financeiras_padronizadas",
+                extra={
+                    "removed_snapshots": [str(snapshot) for snapshot in removed_snapshots],
+                    "remaining_snapshots": [str(snapshot[0]) for snapshot in snapshots if snapshot not in snapshots_to_remove],
+                }
+            )
 
 
 if __name__ == "__main__":
