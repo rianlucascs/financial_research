@@ -3,7 +3,7 @@
 from pipelines.shared.interfaces.readers.cvm.reader_parquet_cvm import ReaderParquetCVMInterface
 
 
-class ReaderParquetCVM(ReaderParquetCVMInterface):
+class ReaderParquetCVMDFP(ReaderParquetCVMInterface):
     
     
     def __init__(

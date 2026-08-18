@@ -20,8 +20,8 @@ class ReaderParquetCVMInterface(ABC):
     
     def __init__(
         self,
-        pipeline: str = Literal["cvm_formulario_demonstracoes_financeiras_padronizadas", "cvm_formulario_informacoes_trimestrais"],
-        prefix: str = Literal["dfp", "itr"]
+        pipeline: Literal["cvm_formulario_demonstracoes_financeiras_padronizadas", "cvm_formulario_informacoes_trimestrais"],
+        prefix: Literal["dfp", "itr"]
     ) -> None:
         
         self.pipeline = pipeline
@@ -32,7 +32,15 @@ class ReaderParquetCVMInterface(ABC):
 
     def _build_parquet_path(self, filename: str) -> Path:
         
-        file_path = self.ctx.data_dir / self.ctx.current_snapshot_path(self.pipeline) / "transform" / "to_processed" / "parquet" / filename
+        file_path = (
+            self.ctx.data_dir 
+            / self.ctx.current_snapshot_path(self.pipeline) 
+            / "transform" 
+            / "to_processed" 
+            / "parquet" 
+            / 
+            filename
+        )
         
         if not file_path.exists():
             raise FileNotFoundError(f"File {file_path} does not exist.")
