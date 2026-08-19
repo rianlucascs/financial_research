@@ -23,6 +23,15 @@ class ReaderLogs:
     """
     
     
+    log_file_name: list[str] = [
+        "extractor_orchestrator", "extractor_worker_a", "extractor_worker_b",
+        "to_interim_orchestrator", "to_interim_worker_a", "to_interim_worker_b",
+        "to_processed_orchestrator", "to_processed_worker_a", "to_processed_worker_b", 
+        "comparator_orchestrator", "comparator_worker_a", "comparator_worker_b",
+        "retention_policy_orchestrator", "retention_policy_worker_a", "retention_policy_worker_b"
+    ]
+
+
     def __init__(
         self,
         *,
@@ -76,13 +85,7 @@ class ReaderLogs:
     
     
     def _read_log_file(self, 
-                       log_file_name: Literal[
-                           "extractor_orchestrator", "extractor_worker_a", "extractor_worker_b",
-                           "to_interim_orchestrator", "to_interim_worker_a", "to_interim_worker_b",
-                           "to_processed_orchestrator", "to_processed_worker_a", "to_processed_worker_b", 
-                           "comparator_orchestrator", "comparator_worker_a", "comparator_worker_b",
-                           "retention_policy_orchestrator", "retention_policy_worker_a", "retention_policy_worker_b"
-                        ] | None = None
+                       log_file_name: str | None = None
         ) -> str:
         """Lê o conteúdo de um arquivo de log específico no diretório de log mais recente para o pipeline especificado."""
         
@@ -91,7 +94,6 @@ class ReaderLogs:
             if log_file_name in log_file.name:
                 
                 with open(log_file, "r") as f:
-                    print(log_file)
                     return f.read()
         
         raise FileNotFoundError(f"Nenhum arquivo de log encontrado com o nome '{log_file_name}' no diretório de logs mais recente.")
