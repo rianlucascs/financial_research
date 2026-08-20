@@ -2,6 +2,8 @@
 
 
 from pathlib import Path
+from pandas import DataFrame, read_csv
+from pandas.errors import ParserError
 
 
 def remove_file(zip_path: Path, logger) -> None:
@@ -62,3 +64,31 @@ def clear_directory(path: Path, logger, remove_root: bool = True) -> None:
         except OSError as e:
             
             logger.error(f"Falha ao remover o diretório '{path}': {e}")
+            
+
+def read_csv_with_fallback(file_path, logger, sep=";", encoding="iso-8859-1") -> DataFrame:
+    """Tenta ler um arquivo CSV com pandas. Se falhar, tenta novamente com engine='python'."""
+
+    try:
+        
+        return read_csv(file_path, sep=sep, encoding=encoding, dtype=str)
+    
+    except ParserError as exc:
+        
+        logger.warning(f"Falha no parser em '{file_path}' ({exc}). Aplicando fallback com engine='python'.")
+
+        try:
+            
+            return read_csv(
+                file_path,
+                sep=sep,
+                encoding=encoding,
+                dtype=str,
+                engine="python",
+            )
+
+        except Exception as exc:
+            
+            logger.error(f"Falha ao ler '{file_path}' com fallback: {exc}")
+            
+            raise

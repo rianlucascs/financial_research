@@ -312,10 +312,10 @@ class SeleniumUtils:
             self.logger.error(f"Erro ao encerrar driver: {e}")
 
 
-    def get_random_delay(self) -> int:
+    def random_delay(self, max_delay: int = 20) -> int:
         """Retorna um valor aleatório de atraso em segundos."""
         
-        time = randint(5, 20)
+        time = randint(5, max_delay)
         
         if type(time) is not int:
             
