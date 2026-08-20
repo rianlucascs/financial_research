@@ -40,11 +40,11 @@ A camada de pipelines é responsável pela aquisição, preparação e persistê
 
 ### Pipelines disponíveis
 
-| Pipeline | Descrição |
-|---|---|
-| `cvm_formulario_informacoes_trimestrais` | Extração e processamento dos dados do formulário ITR. |
-| `cvm_formulario_demonstracoes_financeiras_padronizadas` | Extração e processamento dos dados do formulário DFP. |
-| `cvm_cias_abertas_informacao_cadastral` | Exração e processamento dos dados de Cias Abertas. |
+| Pipeline | Fonte dos dados | Descrição |
+|---|---|---|
+| `cvm_formulario_informacoes_trimestrais` | [CVM](https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/ITR/DADOS/) | Extração e processamento dos dados do formulário ITR. |
+| `cvm_formulario_demonstracoes_financeiras_padronizadas` | [CVM](https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/DFP/DADOS/) | Extração e processamento dos dados do formulário DFP. |
+| `cvm_cias_abertas_informacao_cadastral` | [CVM](https://dados.cvm.gov.br/dataset/cia_aberta-cad) | Extração e processamento dos dados de empresas abertas. |
 
 ---
 
