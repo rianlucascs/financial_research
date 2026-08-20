@@ -13,6 +13,8 @@
 
 O Financial Research é uma estrutura arquitetural reutilizável para organização e desenvolvimento de pipelines de dados. O projeto reúne interfaces, componentes compartilhados e convenções que orientam a extração, transformação, validação, persistência e operação dos dados. Os pipelines seguem uma estrutura comum, mas permanecem independentes para atender diferentes fontes, formatos e regras de negócio.
 
+O projeto tem foco no mercado financeiro brasileiro, abrangendo dados financeiros nacionais, incluindo informações reguladas pela CVM e outras fontes relevantes do mercado.
+
 ### Objetivo
 
 O objetivo é estabelecer uma base comum para desenvolver e manter pipelines de dados de forma consistente, reduzindo duplicação estrutural sem acoplar os pipelines às mesmas fontes ou regras de negócio. A arquitetura separa os componentes compartilhados das implementações específicas, permitindo a evolução dos pipelines existentes e a incorporação gradual de novos pipelines.
