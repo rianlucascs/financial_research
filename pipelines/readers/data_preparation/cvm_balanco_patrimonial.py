@@ -1,7 +1,7 @@
 
 
-from pipelines.readers.pipelines.cvm_formulario_demonstracoes_financeiras_padronizadas.reader_parquet_cvm import ReaderParquetCVM as ReaderParquetCVMDFP
-from pipelines.readers.pipelines.cvm_formulario_informacoes_trimestrais.reader_parquet_cvm import ReaderParquetCVM as ReaderParquetCVMITR
+from pipelines.readers.pipelines.cvm_formulario_demonstracoes_financeiras_padronizadas.reader_parquet_cvm import ReaderParquetCVMDFP as ReaderParquetCVMDFP
+from pipelines.readers.pipelines.cvm_formulario_informacoes_trimestrais.reader_parquet_cvm import ReaderParquetCVMITR as ReaderParquetCVMITR
 
 from dataclasses import dataclass
 from pandas import DataFrame, concat
