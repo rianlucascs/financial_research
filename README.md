@@ -1,4 +1,4 @@
-![alt text](<Adobe Express - file.png>)
+![alt text](<img.png>)
 
 # **Financial Research**
 
