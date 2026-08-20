@@ -1,5 +1,14 @@
 # **Financial Research**
 
+![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)
+![DuckDB](https://img.shields.io/badge/DuckDB-FFF000?style=flat&logo=duckdb&logoColor=black)
+![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat&logo=sqlite&logoColor=white)
+![Selenium](https://img.shields.io/badge/Selenium-43B02A?style=flat&logo=selenium&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat&logo=streamlit&logoColor=white)
+![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=flat&logo=ubuntu&logoColor=white)
+
+
 ### Visão geral
 
 O Financial Research é uma estrutura arquitetural reutilizável para organização e desenvolvimento de pipelines de dados. O projeto reúne interfaces, componentes compartilhados e convenções que orientam a extração, transformação, validação, persistência e operação dos dados. Os pipelines seguem uma estrutura comum, mas permanecem independentes para atender diferentes fontes, formatos e regras de negócio.
@@ -31,6 +40,7 @@ A camada de pipelines é responsável pela aquisição, preparação e persistê
 |---|---|
 | `cvm_formulario_informacoes_trimestrais` | Extração e processamento dos dados do formulário ITR. |
 | `cvm_formulario_demonstracoes_financeiras_padronizadas` | Extração e processamento dos dados do formulário DFP. |
+| `cvm_cias_abertas_informacao_cadastral` | Exração e processamento dos dados de Cias Abertas. |
 
 ---
 
