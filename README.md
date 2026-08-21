@@ -1,5 +1,3 @@
-![alt text](<img.png>)
-
 # **Financial Research**
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)
