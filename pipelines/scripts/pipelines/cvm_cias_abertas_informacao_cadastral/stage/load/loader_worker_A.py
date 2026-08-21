@@ -14,8 +14,6 @@ from pipelines.shared.context import PipelineContext
 from pipelines.shared.interfaces.pipelines.stage.load.loader_workers import LoaderWorkersInterface
 from pipelines.shared.checkpoint_values import Stage, Step, Status
 
-from pipelines.scripts.pipelines.cvm_formulario_informacoes_trimestrais.stage.pipeline_settings import current_snapshot_path
-
 import sqlite3
 import pyarrow.parquet as pq
 import gc
@@ -38,8 +36,8 @@ class LoaderWorkerA(LoaderWorkersInterface):
 
     def _worker(self, ctx: PipelineContext) -> None:
         
-        processed_parquet_path = ctx.build_transformed_path(current_snapshot_path(self.pipeline), subdir_stage="to_processed", subdir_format="parquet")
-        load_path = ctx.prepare_load_path(current_snapshot_path(self.pipeline))
+        processed_parquet_path = ctx.build_transformed_path(ctx.current_snapshot_path(self.pipeline), subdir_stage="to_interim", subdir_format="parquet")
+        load_path = ctx.prepare_load_path(ctx.current_snapshot_path(self.pipeline))
         
         for parquet_path in processed_parquet_path.glob("*.parquet"):
             
@@ -72,9 +70,8 @@ class LoaderWorkerA(LoaderWorkersInterface):
                     step=Step.DB_CREATE,
                     status=Status.SUCCESSFUL,
                     filename=f"loader_worker_a.success.{table_name}.json",
-                    source="cvm_formulario_informacoes_trimestrais",
+                    source="cvm_cias_abertas_informacao_cadastral",
                     extra={
-                        
                         "table_name": table_name,
                         "db_path": str(db_path),
                     },
@@ -85,7 +82,6 @@ class LoaderWorkerA(LoaderWorkersInterface):
                 conn.close()
 
             
-if __name__ == "__main__": 
-           
-    worker = LoaderWorkerA(pipeline="cvm_formulario_informacoes_trimestrais")
+if __name__ == "__main__":        
+    worker = LoaderWorkerA(pipeline="cvm_cias_abertas_informacao_cadastral")
     worker.main(ctx=PipelineContext())

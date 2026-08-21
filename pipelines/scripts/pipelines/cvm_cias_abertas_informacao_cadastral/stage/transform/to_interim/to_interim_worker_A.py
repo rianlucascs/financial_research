@@ -137,7 +137,9 @@ class ToInterimWorkerA(ToInterimWorkersInterface):
     def _worker(self, ctx: PipelineContext) -> None:
         
         build_raw_path_csv = (
-            ctx.prepare_raw_path(pipeline=self.pipeline, subdir_format="csv") 
+            ctx.build_raw_path(
+                pipeline=ctx.current_snapshot_path(self.pipeline), 
+                subdir_format="csv") 
             / filename
         )
         
@@ -149,7 +151,7 @@ class ToInterimWorkerA(ToInterimWorkersInterface):
         )
         
         clear_directory(interim_parquet_path, logger=self.logger, remove_root=False)
-        
+
         try:
         
             df = read_csv_with_fallback(build_raw_path_csv, self.logger)

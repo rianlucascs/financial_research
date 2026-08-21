@@ -32,6 +32,7 @@ class ExtractorWorkerA(ExtractorWorkersInterface):
         *,
         pipeline: str,
     ) -> None:
+        
         super().__init__(pipeline=pipeline)
     
     
@@ -43,7 +44,10 @@ class ExtractorWorkerA(ExtractorWorkersInterface):
             
             return None
 
-        raw_path_csv = ctx.prepare_raw_path(pipeline=self.pipeline, subdir_format="csv")
+        raw_path_csv = ctx.prepare_raw_path(
+            ctx.current_snapshot_path(pipeline=self.pipeline), 
+            subdir_format="csv"
+        )
         
         max_attempts = 3
         attempt = 0
