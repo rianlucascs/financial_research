@@ -16,8 +16,6 @@ from pipelines.shared.interfaces.pipelines.stage_interface import RawData, Inter
 from pipelines.shared.utils.io_utils import read_csv_with_fallback, clear_directory
 from pipelines.shared.checkpoint_values import Stage, Step, Status
 
-from pipelines.scripts.pipelines.cvm_cias_abertas_informacao_cadastral.stage.pipeline_settings import filename
-
 from pandas import to_datetime
 import gc
 
@@ -136,6 +134,8 @@ class ToInterimWorkerA(ToInterimWorkersInterface):
     
     def _worker(self, ctx: PipelineContext) -> None:
         
+        filename = getattr(self.settings, "filename", ValueError)
+        
         build_raw_path_csv = (
             ctx.build_raw_path(
                 pipeline=ctx.current_snapshot_path(self.pipeline), 
@@ -166,7 +166,7 @@ class ToInterimWorkerA(ToInterimWorkersInterface):
                 step=Step.PARSE,
                 filename=f"to_interim_worker_a.failed.{filename}.json",
                 status=Status.FAILED,
-                source="cvm_cias_abertas_informacao_cadastral",
+                source=getattr(self.settings, "url", self.pipeline),
                 extra={"error": str(e)},
             )
         
@@ -189,14 +189,9 @@ class ToInterimWorkerA(ToInterimWorkersInterface):
             step=Step.PARSE,
             filename=f"to_interim_worker_a.success.{_filename}.json",
             status=Status.SUCCESSFUL,
-            source="cvm_cias_abertas_informacao_cadastral",
+            source=getattr(self.settings, "url", self.pipeline),
             extra={
                 "parse_invalid_dates": dict_parse_invalid_dates,
                 "cast_failed_columns": dict_cast_columns_failed,
                 }
             )
-
-if __name__ == "__main__":
-    
-    worker = ToInterimWorkerA(pipeline="cvm_cias_abertas_informacao_cadastral")
-    worker.main(ctx=PipelineContext())

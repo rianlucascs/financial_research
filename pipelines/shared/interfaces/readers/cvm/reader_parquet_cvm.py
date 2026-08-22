@@ -10,7 +10,7 @@ from pandas import read_parquet
 from abc import ABC
 
 
-class ReaderParquetCVMInterface(ABC):
+class ReaderSnapshotParquetInterface(ABC):
     """
     Classe interface para leitura de arquivos Parquet do CVM.
 

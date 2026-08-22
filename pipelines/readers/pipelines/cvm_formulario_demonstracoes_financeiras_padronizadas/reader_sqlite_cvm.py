@@ -1,9 +1,9 @@
 
 
-from pipelines.shared.interfaces.readers.cvm.reader_sqlite_cvm import ReaderSQLiteCVMInterface
+from pipelines.shared.interfaces.readers.cvm.reader_sqlite_cvm import ReaderSnapshotSQLiteInterface
 
 
-class ReaderSQLiteCVM(ReaderSQLiteCVMInterface):
+class ReaderSnapshotSQLiteDFP(ReaderSnapshotSQLiteInterface):
     
     
     def __init__(

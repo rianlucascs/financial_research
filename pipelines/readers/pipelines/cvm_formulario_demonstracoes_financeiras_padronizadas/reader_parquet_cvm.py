@@ -1,11 +1,11 @@
 
 
-from pipelines.shared.interfaces.readers.cvm.reader_parquet_cvm import ReaderParquetCVMInterface
+from pipelines.shared.interfaces.readers.cvm.reader_parquet_cvm import ReaderSnapshotParquetInterface
 
 
-class ReaderParquetCVMDFP(ReaderParquetCVMInterface):
+class ReaderSnapshotParquetDFP(ReaderSnapshotParquetInterface):
     
-    
+
     def __init__(
         self,
     ) -> None:

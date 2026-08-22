@@ -15,9 +15,7 @@ from pipelines.shared.context import PipelineContext
 from pipelines.shared.interfaces.pipelines.stage.extract.extractor_workers import ExtractorWorkersInterface
 from pipelines.shared.utils.http_utils import url_is_accessible, download_file
 from pipelines.shared.checkpoint_values import Stage, Step, Status, Severity
-
-from pipelines.scripts.pipelines.cvm_cias_abertas_informacao_cadastral.stage.pipeline_settings import url, filename
-
+  
 from os import listdir
 
 
@@ -37,6 +35,9 @@ class ExtractorWorkerA(ExtractorWorkersInterface):
     
     
     def _worker(self, ctx: PipelineContext) -> None:
+        
+        url = getattr(self.settings, "url", "")
+        filename = getattr(self.settings, "filename", "")
         
         if not url_is_accessible(url):
             
@@ -71,7 +72,7 @@ class ExtractorWorkerA(ExtractorWorkersInterface):
                         status=Status.SUCCESSFUL,
                         filename=f"extractor_worker_a.success.download.json",
                         severity=Severity.INFO,
-                        source="cvm_cias_abertas_informacao_cadastral",
+                        source=getattr(self.settings, "url", self.pipeline),
                         extra={"downloaded_file_path": str(downloaded_file_path)},
                     )
                     
@@ -96,7 +97,7 @@ class ExtractorWorkerA(ExtractorWorkersInterface):
                     status=Status.FAILED,
                     filename=f"extractor_worker_a.failed.download.json",
                     severity=Severity.CRITICAL,
-                    source="cvm_cias_abertas_informacao_cadastral",
+                    source=getattr(self.settings, "url", self.pipeline),
                     extra={"download_result": None, "error": f"Falha ao baixar o arquivo CSV após {max_attempts} tentativas."},
                 )
 

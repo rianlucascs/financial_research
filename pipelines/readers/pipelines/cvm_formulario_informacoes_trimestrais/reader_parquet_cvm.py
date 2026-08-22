@@ -1,9 +1,9 @@
 
 
-from pipelines.shared.interfaces.readers.cvm.reader_parquet_cvm import ReaderParquetCVMInterface
+from pipelines.shared.interfaces.readers.cvm.reader_parquet_cvm import ReaderSnapshotParquetInterface
 
 
-class ReaderParquetCVMITR(ReaderParquetCVMInterface):
+class ReaderSnapshotParquetITR(ReaderSnapshotParquetInterface):
     
     
     def __init__(

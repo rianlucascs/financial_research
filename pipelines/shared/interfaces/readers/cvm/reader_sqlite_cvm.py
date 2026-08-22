@@ -11,7 +11,7 @@ import sqlite3
 from abc import ABC
 
 
-class ReaderSQLiteCVMInterface(ABC):
+class ReaderSnapshotSQLiteInterface(ABC):
     """
     Classe interface para leitura de arquivos SQLite do CVM.
     
@@ -38,8 +38,7 @@ class ReaderSQLiteCVMInterface(ABC):
             self.ctx.data_dir 
             / self.ctx.current_snapshot_path(self.pipeline) 
             / "load" 
-            / 
-            f"{filename}.db"
+            / f"{filename}.db"
         )
         
         if not file_path.exists():
