@@ -11,9 +11,16 @@ class RetentionPolicyOrchestratorInterface(BaseOrchestratorInterface):
     """
     Interface para orquestradores de retenção.
     """
+    
+    
+    process: str = "retention_policy_orchestrator"
+    
 
     @abstractmethod
     def _build_workers(self, ctx: PipelineContext) -> list[RetentionPolicyWorkersInterface]:
+        """
+        Método responsável por construir os workers de retenção.
+        """
 
         # return [
         #     WorkerA(pipeline=self.pipeline),

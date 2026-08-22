@@ -8,9 +8,6 @@ from pipelines.scripts.pipelines.cvm_formulario_informacoes_trimestrais.stage.lo
 
 
 class LoaderOrchestrator(LoaderOrchestratorInterface):
-    
-    
-    process: str = "loader_orchestrator"
 
 
     def __init__(

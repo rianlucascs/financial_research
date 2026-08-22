@@ -11,6 +11,10 @@ class ToInterimOrchestratorInterface(BaseOrchestratorInterface):
     """
     Interface para orquestradores de to_interim.
     """
+    
+    
+    process: str = "to_interim_orchestrator"
+    
 
     @abstractmethod
     def _build_workers(self, ctx: PipelineContext) -> list[ToInterimWorkersInterface]:

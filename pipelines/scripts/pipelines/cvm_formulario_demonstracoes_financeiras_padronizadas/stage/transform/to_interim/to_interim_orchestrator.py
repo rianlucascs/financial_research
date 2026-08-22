@@ -9,9 +9,6 @@ from pipelines.scripts.pipelines.cvm_formulario_demonstracoes_financeiras_padron
 
 class ToInterimOrchestrator(ToInterimOrchestratorInterface):
     
-    
-    process: str = "to_interim_orchestrator"
-    
 
     def __init__(
         self,

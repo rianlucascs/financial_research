@@ -11,6 +11,10 @@ class LoaderOrchestratorInterface(BaseOrchestratorInterface):
     """
     Interface para orquestradores de carga.
     """
+    
+    
+    process: str = "loader_orchestrator"
+    
 
     @abstractmethod
     def _build_workers(self, ctx: PipelineContext) -> list[LoaderWorkersInterface]:

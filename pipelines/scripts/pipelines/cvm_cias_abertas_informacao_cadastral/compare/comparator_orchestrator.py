@@ -4,13 +4,10 @@ from pipelines.shared.context import PipelineContext
 from pipelines.shared.interfaces.pipelines.stage.compare.comparator_orchestrator import ComparatorOrchestratorInterface
 from pipelines.shared.interfaces.pipelines.stage.compare.comparator_workers import ComparatorWorkersInterface
 
-from pipelines.scripts.pipelines.cvm_formulario_demonstracoes_financeiras_padronizadas.stage.compare.comparator_worker_B import ComparatorWorkerB
+from pipelines.scripts.pipelines.cvm_formulario_demonstracoes_financeiras_padronizadas.stage.compare.comparator_worker_A import ComparatorWorkerB
 
 
 class ComparatorOrchestrator(ComparatorOrchestratorInterface):
-    
-    
-    process: str = "comparator_orchestrator"
 
 
     def __init__(

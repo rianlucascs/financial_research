@@ -10,9 +10,6 @@ from pipelines.scripts.pipelines.cvm_formulario_demonstracoes_financeiras_padron
 
 class RetentionPolicyOrchestrator(RetentionPolicyOrchestratorInterface):
 
-    
-    process: str = "retention_policy_orchestrator"
-
 
     def __init__(
         self,
@@ -25,9 +22,6 @@ class RetentionPolicyOrchestrator(RetentionPolicyOrchestratorInterface):
 
 
     def _build_workers(self, ctx: PipelineContext) -> list[RetentionPolicyWorkersInterface]:
-        """
-        Método responsável por construir os workers de retenção.
-        """
 
         return [
             RetentionPolicyWorkerA(pipeline=self.pipeline),

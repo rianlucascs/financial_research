@@ -28,8 +28,6 @@ class ComparatorWorkersInterface(CheckpointWriterMixin, ABC, StageTypes[Processe
         ``main``: ponto de entrada, sempre configura logging e chama o método ``_worker``.
         
     Métodos que a subclasse deve implementar:
-        ``_get_previous_data``: define a lógica para obter o DataFrame anterior.
-        ``_get_current_data``: define a lógica para obter o DataFrame atual.
         ``_worker``: define a lógica do worker de comparação.
     """
     
@@ -46,37 +44,12 @@ class ComparatorWorkersInterface(CheckpointWriterMixin, ABC, StageTypes[Processe
         self.pipeline = pipeline
         self.logger = None
         
-        
-    def _get_previous_data(self) -> ProcessedData:
-        """
-        Método que implementa a lógica para obter o DataFrame anterior.
-        """
-        ...
-    
-    
-    def _get_current_data(self) -> ProcessedData:
-        """
-        Método que implementa a lógica para obter o DataFrame atual.
-        """
-        ...
-    
     
     @abstractmethod
     def _worker(self, ctx: PipelineContext) -> None:
         """
         Compara dois DataFrames: ``previous`` e ``current``.
-
-        Args:
-            previous (DataFrame): O DataFrame anterior.
-            current (DataFrame): O DataFrame atual.
-
-        Returns:
-            Any: O resultado da comparação .
         """
-    
-        # previous_data = self._get_previous_data(ctx=ctx)
-        # current_data = self._get_current_data(ctx=ctx)
-        
         ...
 
 

@@ -8,9 +8,6 @@ from pipelines.scripts.pipelines.cvm_formulario_demonstracoes_financeiras_padron
 
 
 class ToProcessedOrchestrator(ToProcessedOrchestratorInterface):
-    
-    
-    process: str = "to_processed_orchestrator"
 
 
     def __init__(

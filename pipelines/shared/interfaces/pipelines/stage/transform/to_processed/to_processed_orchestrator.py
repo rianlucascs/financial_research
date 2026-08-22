@@ -11,6 +11,10 @@ class ToProcessedOrchestratorInterface(BaseOrchestratorInterface):
     """
     Interface para orquestradores de to_processed.
     """
+    
+    
+    process: str = "to_processed_orchestrator"
+    
 
     @abstractmethod
     def _build_workers(self, ctx: PipelineContext) -> list[ToProcessedWorkersInterface]:

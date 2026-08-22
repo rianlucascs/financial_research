@@ -11,6 +11,10 @@ class ExtractorOrchestratorInterface(BaseOrchestratorInterface):
     """
     Interface para orquestradores de extração.
     """
+    
+
+    process: str = "extractor_orchestrator"
+
 
     @abstractmethod
     def _build_workers(self, ctx: PipelineContext) -> list[ExtractorWorkersInterface]:

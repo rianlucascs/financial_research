@@ -19,6 +19,10 @@ class ComparatorOrchestratorInterface(BaseOrchestratorInterface):
     """
     Interface para orquestradores de comparação.
     """
+    
+    
+    process: str = "comparator_orchestrator"
+    
 
     @abstractmethod
     def _build_workers(self, ctx: PipelineContext) -> list[ComparatorWorkersInterface]:

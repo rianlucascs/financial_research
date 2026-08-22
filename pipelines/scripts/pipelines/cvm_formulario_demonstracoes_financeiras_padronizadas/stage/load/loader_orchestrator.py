@@ -8,9 +8,6 @@ from pipelines.scripts.pipelines.cvm_formulario_demonstracoes_financeiras_padron
 
 
 class LoaderOrchestrator(LoaderOrchestratorInterface):
-    
-    
-    process: str = "loader_orchestrator"
 
 
     def __init__(

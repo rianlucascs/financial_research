@@ -9,9 +9,6 @@ from pipelines.scripts.pipelines.cvm_formulario_informacoes_trimestrais.stage.ex
 
 
 class ExtractorOrchestrator(ExtractorOrchestratorInterface):
-
-
-    process: str = "extractor_orchestrator"
     
     
     def __init__(
