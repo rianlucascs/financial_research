@@ -1,7 +1,7 @@
 
 
-from pipelines.readers.pipelines.cvm_formulario_demonstracoes_financeiras_padronizadas.reader_parquet_cvm import ReaderParquetCVMDFP as ReaderParquetCVMDFP
-from pipelines.readers.pipelines.cvm_formulario_informacoes_trimestrais.reader_parquet_cvm import ReaderParquetCVMITR as ReaderParquetCVMITR
+from pipelines.readers.pipelines.cvm_formulario_demonstracoes_financeiras_padronizadas.reader_parquet_cvm import ReaderSnapshotParquetDFP
+from pipelines.readers.pipelines.cvm_formulario_informacoes_trimestrais.reader_parquet_cvm import ReaderSnapshotParquetITR
 
 from dataclasses import dataclass
 from pandas import DataFrame, concat
@@ -181,11 +181,11 @@ class CVMBalancoPatrimonial:
     
 
     def _reader_itr_parquet_cvm(self, demonstration_code: str) -> DataFrame:
-        return ReaderParquetCVMITR().read(demonstration_code=demonstration_code).copy()
+        return ReaderSnapshotParquetITR().read(demonstration_code=demonstration_code).copy()
     
 
     def _reader_dfp_parquet_cvm(self, demonstration_code: str) -> DataFrame:
-        return ReaderParquetCVMDFP().read(demonstration_code=demonstration_code).copy()
+        return ReaderSnapshotParquetDFP().read(demonstration_code=demonstration_code).copy()
     
     
     def _concat_dataframes(self, demonstration_code: str) -> DataFrame:
