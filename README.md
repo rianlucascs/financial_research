@@ -45,7 +45,10 @@ A camada de pipelines é responsável pela aquisição, preparação e persistê
 | `cvm_formulario_informacoes_trimestrais` | [CVM](https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/ITR/DADOS/) | Extração e processamento dos dados do formulário ITR. |
 | `cvm_formulario_demonstracoes_financeiras_padronizadas` | [CVM](https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/DFP/DADOS/) | Extração e processamento dos dados do formulário DFP. |
 | `cvm_cias_abertas_informacao_cadastral` | [CVM](https://dados.cvm.gov.br/dataset/cia_aberta-cad) | Extração e processamento dos dados de empresas abertas. |
-
+| `cvm_formulario_de_referencia` | [CVM](https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/FRE/DADOS/) | Extração e processamento dos dados do formulário FRE. |
+| `cvm_informacoes_periodicas_e_eventuais` | [CVM](https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/IPE/DADOS/) | Extração e processamento dos dados do formulário IPE. |
+| `cvm_formulario_cadastral` | [CVM](https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/FCA/DADOS/) | Extração e processamento dos dados do formulário FCA.
+| `cvm_valores_mobiliarios_ofertados`| [CVM](https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/VLMO/DADOS/) | Extração e processamento dos dados do formulário VLMO. |
 ---
 
 # **Research**
