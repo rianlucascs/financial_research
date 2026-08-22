@@ -18,8 +18,6 @@ from pipelines.shared.interfaces.pipelines.stage_interface import RawData, Inter
 from pipelines.shared.checkpoint_values import Stage, Step, Status
 from pipelines.shared.utils.io_utils import clear_directory
 
-from pipelines.scripts.pipelines.cvm_formulario_informacoes_trimestrais.stage.pipeline_settings import current_snapshot_path
-
 from os import listdir
 from pandas import read_csv, DataFrame, to_datetime, to_numeric
 from pandas.errors import ParserError
@@ -159,8 +157,16 @@ class ToInterimWorkerA(ToInterimWorkersInterface):
 
     def _worker(self, ctx: PipelineContext) -> None:
         
-        raw_csv_path = ctx.build_raw_path(current_snapshot_path(self.pipeline), subdir_format="csv")
-        interim_parquet_path = ctx.prepare_transformed_path(current_snapshot_path(self.pipeline), subdir_stage="to_interim", subdir_format="parquet")
+        raw_csv_path = ctx.build_raw_path(
+            ctx.current_snapshot_path(self.pipeline), 
+            subdir_format="csv"
+        )
+        
+        interim_parquet_path = ctx.prepare_transformed_path(
+            ctx.current_snapshot_path(self.pipeline), 
+            subdir_stage="to_interim", 
+            subdir_format="parquet"
+        )
         
         clear_directory(interim_parquet_path, logger=self.logger, remove_root=False)
         
@@ -190,16 +196,11 @@ class ToInterimWorkerA(ToInterimWorkersInterface):
                     step=Step.PARSE,
                     filename=f"to_interim_worker_a.success.{_filename}.json",
                     status=Status.SUCCESSFUL,
-                    source="cvm_formulario_informacoes_trimestrais",
+                    source=getattr(self.settings, "url", self.pipeline),
                     extra={
                         "parse_invalid_dates": dict_parse_invalid_dates,
                         "cast_failed_columns": dict_cast_columns_failed,
                         "cast_failed_vl_conta": dict_cast_failed_vl_conta,
                         }
                     )
-                
-                
-if __name__ == "__main__":
-    
-    worker = ToInterimWorkerA(pipeline="cvm_formulario_informacoes_trimestrais")
-    worker.main(ctx=PipelineContext())
+

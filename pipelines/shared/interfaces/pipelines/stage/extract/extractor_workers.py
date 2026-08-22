@@ -16,6 +16,7 @@ from pipelines.shared.interfaces.pipelines.stage_interface import RawData, Stage
 from pipelines.shared.checkpoint_writer_mixin import CheckpointWriterMixin
 
 from abc import ABC, abstractmethod
+from importlib import import_module
 
 
 class ExtractorWorkersInterface(CheckpointWriterMixin, ABC, StageTypes[None, RawData]):
@@ -44,6 +45,8 @@ class ExtractorWorkersInterface(CheckpointWriterMixin, ABC, StageTypes[None, Raw
         
         self.pipeline = pipeline
         self.logger = None
+        
+        self.settings = import_module(f"pipelines.scripts.pipelines.{pipeline}.stage.pipeline_settings")
     
     
     @abstractmethod

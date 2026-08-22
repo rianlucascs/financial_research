@@ -3,11 +3,9 @@ Settings:
     pipeline_settings
 
 Responsabilidades:
-    Variáveis e funções de `configuração` do pipeline `cvm_formulario_demonstracoes_financeiras_padronizadas`.
-    
-    - Listar os arquivos zip a serem baixados, um para cada ano de 2011 até o ano atual.
-    - Listar os códigos de demonstrações financeiras padronizadas (CVM) a serem processadas.
-    - Acessar o caminho do snapshot atual.
+    - Definir as configurações do pipeline `cvm_formulario_informacoes_trimestrais`, 
+    incluindo a URL base para baixar os arquivos ZIP do site da CVM (Comissão de Valores Mobiliários) 
+    e a lista de arquivos ZIP a serem baixados, um para cada ano de 2011 até o ano atual.
     
 Notas:
     ...
@@ -15,11 +13,14 @@ Notas:
 
 
 from datetime import date
-from pathlib import Path
+
+
+# URL base para baixar os arquivos ZIP do site da CVM (Comissão de Valores Mobiliários).
+url: str = "https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/ITR/DADOS/"
 
 
 # Lista de arquivos zip a serem baixados, um para cada ano de 2011 até o ano atual.
-build_archives_zip = [f'itr_cia_aberta_{year_now}.zip' for year_now in range(2011, date.today().year + 1)]
+build_archives_zip: list[str] = [f'itr_cia_aberta_{year_now}.zip' for year_now in range(2011, date.today().year + 1)]
 
 
 # Lista de códigos de demonstrações financeiras padronizadas (CVM) a serem processadas.
@@ -33,17 +34,4 @@ demonstration_codes: list[str] = [
     'DRE_con', 'DRE_ind', 
     'DVA_con', 'DVA_ind'
     ]
-
-
-def current_snapshot_path(pipeline, current_date: str | None = None) -> Path:
-    """Retorna o caminho do snapshot atual.
-    
-    Returns:
-        Path(pipeline) / date.today().strftime("%Y-%m-%d"): Caminho do snapshot atual.
-    """
-    
-    if current_date is None:
-        current_date = date.today().strftime("%Y-%m-%d")
-        
-    return Path(pipeline) / current_date
 

@@ -16,8 +16,6 @@ from pipelines.shared.interfaces.pipelines.stage.extract.extractor_workers impor
 from pipelines.shared.checkpoint_values import Stage, Step, Status, FailurePoint, Severity
 from pipelines.shared.utils.io_utils import clear_directory
 
-from pipelines.scripts.pipelines.cvm_formulario_demonstracoes_financeiras_padronizadas.stage.pipeline_settings import build_archives_zip, current_snapshot_path
-
 from pathlib import Path
 from zipfile import ZipFile
 
@@ -68,12 +66,19 @@ class ExtractorWorkerB(ExtractorWorkersInterface):
     
     def _worker(self, ctx: PipelineContext) -> None:
         
-        raw_zip_path = ctx.build_raw_path(current_snapshot_path(self.pipeline), subdir_format="zip")
-        raw_csv_path = ctx.build_raw_path(current_snapshot_path(self.pipeline), subdir_format="csv")
+        raw_zip_path = ctx.build_raw_path(
+            ctx.current_snapshot_path(self.pipeline), 
+            subdir_format="zip"
+            )
+        
+        raw_csv_path = ctx.build_raw_path(
+            ctx.current_snapshot_path(self.pipeline), 
+            subdir_format="csv"
+        )
         
         clear_directory(path=raw_csv_path, logger=self.logger, remove_root=False)
-            
-        for filename in build_archives_zip:
+        
+        for filename in getattr(self.settings, "build_archives_zip", []):
             
             if (raw_zip_path / filename).exists():
                 
@@ -87,7 +92,7 @@ class ExtractorWorkerB(ExtractorWorkersInterface):
                         step=self._step_dynamic_folder(step=Step.UNZIP, zipname=filename),
                         filename=f"extractor_worker_b.success.json",
                         status=Status.SUCCESSFUL,
-                        source="cvm_formulario_demonstracoes_financeiras_padronizadas",
+                        source=getattr(self.settings, "url", self.pipeline),
                         extra={
                             "zipname": filename,
                             "raw_zip_path": str(raw_zip_path),
@@ -107,7 +112,7 @@ class ExtractorWorkerB(ExtractorWorkersInterface):
                         failure_point=FailurePoint.UNZIP,
                         reason=str(e),
                         severity=Severity.ERROR,
-                        source="cvm_formulario_demonstracoes_financeiras_padronizadas",
+                        source=getattr(self.settings, "url", self.pipeline),
                         extra={
                             "zipname": filename,
                             "raw_zip_path": str(raw_zip_path),
@@ -131,7 +136,7 @@ class ExtractorWorkerB(ExtractorWorkersInterface):
                     failure_point=FailurePoint.UNZIP,
                     reason="Arquivo ZIP não encontrado",
                     severity=Severity.ERROR,
-                    source="cvm_formulario_demonstracoes_financeiras_padronizadas",
+                    source=getattr(self.settings, "url", self.pipeline),
                     extra={
                         "zipname": filename,
                         "raw_zip_path": str(raw_zip_path),
@@ -140,8 +145,3 @@ class ExtractorWorkerB(ExtractorWorkersInterface):
                 )
                 
                 self.logger.error(f"Arquivo ZIP '{filename}' não encontrado no caminho '{raw_zip_path}'")
-                
-
-if __name__ == "__main__":
-    worker = ExtractorWorkerB(pipeline="cvm_formulario_demonstracoes_financeiras_padronizadas")
-    worker.main(ctx=PipelineContext())

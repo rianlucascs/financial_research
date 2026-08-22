@@ -109,7 +109,7 @@ class RetentionPolicyWorkerInterfaceB(RetentionPolicyWorkersInterface):
             step=Step.CLEANUP,
             filename="retention_policy_workers_b.success.json",
             status=Status.SUCCESSFUL,
-            source=globals().get("url", self.pipeline),
+            source=getattr(self.settings, "url", self.pipeline),
             extra={
                 "removed_logs": [str(log_path) for log_path in removed_logs],
                 "remaining_logs": [str(log[0]) for log in logs if log not in logs_to_remove],

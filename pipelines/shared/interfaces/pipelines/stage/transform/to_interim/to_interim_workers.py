@@ -17,6 +17,7 @@ from pipelines.shared.interfaces.pipelines.stage_interface import StageTypes, Ra
 from pipelines.shared.checkpoint_writer_mixin import CheckpointWriterMixin
 
 from abc import ABC, abstractmethod
+from importlib import import_module
 
 
 class ToInterimWorkersInterface(CheckpointWriterMixin, ABC, StageTypes[RawData, InterimData]):
@@ -45,6 +46,8 @@ class ToInterimWorkersInterface(CheckpointWriterMixin, ABC, StageTypes[RawData, 
         
         self.pipeline = pipeline
         self.logger = None
+        
+        self.settings = import_module(f"pipelines.scripts.pipelines.{pipeline}.stage.pipeline_settings")
     
     
     @abstractmethod

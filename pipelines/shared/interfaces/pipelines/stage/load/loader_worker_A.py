@@ -19,7 +19,6 @@ import sqlite3
 import pyarrow.parquet as pq
 import gc
 from pathlib import Path
-from importlib import import_module
 
 
 class LoaderWorkerInterfaceA(LoaderWorkersInterface):
@@ -37,8 +36,6 @@ class LoaderWorkerInterfaceA(LoaderWorkersInterface):
         self.pipeline = pipeline
         self.logger = None
         
-        import_module(f"pipelines.scripts.pipelines.{self.pipeline}.stage.pipeline_settings")
-
 
     @abstractmethod
     def _build_data_path(self, ctx: PipelineContext) -> Path:
@@ -85,7 +82,7 @@ class LoaderWorkerInterfaceA(LoaderWorkersInterface):
                     step=Step.DB_CREATE,
                     status=Status.SUCCESSFUL,
                     filename=f"loader_worker_a.success.{table_name}.json",
-                    source=globals().get("url", self.pipeline),
+                    source=getattr(self.settings, "url", self.pipeline),
                     extra={
                         "table_name": table_name,
                         "db_path": str(db_path),
@@ -102,7 +99,7 @@ class LoaderWorkerInterfaceA(LoaderWorkersInterface):
                     step=Step.DB_CREATE,
                     status=Status.FAILED,
                     filename=f"loader_worker_a.failed.{table_name}.json",
-                    source=globals().get("url", self.pipeline),
+                    source=getattr(self.settings, "url", self.pipeline),
                     extra={
                         "table_name": table_name,
                         "db_path": str(db_path),

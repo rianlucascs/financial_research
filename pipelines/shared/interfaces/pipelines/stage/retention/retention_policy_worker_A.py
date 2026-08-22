@@ -122,7 +122,7 @@ class RetentionPolicyWorkerInterfaceA(RetentionPolicyWorkersInterface):
                 step=f"{Step.CLEANUP.value}/{root['name']}",
                 filename="retention_policy_workers_a.success.json",
                 status=Status.SUCCESSFUL,
-                source=globals().get("url", self.pipeline),
+                source=getattr(self.settings, "url", self.pipeline),
                 extra={
                     "removed_snapshots": [str(snapshot) for snapshot in removed_snapshots],
                     "remaining_snapshots": [str(snapshot[0]) for snapshot in snapshots if snapshot not in snapshots_to_remove],

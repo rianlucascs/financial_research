@@ -18,8 +18,6 @@ from pipelines.shared.utils.formatting_utils import format_size
 from pipelines.shared.utils.io_utils import remove_file
 from pipelines.shared.utils.http_utils import url_is_accessible
 
-from pipelines.scripts.pipelines.cvm_formulario_demonstracoes_financeiras_padronizadas.stage.pipeline_settings import build_archives_zip
-
 from pathlib import Path
 import wget
 from datetime import date
@@ -29,7 +27,6 @@ class ExtractorWorkerA(ExtractorWorkersInterface):
     
     
     process: str = "extractor_worker_a"
-    url: str = "https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/DFP/DADOS/"
     
     
     def __init__(
@@ -43,16 +40,16 @@ class ExtractorWorkerA(ExtractorWorkersInterface):
     
     def _download_zip_file(self, filename: str, raw_path_zip: Path) -> tuple[Path | None, str | None]:
         
-        url = f"{self.url}{filename}"
+        _url = f"{getattr(self.settings, 'url', '')}{filename}"
         
-        if not url_is_accessible(url):
-            return None, f"URL não encontrada (404 ou indisponível): {url}"
+        if not url_is_accessible(_url):
+            return None, f"URL não encontrada (404 ou indisponível): {_url}"
         
         remove_file(zip_path=raw_path_zip / filename, logger=self.logger)
     
         try:
             
-            return Path(wget.download(url, out=str(raw_path_zip), bar=None)), None
+            return Path(wget.download(_url, out=str(raw_path_zip), bar=None)), None
         
         except Exception as e:
             
@@ -63,7 +60,7 @@ class ExtractorWorkerA(ExtractorWorkersInterface):
 
     def _worker(self, ctx: PipelineContext) -> None:
 
-        for filename in build_archives_zip:
+        for filename in getattr(self.settings, "build_archives_zip", []):
             
             build_raw_path_zip = ctx.prepare_raw_path(pipeline=Path(self.pipeline) / date.today().strftime("%Y-%m-%d"), subdir_format="zip")
             
@@ -79,7 +76,7 @@ class ExtractorWorkerA(ExtractorWorkersInterface):
                     status=Status.FAILED,
                     failure_point=FailurePoint.EXCEPTION,
                     severity=Severity.ERROR,
-                    source="cvm_formulario_demonstracoes_financeiras_padronizadas",
+                    source=getattr(self.settings, "url", self.pipeline),
                     extra={"download_result": None, "error": download_result[1]},
                 )
                 
@@ -93,7 +90,7 @@ class ExtractorWorkerA(ExtractorWorkersInterface):
                     step=Step.DOWNLOAD,
                     filename=f"extractor_worker_a.success_{filename}.json",
                     status=Status.SUCCESSFUL,
-                    source="cvm_formulario_demonstracoes_financeiras_padronizadas",
+                    source=getattr(self.settings, "url", self.pipeline),
                     extra={"download_result": {
                         "name": download_result[0].name,
                         "parent": str(download_result[0].parent),

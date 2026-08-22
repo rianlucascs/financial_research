@@ -4,6 +4,7 @@ from pipelines.shared.context import PipelineContext
 from pipelines.shared.utils.resource_monitor import resource_monitor
 
 from abc import ABC, abstractmethod
+from importlib import import_module
 
 
 class BaseOrchestratorInterface(ABC):
@@ -27,6 +28,9 @@ class BaseOrchestratorInterface(ABC):
 
         self.pipeline = pipeline
         self.logger = None
+        
+        self.settings = import_module(f"pipelines.scripts.pipelines.{pipeline}.stage.pipeline_settings")
+        
 
     @abstractmethod
     def _build_workers(self, ctx: PipelineContext) -> list:

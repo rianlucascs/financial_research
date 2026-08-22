@@ -25,7 +25,6 @@ from datetime import date, timedelta
 from pathlib import Path
 import duckdb
 from abc import ABC, abstractmethod
-from importlib import import_module
 
 
 class DuckDBManager:
@@ -194,8 +193,6 @@ class ComparatorWorkerInterfaceA(ComparatorWorkersInterface, ABC):
         self.previous_snapshot = (date.today() - timedelta(days=1)).strftime("%Y-%m-%d")
         self.current_snapshot = date.today().strftime("%Y-%m-%d")
         
-        import_module(f"pipelines.scripts.pipelines.{self.pipeline}.stage.pipeline_settings")
-        
         
     @abstractmethod
     def _build_previous_data_path(self, ctx: PipelineContext) -> Path:
@@ -289,7 +286,7 @@ class ComparatorWorkerInterfaceA(ComparatorWorkersInterface, ABC):
                     step=Step.TRANSFORM,
                     filename=f"comparator_worker_a.success.{_filename}.json",
                     status=Status.SUCCESSFUL,
-                    source = globals().get("url", self.pipeline),
+                    source=getattr(self.settings, "url", self.pipeline),
                     extra={
                         "previous_snapshot": self.previous_snapshot,
                         "current_snapshot": self.current_snapshot,
@@ -311,7 +308,7 @@ class ComparatorWorkerInterfaceA(ComparatorWorkersInterface, ABC):
                     step=Step.TRANSFORM,
                     filename=f"comparator_worker_a.failure.{_filename}.json",
                     status=Status.FAILED,
-                    source = globals().get("url", self.pipeline),   
+                    source=getattr(self.settings, "url", self.pipeline),
                     extra={
                         "previous_snapshot": self.previous_snapshot,
                         "current_snapshot": self.current_snapshot,

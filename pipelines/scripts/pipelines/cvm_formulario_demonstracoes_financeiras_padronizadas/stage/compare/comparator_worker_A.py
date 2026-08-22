@@ -51,8 +51,3 @@ class ComparatorWorkerA(ComparatorWorkerInterfaceA):
     
     def _key_cols(self) -> list[str]:
         return ["CD_CVM", "DT_REFER", "VERSAO", "GRUPO_DFP", "ORDEM_EXERC", "DT_FIM_EXERC", "CD_CONTA"]
-    
-    
-if __name__ == "__main__":
-    worker = ComparatorWorkerA(pipeline="cvm_formulario_demonstracoes_financeiras_padronizadas")
-    worker.main(ctx=PipelineContext())

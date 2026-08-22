@@ -15,6 +15,7 @@ from pipelines.shared.interfaces.pipelines.stage_interface import ProcessedData,
 from pipelines.shared.checkpoint_writer_mixin import CheckpointWriterMixin
 
 from abc import ABC, abstractmethod
+from importlib import import_module
 
 
 class ComparatorWorkersInterface(CheckpointWriterMixin, ABC, StageTypes[ProcessedData, SnapshotDrift]):
@@ -43,6 +44,8 @@ class ComparatorWorkersInterface(CheckpointWriterMixin, ABC, StageTypes[Processe
         
         self.pipeline = pipeline
         self.logger = None
+        
+        self.settings = import_module(f"pipelines.scripts.pipelines.{pipeline}.stage.pipeline_settings")
         
     
     @abstractmethod

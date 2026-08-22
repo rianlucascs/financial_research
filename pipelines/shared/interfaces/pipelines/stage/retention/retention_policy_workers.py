@@ -17,6 +17,7 @@ from pipelines.shared.interfaces.pipelines.stage_interface import RawData, Stage
 
 from abc import ABC, abstractmethod
 from pathlib import Path
+from importlib import import_module
 
 
 class RetentionPolicyWorkersInterface(CheckpointWriterMixin, ABC, StageTypes[RawData, None]):
@@ -51,6 +52,8 @@ class RetentionPolicyWorkersInterface(CheckpointWriterMixin, ABC, StageTypes[Raw
         
         self.pipeline = pipeline
         self.logger = None
+        
+        self.settings = import_module(f"pipelines.scripts.pipelines.{pipeline}.stage.pipeline_settings")
     
     
     def _list_snapshots(self, source_path: Path) -> list[Path]:

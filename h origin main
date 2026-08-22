@@ -1,0 +1,36 @@
+[33m0037750[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m feat: adicionar abstrações
+ .gitignore                                                                                             |   5 [32m+[m[31m-[m
+ pipelines/scripts/pipelines/cvm_cias_abertas_informacao_cadastral/compare/comparator_orchestrator.py   |   5 [32m+[m[31m-[m
+ .../cvm_formulario_demonstracoes_financeiras_padronizadas/stage/compare/comparator_orchestrator.py     |   7 [32m+[m[31m-[m
+ .../cvm_formulario_demonstracoes_financeiras_padronizadas/stage/compare/comparator_worker_A.py         | 215 [32m++[m[31m-----------------[m
+ .../cvm_formulario_demonstracoes_financeiras_padronizadas/stage/extract/extractor_orchestrator.py      |   3 [31m-[m
+ .../pipelines/cvm_formulario_demonstracoes_financeiras_padronizadas/stage/load/loader_orchestrator.py  |   3 [31m-[m
+ .../pipelines/cvm_formulario_demonstracoes_financeiras_padronizadas/stage/load/loader_worker_A.py      |  67 [32m+[m[31m-----[m
+ .../stage/retention/retention_policy_orchestrator.py                                                   |   6 [31m-[m
+ .../cvm_formulario_demonstracoes_financeiras_padronizadas/stage/retention/retention_policy_worker_A.py | 125 [32m+[m[31m----------[m
+ .../cvm_formulario_demonstracoes_financeiras_padronizadas/stage/retention/retention_policy_worker_B.py | 114 [32m+[m[31m---------[m
+ .../stage/transform/to_interim/to_interim_orchestrator.py                                              |   3 [31m-[m
+ .../stage/transform/to_processed/to_processed_orchestrator.py                                          |   3 [31m-[m
+ .../scripts/pipelines/cvm_formulario_informacoes_trimestrais/stage/compare/comparator_orchestrator.py  |  10 [32m+[m[31m-[m
+ .../scripts/pipelines/cvm_formulario_informacoes_trimestrais/stage/compare/comparator_worker_A.py      | 231 [32m++[m[31m-------------------[m
+ .../scripts/pipelines/cvm_formulario_informacoes_trimestrais/stage/compare/comparator_worker_B.py      | 259 [31m-----------------------[m
+ .../scripts/pipelines/cvm_formulario_informacoes_trimestrais/stage/extract/extractor_orchestrator.py   |   3 [31m-[m
+ pipelines/scripts/pipelines/cvm_formulario_informacoes_trimestrais/stage/load/loader_orchestrator.py   |   3 [31m-[m
+ pipelines/scripts/pipelines/cvm_formulario_informacoes_trimestrais/stage/load/loader_worker_A.py       |  82 [32m+[m[31m-------[m
+ .../pipelines/cvm_formulario_informacoes_trimestrais/stage/retention/retention_policy_orchestrator.py  |   6 [31m-[m
+ .../pipelines/cvm_formulario_informacoes_trimestrais/stage/retention/retention_policy_worker_A.py      | 124 [32m+[m[31m----------[m
+ .../pipelines/cvm_formulario_informacoes_trimestrais/stage/retention/retention_policy_worker_B.py      | 114 [32m+[m[31m---------[m
+ .../cvm_formulario_informacoes_trimestrais/stage/transform/to_interim/to_interim_orchestrator.py       |   3 [31m-[m
+ .../cvm_formulario_informacoes_trimestrais/stage/transform/to_processed/to_processed_orchestrator.py   |   3 [31m-[m
+ pipelines/shared/interfaces/pipelines/stage/compare/comparator_orchestrator.py                         |   4 [32m+[m
+ .../comparator_worker_B.py => shared/interfaces/pipelines/stage/compare/comparator_worker_A.py}        | 585 [32m+++++++++++++++++++++++++++++[m[31m-----------------------[m
+ pipelines/shared/interfaces/pipelines/stage/compare/comparator_workers.py                              |  27 [31m---[m
+ pipelines/shared/interfaces/pipelines/stage/extract/extractor_orchestrator.py                          |   4 [32m+[m
+ pipelines/shared/interfaces/pipelines/stage/load/loader_orchestrator.py                                |   4 [32m+[m
+ pipelines/shared/interfaces/pipelines/stage/load/loader_worker_A.py                                    | 118 [32m+++++++++++[m
+ pipelines/shared/interfaces/pipelines/stage/retention/retention_policy_orchestrator.py                 |   7 [32m+[m
+ pipelines/shared/interfaces/pipelines/stage/retention/retention_policy_worker_A.py                     | 132 [32m++++++++++++[m
+ pipelines/shared/interfaces/pipelines/stage/retention/retention_policy_worker_B.py                     | 124 [32m+++++++++++[m
+ pipelines/shared/interfaces/pipelines/stage/transform/to_interim/to_interim_orchestrator.py            |   4 [32m+[m
+ pipelines/shared/interfaces/pipelines/stage/transform/to_processed/to_processed_orchestrator.py        |   4 [32m+[m
+ 34 files changed, 813 insertions(+), 1594 deletions(-)

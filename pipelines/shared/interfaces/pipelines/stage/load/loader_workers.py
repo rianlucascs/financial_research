@@ -14,6 +14,7 @@ from pipelines.shared.context import PipelineContext
 from pipelines.shared.checkpoint_writer_mixin import CheckpointWriterMixin
 
 from abc import ABC, abstractmethod
+from importlib import import_module
 
 
 class LoaderWorkersInterface(CheckpointWriterMixin, ABC):
@@ -41,6 +42,8 @@ class LoaderWorkersInterface(CheckpointWriterMixin, ABC):
         
         self.pipeline = pipeline
         self.logger = None
+        
+        self.settings = import_module(f"pipelines.scripts.pipelines.{pipeline}.stage.pipeline_settings")
 
 
     @abstractmethod

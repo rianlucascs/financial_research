@@ -15,8 +15,6 @@ from pipelines.shared.interfaces.pipelines.stage.transform.to_processed.to_proce
 from pipelines.shared.checkpoint_values import Stage, Step, Status
 from pipelines.shared.utils.io_utils import remove_file
 
-from pipelines.scripts.pipelines.cvm_formulario_informacoes_trimestrais.stage.pipeline_settings import current_snapshot_path, demonstration_codes
-
 from datetime import date
 from pandas import DataFrame, read_parquet
 import pyarrow.parquet as pq
@@ -53,10 +51,19 @@ class ToProcessedWorkerA(ToProcessedWorkersInterface):
         
         current_year = date.today().year
         
-        processed_parquet_path = ctx.prepare_transformed_path(current_snapshot_path(self.pipeline), subdir_stage="to_processed", subdir_format="parquet")
-        interim_parquet_path = ctx.build_transformed_path(current_snapshot_path(self.pipeline), subdir_stage="to_interim", subdir_format="parquet")
+        processed_parquet_path = ctx.prepare_transformed_path(
+            ctx.current_snapshot_path(self.pipeline), 
+            subdir_stage="to_processed", 
+            subdir_format="parquet"
+        )
         
-        for demonstration_code in demonstration_codes:
+        interim_parquet_path = ctx.build_transformed_path(
+            ctx.current_snapshot_path(self.pipeline), 
+            subdir_stage="to_interim", 
+            subdir_format="parquet"
+        )
+        
+        for demonstration_code in getattr(self.settings, "demonstration_codes", []):
             
             # Monta o caminho do arquivo Parquet processado final
             filename = f"itr_cia_aberta_{demonstration_code}_2011-{current_year}.parquet"
@@ -116,7 +123,7 @@ class ToProcessedWorkerA(ToProcessedWorkersInterface):
                 step=Step.CONCATENATE,
                 filename=f"to_processed_worker_a.success.{demonstration_code}.json",
                 status=Status.SUCCESSFUL,
-                source="cvm_formulario_informacoes_trimestrais",
+                source=getattr(self.settings, "url", self.pipeline),
                 extra={
                     "demonstration_code": demonstration_code,
                     "years": list(range(2011, current_year + 1)),
@@ -124,7 +131,3 @@ class ToProcessedWorkerA(ToProcessedWorkersInterface):
                     }
             )
             
-
-if __name__ == "__main__":
-    worker = ToProcessedWorkerA(pipeline="cvm_formulario_informacoes_trimestrais")
-    worker.main(ctx=PipelineContext())
