@@ -187,8 +187,7 @@ class ComparatorWorkerInterfaceA(ComparatorWorkersInterface, ABC):
         pipeline: str,
     ) -> None:
         
-        self.pipeline = pipeline
-        self.logger = None
+        super().__init__(pipeline=pipeline)
         
         self.previous_snapshot = (date.today() - timedelta(days=1)).strftime("%Y-%m-%d")
         self.current_snapshot = date.today().strftime("%Y-%m-%d")
@@ -213,7 +212,13 @@ class ComparatorWorkerInterfaceA(ComparatorWorkersInterface, ABC):
     @abstractmethod
     def _key_cols(self) -> list[str]:
         """
-        Retorna a lista de colunas que serão usadas como chave para identificar linhas únicas.
+        Retorna as colunas que identificam unicamente uma entidade entre snapshots.
+
+        Essas colunas são usadas para relacionar os registros dos snapshots anterior
+        e atual, classificar registros como adicionados ou removidos e localizar
+        registros existentes que podem ter sofrido alterações. Elas não são
+        comparadas como valores alterados; todas as demais colunas do dataset são
+        avaliadas nessa comparação.
         """
         ...
         

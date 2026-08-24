@@ -34,10 +34,10 @@ class PipelineInterface(ABC):
     Métodos que a subclasse deve implementar:
         ``build_extractor_orchestrator``: define qual orquestrador de extração essa pipeline usa.
         ``build_to_interim_orchestrator``: define qual orquestrador de to_interim essa pipeline usa.
-        ``build_to_processed_orchestrator``: define qual orquestrador de to_processed essa pipeline usa.
         ``build_loader_orchestrator``: define qual orquestrador de carga essa pipeline usa.
     
     Metodos opcionais que a subclasse pode implementar:
+        ``build_to_processed_orchestrator``: define qual orquestrador de to_processed essa pipeline usa.
         ``build_comparator_orchestrator``: define qual orquestrador de comparação essa pipeline usa.
         ``build_retention_policy_orchestrator``: define qual orquestrador de política de retenção essa pipeline usa.
     
@@ -66,8 +66,8 @@ class PipelineInterface(ABC):
     def build_to_interim_orchestrator(self) -> ToInterimOrchestratorInterface: ...
     
     
-    @abstractmethod
-    def build_to_processed_orchestrator(self) -> ToProcessedOrchestratorInterface: ...
+    def build_to_processed_orchestrator(self) -> ToProcessedOrchestratorInterface | None:
+        return None
     
     
     @abstractmethod
@@ -91,7 +91,9 @@ class PipelineInterface(ABC):
         
         self.build_to_interim_orchestrator().main(ctx=self.ctx)
         
-        self.build_to_processed_orchestrator().main(ctx=self.ctx)
+        to_processed = self.build_to_processed_orchestrator()
+        if to_processed is not None:
+            to_processed.main(ctx=self.ctx)
         
         self.build_loader_orchestrator().main(ctx=self.ctx)
         

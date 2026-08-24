@@ -20,7 +20,6 @@ from pipelines.shared.checkpoint_values import Stage, Step, Status
 from datetime import date, timedelta
 from pathlib import Path
 from typing import Literal
-from importlib import import_module
 
 
 class RetentionPolicyWorkerInterfaceA(RetentionPolicyWorkersInterface):
@@ -35,10 +34,9 @@ class RetentionPolicyWorkerInterfaceA(RetentionPolicyWorkersInterface):
         pipeline: str,
     ) -> None:
         
-        self.pipeline = pipeline
-        self.logger = None
-        
-        import_module(f"pipelines.scripts.pipelines.{self.pipeline}.stage.pipeline_settings")
+        super().__init__(
+            pipeline=pipeline
+        )
     
     
     def _list_snapshots(self, ctx: PipelineContext, snapshots_root: Literal["data_dir", "historical_data_dir"]) -> list[tuple[Path, str]]:

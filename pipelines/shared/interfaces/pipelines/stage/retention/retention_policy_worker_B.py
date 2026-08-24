@@ -33,8 +33,9 @@ class RetentionPolicyWorkerInterfaceB(RetentionPolicyWorkersInterface):
         pipeline: str,
     ) -> None:
         
-        self.pipeline = pipeline
-        self.logger = None
+        super().__init__(
+            pipeline=pipeline
+        )
     
     
     def _get_creation_time(self, path: Path) -> date:
