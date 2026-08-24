@@ -3,10 +3,8 @@ Settings:
     pipeline_settings
 
 Responsabilidades:
-    Variáveis de `configuração` do pipeline `cvm_cias_abertas_informacao_cadastral`.
-    
-    - Url de download do arquivo CSV.
-    - Nome do arquivo CSV.
+    - Definir as configurações do pipeline `cvm_cias_abertas_informacao_cadastral`, 
+    incluindo a URL base para baixar o arquivo CSV do site da CVM (Comissão de Valores Mobiliários) e o nome do arquivo CSV a ser baixado.
     
 Notas:
     ...

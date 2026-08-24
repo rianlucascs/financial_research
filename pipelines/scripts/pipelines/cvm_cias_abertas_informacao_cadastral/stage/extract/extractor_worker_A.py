@@ -101,8 +101,3 @@ class ExtractorWorkerA(ExtractorWorkersInterface):
                     extra={"download_result": None, "error": f"Falha ao baixar o arquivo CSV após {max_attempts} tentativas."},
                 )
 
-
-if __name__ == "__main__":
-    
-    worker = ExtractorWorkerA(pipeline="cvm_cias_abertas_informacao_cadastral")
-    worker.main(ctx=PipelineContext())

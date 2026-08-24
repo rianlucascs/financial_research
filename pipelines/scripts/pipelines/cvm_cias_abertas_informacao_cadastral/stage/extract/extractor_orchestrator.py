@@ -8,9 +8,6 @@ from pipelines.scripts.pipelines.cvm_cias_abertas_informacao_cadastral.stage.ext
 
 
 class ExtractorOrchestrator(ExtractorOrchestratorInterface):
-
-
-    process: str = "extractor_orchestrator"
     
     
     def __init__(
