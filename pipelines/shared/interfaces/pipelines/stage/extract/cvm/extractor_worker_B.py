@@ -7,22 +7,7 @@ Responsabilidades:
     
 Notas:
     
-    Caso o pipelines seja executado no mesmo dia em que os arquivos `ZIP` foram baixados, o worker irá sobrescrever os arquivos baixados.
-    
-    ---
-    
-    Páginas com o mesmo padrão:
-    
-    Arquivos ZIP via HTTP:
-
-        - https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/ITR/DADOS/
-        - https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/DFP/DADOS/
-        - https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/FRE/DADOS/
-        - https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/FRE/DADOS/
-        - https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/IPE/DADOS/
-        - https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/FCA/DADOS/
-        - https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/VLMO/DADOS/
-        
+    Caso o pipelines seja executado no mesmo dia em que os arquivos `CSV` foram baixados, o worker irá sobrescrever os arquivos baixados.
 """
 
 
