@@ -36,7 +36,9 @@ class ToInterimWorkerA(ToInterimWorkersInterface):
         pipeline: str,
     ) -> None:
         
-        super().__init__(pipeline=pipeline)
+        super().__init__(
+            pipeline=pipeline
+        )
 
     
     def _cast_column_vl_conta(self, df: RawData) -> tuple[InterimData, dict[str, str]]:

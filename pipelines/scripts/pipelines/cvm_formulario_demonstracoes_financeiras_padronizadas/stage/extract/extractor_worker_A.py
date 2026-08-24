@@ -35,7 +35,9 @@ class ExtractorWorkerA(ExtractorWorkersInterface):
         pipeline: str,
     ) -> None:
         
-        super().__init__(pipeline=pipeline)
+        super().__init__(
+            pipeline=pipeline
+        )
         
     
     def _download_zip_file(self, filename: str, raw_path_zip: Path) -> tuple[Path | None, str | None]:

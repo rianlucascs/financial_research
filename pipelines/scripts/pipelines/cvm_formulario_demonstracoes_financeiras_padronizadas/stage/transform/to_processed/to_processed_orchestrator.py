@@ -16,7 +16,9 @@ class ToProcessedOrchestrator(ToProcessedOrchestratorInterface):
         pipeline: str,
     ) -> None:
         
-        super().__init__(pipeline=pipeline)
+        super().__init__(
+            pipeline=pipeline
+        )
 
 
     def _build_workers(self, ctx: PipelineContext) -> list[ToProcessedWorkersInterface]:

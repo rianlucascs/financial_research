@@ -17,9 +17,6 @@ from pathlib import Path
 
 
 class ComparatorWorkerA(ComparatorWorkerInterfaceA):
-    
-    
-    process: str = "comparator_worker_A"
 
 
     def __init__(
@@ -28,7 +25,9 @@ class ComparatorWorkerA(ComparatorWorkerInterfaceA):
         pipeline: str,
     ) -> None:
         
-        super().__init__(pipeline=pipeline)
+        super().__init__(
+            pipeline=pipeline
+        )
         
         
     def _build_previous_data_path(self, ctx: PipelineContext) -> Path:

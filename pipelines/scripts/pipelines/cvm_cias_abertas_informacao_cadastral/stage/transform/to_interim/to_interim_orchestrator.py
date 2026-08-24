@@ -9,9 +9,6 @@ from pipelines.scripts.pipelines.cvm_cias_abertas_informacao_cadastral.stage.tra
 
 class ToInterimOrchestrator(ToInterimOrchestratorInterface):
     
-    
-    process: str = "to_interim_orchestrator"
-    
 
     def __init__(
         self,
@@ -19,7 +16,9 @@ class ToInterimOrchestrator(ToInterimOrchestratorInterface):
         pipeline: str,
     ) -> None:
         
-        super().__init__(pipeline=pipeline)
+        super().__init__(
+            pipeline=pipeline
+        )
 
 
     def _build_workers(self, ctx: PipelineContext) -> list[ToInterimWorkersInterface]:

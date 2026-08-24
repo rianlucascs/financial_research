@@ -15,7 +15,9 @@ class LoaderWorkerA(LoaderWorkerInterfaceA):
         pipeline: str,
     ) -> None:
         
-        super().__init__(pipeline=pipeline)
+        super().__init__(
+            pipeline=pipeline
+        )
 
 
     def _build_data_path(self, ctx: PipelineContext) -> Path:

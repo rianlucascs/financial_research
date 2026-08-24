@@ -16,6 +16,17 @@ class LoaderOrchestratorInterface(BaseOrchestratorInterface):
     process: str = "loader_orchestrator"
     
 
+    def __init__(
+        self,
+        *,
+        pipeline: str,
+    ) -> None:
+
+        super().__init__(
+            pipeline=pipeline
+        )
+        
+        
     @abstractmethod
     def _build_workers(self, ctx: PipelineContext) -> list[LoaderWorkersInterface]:
 

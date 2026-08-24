@@ -32,7 +32,9 @@ class ExtractorWorkerB(ExtractorWorkersInterface):
         pipeline: str,
     ) -> None:
         
-        super().__init__(pipeline=pipeline)
+        super().__init__(
+            pipeline=pipeline
+        )
     
     
     def _extract_zip_files(self, filename: str, raw_zip_path: Path, raw_csv_path: Path) -> list[str]:

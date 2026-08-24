@@ -16,8 +16,9 @@ class ComparatorOrchestrator(ComparatorOrchestratorInterface):
         pipeline: str,
     ) -> None:
         
-        self.pipeline = pipeline
-        self.logger = None
+        super().__init__(
+            pipeline=pipeline
+        )
     
     
     def _build_workers(self, ctx: PipelineContext) -> list[ComparatorWorkersInterface]:

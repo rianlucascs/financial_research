@@ -34,7 +34,9 @@ class ToProcessedWorkerA(ToProcessedWorkersInterface):
         pipeline: str,
     ) -> None:
         
-        super().__init__(pipeline=pipeline)
+        super().__init__(
+            pipeline=pipeline
+        )
     
     
     def _add_derived_columns(self, df: DataFrame) -> DataFrame:

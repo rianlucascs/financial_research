@@ -187,7 +187,9 @@ class ComparatorWorkerInterfaceA(ComparatorWorkersInterface, ABC):
         pipeline: str,
     ) -> None:
         
-        super().__init__(pipeline=pipeline)
+        super().__init__(
+            pipeline=pipeline
+        )
         
         self.previous_snapshot = (date.today() - timedelta(days=1)).strftime("%Y-%m-%d")
         self.current_snapshot = date.today().strftime("%Y-%m-%d")

@@ -32,7 +32,9 @@ class ToInterimWorkerA(ToInterimWorkersInterface):
         pipeline: str,
     ) -> None:
         
-        super().__init__(pipeline=pipeline)
+        super().__init__(
+            pipeline=pipeline
+        )
         
         
     def _cast_columns(self, df: RawData) -> InterimData:

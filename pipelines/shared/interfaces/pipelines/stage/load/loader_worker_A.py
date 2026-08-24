@@ -33,9 +33,9 @@ class LoaderWorkerInterfaceA(LoaderWorkersInterface):
         pipeline: str,
     ) -> None:
         
-        self.pipeline = pipeline
-        self.logger = None
-        
+        super().__init__(
+            pipeline=pipeline
+        )
 
     @abstractmethod
     def _build_data_path(self, ctx: PipelineContext) -> Path:

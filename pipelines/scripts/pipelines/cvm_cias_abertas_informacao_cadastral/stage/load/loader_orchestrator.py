@@ -8,9 +8,6 @@ from pipelines.scripts.pipelines.cvm_cias_abertas_informacao_cadastral.stage.loa
 
 
 class LoaderOrchestrator(LoaderOrchestratorInterface):
-    
-    
-    process: str = "loader_orchestrator"
 
 
     def __init__(
@@ -19,7 +16,9 @@ class LoaderOrchestrator(LoaderOrchestratorInterface):
         pipeline: str,
     ) -> None:
         
-        super().__init__(pipeline=pipeline)
+        super().__init__(
+            pipeline=pipeline
+        )
 
 
     def _build_workers(self, ctx: PipelineContext) -> list[LoaderWorkersInterface]:
