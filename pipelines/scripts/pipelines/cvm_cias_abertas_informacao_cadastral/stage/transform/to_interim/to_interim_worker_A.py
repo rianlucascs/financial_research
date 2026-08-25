@@ -1,29 +1,9 @@
-"""
-Worker:
-    to_interim_worker_a
-
-Responsabilidades:
-    ...
-    
-Notas:
-    ...
-"""
 
 
-from pipelines.shared.context import PipelineContext
-from pipelines.shared.interfaces.pipelines.stage.transform.to_interim.to_interim_workers import ToInterimWorkersInterface
-from pipelines.shared.interfaces.pipelines.stage_interface import RawData, InterimData
-from pipelines.shared.utils.io_utils import read_csv_with_fallback, clear_directory
-from pipelines.shared.checkpoint_values import Stage, Step, Status
-
-from pandas import to_datetime
-import gc
+from pipelines.shared.interfaces.pipelines.stage.transform.to_interim.cvm.to_interim_worker_A import ToInterimWorkerInterfaceA
 
 
-class ToInterimWorkerA(ToInterimWorkersInterface):
-    
-    
-    process: str = "to_interim_worker_a"
+class ToInterimWorkerA(ToInterimWorkerInterfaceA):
 
 
     def __init__(
@@ -35,11 +15,11 @@ class ToInterimWorkerA(ToInterimWorkersInterface):
         super().__init__(
             pipeline=pipeline
         )
-        
-        
-    def _cast_columns(self, df: RawData) -> InterimData:
 
-        column_types = {
+
+    def _columns_to_cast(self) -> dict[str, str]:
+        
+        return {
             
             'CNPJ_CIA': "string",
             'DENOM_SOCIAL': "string",
@@ -82,30 +62,11 @@ class ToInterimWorkerA(ToInterimWorkersInterface):
             'CNPJ_AUDITOR': "string",
             'AUDITOR': "string",
         }
+
+
+    def _columns_to_parse_dates(self) -> list[str]:
         
-        cast_failed: dict[str, str] = {}
-        
-        for col, dtype in column_types.items():
-            
-            if col not in df.columns:
-                continue
-            
-            try:
-                
-                df[col] = df[col].astype(dtype)
-                
-            except (ValueError, TypeError) as exc:
-                
-                cast_failed[col] = str(dtype)
-                
-                self.logger.warning(f"Não foi possível converter '{col}' para '{dtype}': {exc}")
-
-        return df, cast_failed
-
-
-    def _parse_dates(self, df: RawData) -> tuple[InterimData, dict[str, int]]:
-
-        date_columns = [
+        return [
             "DT_REG",
             "DT_CONST",
             "DT_CANCEL",
@@ -114,86 +75,3 @@ class ToInterimWorkerA(ToInterimWorkersInterface):
             "DT_INI_SIT_EMISSOR",
             "DT_INI_RESP",
         ]
-
-        parse_invalid_dates: dict[str, int] = {}
-        
-        for col in date_columns:
-            
-            if col in df.columns:
-            
-                df[col] = to_datetime(df[col], errors="coerce")
-                
-                invalid_dates = df[col].isna().sum()
-                
-                if invalid_dates > 0:
-                
-                    parse_invalid_dates[col] = invalid_dates
-                    
-                    self.logger.warning(f"Foram encontradas {invalid_dates} datas inválidas em {col}.")
-                    
-        return df, parse_invalid_dates
-    
-    
-    def _worker(self, ctx: PipelineContext) -> None:
-        
-        filename = getattr(self.settings, "filename", ValueError)
-        
-        build_raw_path_csv = (
-            ctx.build_raw_path(
-                pipeline=ctx.current_snapshot_path(self.pipeline), 
-                subdir_format="csv") 
-            / filename
-        )
-        
-        interim_parquet_path = (
-            ctx.prepare_transformed_path(
-                ctx.current_snapshot_path(self.pipeline), 
-                subdir_stage="to_interim", 
-                subdir_format="parquet") 
-        )
-        
-        clear_directory(interim_parquet_path, logger=self.logger, remove_root=False)
-
-        try:
-        
-            df = read_csv_with_fallback(build_raw_path_csv, self.logger)
-        
-        except Exception as e:
-            
-            self.logger.error(f"Falha ao ler o arquivo CSV '{build_raw_path_csv}': {e}")
-            
-            self._write_checkpoint(
-                ctx=ctx,
-                stage=Stage.TO_INTERIM,
-                step=Step.PARSE,
-                filename=f"to_interim_worker_a.failed.{filename}.json",
-                status=Status.FAILED,
-                source=getattr(self.settings, "url", self.pipeline),
-                extra={"error": str(e)},
-            )
-        
-            return
-        
-        df, dict_cast_columns_failed = self._cast_columns(df)
-        df, dict_parse_invalid_dates = self._parse_dates(df)
-        
-        interim_file_path = interim_parquet_path / filename.replace('.csv', '.parquet')
-        df.to_parquet(interim_file_path, index=False, engine="pyarrow")
-        
-        del df
-        gc.collect()
-
-        _filename = filename.removesuffix('.csv')
-        
-        self._write_checkpoint(
-            ctx=ctx,
-            stage=Stage.TO_INTERIM,
-            step=Step.PARSE,
-            filename=f"to_interim_worker_a.success.{_filename}.json",
-            status=Status.SUCCESSFUL,
-            source=getattr(self.settings, "url", self.pipeline),
-            extra={
-                "parse_invalid_dates": dict_parse_invalid_dates,
-                "cast_failed_columns": dict_cast_columns_failed,
-                }
-            )
