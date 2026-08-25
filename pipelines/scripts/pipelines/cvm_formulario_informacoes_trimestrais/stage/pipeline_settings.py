@@ -19,8 +19,14 @@ from datetime import date
 url: str = "https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/ITR/DADOS/"
 
 
+file_prefix: str = "dfp_cia_aberta"
+
+
+start_year: int = 2011
+
+
 # Lista de arquivos zip a serem baixados, um para cada ano de 2011 até o ano atual.
-build_archives_zip: list[str] = [f'itr_cia_aberta_{year_now}.zip' for year_now in range(2011, date.today().year + 1)]
+build_archives_zip: list[str] = [f'{file_prefix}_{year_now}.zip' for year_now in range(start_year, date.today().year + 1)]
 
 
 # Lista de códigos de demonstrações financeiras padronizadas (CVM) a serem processadas.
