@@ -62,10 +62,10 @@ class RetentionPolicyWorkerInterfaceB(RetentionPolicyWorkersInterface):
     def _select_logs_to_remove(self, logs: list[tuple[Path, str, date]]) -> list[Path]:
         """Seleciona os logs que devem ser removidos com base na política de retenção."""
         
-        # Define a política de retenção: manter os últimos 3 dias de logs
+        # Define a política de retenção: manter os últimos 2 dias de logs
         manter = {
             date.today() - timedelta(days=i)
-            for i in range(3)
+            for i in range(2)
         }
         
         # Datas que podem ser apagadas
@@ -107,7 +107,7 @@ class RetentionPolicyWorkerInterfaceB(RetentionPolicyWorkersInterface):
         self._write_checkpoint(
             ctx=ctx,
             stage=Stage.RETENTION,
-            step=Step.CLEANUP,
+            step=Step.CLEANUP_LOGS,
             filename="retention_policy_workers_b.success.json",
             status=Status.SUCCESSFUL,
             source=getattr(self.settings, "url", self.pipeline),

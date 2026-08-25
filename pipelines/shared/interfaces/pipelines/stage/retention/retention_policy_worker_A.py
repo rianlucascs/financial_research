@@ -104,8 +104,8 @@ class RetentionPolicyWorkerInterfaceA(RetentionPolicyWorkersInterface):
         """
         
         roots = [
-            {"name": "data_dir", "number_days": 3}, 
-            {"name": "historical_data_dir", "number_days": 3}
+            {"name": "data_dir", "number_days": 2}, 
+            {"name": "historical_data_dir", "number_days": 2}
         ]
         
         for root in roots:
@@ -117,7 +117,7 @@ class RetentionPolicyWorkerInterfaceA(RetentionPolicyWorkersInterface):
             self._write_checkpoint(
                 ctx=ctx,
                 stage=Stage.RETENTION,
-                step=f"{Step.CLEANUP.value}/{root['name']}",
+                step=f"{Step.CLEANUP_SNAPSHOTS}/{root['name']}",
                 filename="retention_policy_workers_a.success.json",
                 status=Status.SUCCESSFUL,
                 source=getattr(self.settings, "url", self.pipeline),

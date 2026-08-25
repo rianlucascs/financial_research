@@ -34,8 +34,7 @@ class ToInterimWorkerInterfaceA(ToInterimWorkersInterface, ABC):
         ``_columns_to_parse_dates``: Retorna uma lista com os nomes das colunas que devem ser convertidas para o tipo de dado datetime.
         ``_columns_to_cast_to_numeric``: Retorna uma lista com os nomes das colunas que devem ser convertidas para o tipo de dado numérico.
     """
-    
-    
+     
     
     process: str = "to_interim_worker_a"
 
@@ -108,9 +107,9 @@ class ToInterimWorkerInterfaceA(ToInterimWorkersInterface, ABC):
             
             if col not in df.columns:
                 
-                cast_failed[col] = str(dtype)
+                # cast_failed[col] = str(dtype)
                 
-                self.logger.warning(f"A coluna '{col}' não foi encontrada no DataFrame.")
+                # self.logger.warning(f"A coluna '{col}' não foi encontrada no DataFrame.")
                 
                 continue
             
@@ -156,11 +155,11 @@ class ToInterimWorkerInterfaceA(ToInterimWorkersInterface, ABC):
                     
                     self.logger.warning(f"Foram encontradas {invalid_dates} datas inválidas em {col}.")
             
-            else:
+            # else:
                 
-                parse_invalid_dates[col] = 0
+            #     parse_invalid_dates[col] = 0
                 
-                self.logger.warning(f"A coluna '{col}' não foi encontrada no DataFrame.")
+            #     self.logger.warning(f"A coluna '{col}' não foi encontrada no DataFrame.")
                 
                     
         return df, parse_invalid_dates
@@ -202,11 +201,11 @@ class ToInterimWorkerInterfaceA(ToInterimWorkersInterface, ABC):
                     
                     self.logger.warning(f"Não foi possível converter '{col}' para 'float64': {exc}")
 
-            else:
+            # else:
                 
-                cast_failed[col] = "float64"
+            #     cast_failed[col] = "float64"
                 
-                self.logger.warning(f"A coluna '{col}' não foi encontrada no DataFrame.")
+            #     self.logger.warning(f"A coluna '{col}' não foi encontrada no DataFrame.")
             
         return df, cast_failed
 
@@ -227,6 +226,8 @@ class ToInterimWorkerInterfaceA(ToInterimWorkersInterface, ABC):
         clear_directory(interim_parquet_path, logger=self.logger, remove_root=False)
         
         for filename in listdir(raw_csv_path):
+            
+            # Aplica em todos os arquivos CSV encontrados no diretório RawData, convertendo-os para Parquet e aplicando os tipos corretos.
             
             if filename.endswith(".csv"):
                 
