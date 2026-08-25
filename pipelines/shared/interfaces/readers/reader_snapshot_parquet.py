@@ -16,21 +16,27 @@ class ReaderSnapshotParquetInterface(ABC):
         ctx: PipelineContext | None = None,
         subdir_stage: Literal["to_interim", "to_processed"] = "to_interim",
         subdir_format: str = "parquet",
+        file_identifiers: str | None = None,
     ) -> None:
         
         self.ctx = ctx or PipelineContext()
         self.pipeline = pipeline
         self.subdir_stage = subdir_stage
         self.subdir_format = subdir_format
+        self.file_identifiers = file_identifiers if ".parquet" in file_identifiers else f"{file_identifiers}.parquet"
 
 
     def _build_parquet_path(self) -> str:
         
-        return self.ctx.build_transformed_path(
+        return (
+            self.ctx.build_transformed_path(
             self.ctx.current_snapshot_path(self.pipeline),
             subdir_stage=self.subdir_stage,
-            subdir_format=self.subdir_format,
-        )
+            subdir_format=self.subdir_format)
+            / self.file_identifiers
+            )
+
 
     def read(self) -> DataFrame:
+        
         return read_parquet(self._build_parquet_path(), engine="pyarrow")

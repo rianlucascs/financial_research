@@ -12,4 +12,5 @@ class ReaderSnapshotParquet(ReaderSnapshotParquetInterface):
 
         super().__init__(
             pipeline="cvm_cias_abertas_informacao_cadastral",
+            filename="cad_cia_aberta.parquet"
         )

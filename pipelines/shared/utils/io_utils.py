@@ -4,6 +4,7 @@
 from pathlib import Path
 from pandas import DataFrame, read_csv
 from pandas.errors import ParserError
+from csv import QUOTE_NONE
 
 
 def remove_file(zip_path: Path, logger) -> None:
@@ -67,7 +68,9 @@ def clear_directory(path: Path, logger, remove_root: bool = True) -> None:
             
 
 def read_csv_with_fallback(file_path, logger, sep=";", encoding="iso-8859-1") -> DataFrame:
-    """Tenta ler um arquivo CSV com pandas. Se falhar, tenta novamente com engine='python'."""
+    """Tenta ler um arquivo CSV com pandas. Se falhar, tenta novamente com engine='python'.
+    Se ainda assim falhar (linhas com delimitadores não escapados no conteúdo), ignora as linhas malformadas.
+    """
 
     try:
         
@@ -85,7 +88,42 @@ def read_csv_with_fallback(file_path, logger, sep=";", encoding="iso-8859-1") ->
                 encoding=encoding,
                 dtype=str,
                 engine="python",
+                quoting=QUOTE_NONE,
             )
+
+        except ParserError as exc:
+            
+            logger.warning(f"Falha no fallback em '{file_path}' ({exc}). Ignorando linhas malformadas.")
+
+            bad_lines: list[list[str]] = []
+
+            def _on_bad_line(bad_line: list[str]) -> None:
+                bad_lines.append(bad_line)
+                return None
+
+            try:
+
+                df = read_csv(
+                    file_path,
+                    sep=sep,
+                    encoding=encoding,
+                    dtype=str,
+                    engine="python",
+                    quoting=QUOTE_NONE,
+                    on_bad_lines=_on_bad_line,
+                )
+
+                if bad_lines:
+
+                    logger.warning(f"'{file_path}': {len(bad_lines)} linha(s) malformada(s) ignorada(s).")
+
+                return df
+
+            except Exception as exc:
+
+                logger.error(f"Falha ao ler '{file_path}' ignorando linhas malformadas: {exc}")
+
+                raise
 
         except Exception as exc:
             

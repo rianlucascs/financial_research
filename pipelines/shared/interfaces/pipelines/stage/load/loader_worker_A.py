@@ -49,7 +49,7 @@ class LoaderWorkerInterfaceA(LoaderWorkersInterface):
     def _worker(self, ctx: PipelineContext) -> None:
         
         data_path = self._build_data_path(ctx=ctx)
-        load_path = ctx.prepare_load_path(ctx.current_snapshot_path(self.pipeline))
+        load_path = ctx.prepare_load_path(ctx.current_snapshot_path(self.pipeline)) 
         
         for parquet_path in data_path.glob("*.parquet"):
             
