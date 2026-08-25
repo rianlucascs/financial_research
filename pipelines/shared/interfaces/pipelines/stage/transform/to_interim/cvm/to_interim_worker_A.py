@@ -107,6 +107,11 @@ class ToInterimWorkerInterfaceA(ToInterimWorkersInterface, ABC):
         for col, dtype in self._columns_to_cast().items():
             
             if col not in df.columns:
+                
+                cast_failed[col] = str(dtype)
+                
+                self.logger.warning(f"A coluna '{col}' não foi encontrada no DataFrame.")
+                
                 continue
             
             try:
@@ -150,6 +155,13 @@ class ToInterimWorkerInterfaceA(ToInterimWorkersInterface, ABC):
                     parse_invalid_dates[col] = invalid_dates
                     
                     self.logger.warning(f"Foram encontradas {invalid_dates} datas inválidas em {col}.")
+            
+            else:
+                
+                parse_invalid_dates[col] = 0
+                
+                self.logger.warning(f"A coluna '{col}' não foi encontrada no DataFrame.")
+                
                     
         return df, parse_invalid_dates
     
@@ -189,7 +201,13 @@ class ToInterimWorkerInterfaceA(ToInterimWorkersInterface, ABC):
                     cast_failed[col] = "float64"
                     
                     self.logger.warning(f"Não foi possível converter '{col}' para 'float64': {exc}")
-        
+
+            else:
+                
+                cast_failed[col] = "float64"
+                
+                self.logger.warning(f"A coluna '{col}' não foi encontrada no DataFrame.")
+            
         return df, cast_failed
 
 
