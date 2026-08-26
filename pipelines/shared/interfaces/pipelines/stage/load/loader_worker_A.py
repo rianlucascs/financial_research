@@ -22,6 +22,11 @@ from pathlib import Path
 
 
 class LoaderWorkerInterfaceA(LoaderWorkersInterface):
+    """
+    Classe responsável por implementar a lógica de carregamento de dados do worker 'loader_worker_a'.
+    
+    Está classe carrega os dados dos arquivos InterimData para bancos de dados SQLite, criando um arquivo .db para cada tabela.
+    """
     
     
     process: str = "loader_worker_a"
@@ -36,6 +41,7 @@ class LoaderWorkerInterfaceA(LoaderWorkersInterface):
         super().__init__(
             pipeline=pipeline
         )
+
 
     @abstractmethod
     def _build_data_path(self, ctx: PipelineContext) -> Path:

@@ -1,13 +1,3 @@
-"""
-Worker:
-    loader_worker_a
-
-Responsabilidades:
-    Carregar InterimData em banco de dados SQLite, criando um arquivo .db para cada tabela. 
-    
-Notas:
-    Caso o pipelines seja executado no mesmo dia em que os arquivos InterimData foram gerados, o worker irá sobrescrever os arquivos .db existentes.
-"""
 
 
 from pipelines.shared.context import PipelineContext

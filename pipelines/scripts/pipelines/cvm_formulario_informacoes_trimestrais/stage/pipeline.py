@@ -5,7 +5,7 @@ from pipelines.shared.interfaces.pipelines.stage.pipeline import PipelineInterfa
 from pipelines.scripts.pipelines.cvm_formulario_informacoes_trimestrais.stage.extract.extractor_orchestrator import ExtractorOrchestrator
 from pipelines.scripts.pipelines.cvm_formulario_informacoes_trimestrais.stage.transform.to_interim.to_interim_orchestrator import ToInterimOrchestrator
 from pipelines.scripts.pipelines.cvm_formulario_informacoes_trimestrais.stage.transform.to_processed.to_processed_orchestrator import ToProcessedOrchestrator
-from pipelines.scripts.pipelines.cvm_formulario_informacoes_trimestrais.stage.load.loader_orchestrator import LoaderOrchestrator
+# from pipelines.scripts.pipelines.cvm_formulario_informacoes_trimestrais.stage.load.loader_orchestrator import LoaderOrchestrator
 from pipelines.scripts.pipelines.cvm_formulario_informacoes_trimestrais.stage.compare.comparator_orchestrator import ComparatorOrchestrator
 from pipelines.scripts.pipelines.cvm_formulario_informacoes_trimestrais.stage.retention.retention_policy_orchestrator import RetentionPolicyOrchestrator
 
@@ -28,8 +28,8 @@ class PipelineTemplate(PipelineInterface):
 		return ToProcessedOrchestrator(pipeline=self.pipeline)
 
 
-	def build_loader_orchestrator(self) -> LoaderOrchestrator:
-		return LoaderOrchestrator(pipeline=self.pipeline)
+	def build_loader_orchestrator(self) -> None:
+		return None
 
 
 	def build_comparator_orchestrator(self) -> ComparatorOrchestrator:
