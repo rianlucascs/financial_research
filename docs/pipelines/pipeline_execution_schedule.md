@@ -8,6 +8,7 @@ Visão geral dos horários programados para os pipelines ativos do projeto.
 | `cvm_formulario_demonstracoes_financeiras_padronizadas` | 08:00:00 | Diária | Executado pelo serviço `financial-research-cvm-dfp.timer`. |
 | `cvm_formulario_informacoes_trimestrais` | 08:30:00 | Diária | Executado pelo serviço `financial-research-cvm-itr.timer`. |
 | `cvm_cias_abertas_informacao_cadastral` | 09:10:00 | Diária | Executado pelo serviço `financial-research-cvm-cad.timer`. |
+| `cvm_formulario_de_referencia` | 19:00:00 | Diária | Executado pelo serviço `financial-research-cvm-fre.timer`. |
 
 ## Visão geral da execução
 

@@ -40,3 +40,11 @@ services:
       - PYTHONUNBUFFERED=1
       - PIPELINE_NAME=cvm_cias_abertas_informacao_cadastral
       - PIPELINE_ENV=prod
+
+  cvm-fre-pipeline:
+    <<: *pipeline-common
+    container_name: cvm-fre-pipeline
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PIPELINE_NAME=cvm_formulario_de_referencia
+      - PIPELINE_ENV=prod
