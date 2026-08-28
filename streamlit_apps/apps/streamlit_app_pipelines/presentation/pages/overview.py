@@ -18,7 +18,7 @@ st.markdown(
     <h1 style="
         color: #FFFFFF;
         font-family: 'Inter', sans-serif;
-        font-size: 30px;
+        font-size: 40px;
         font-weight: 600;
         letter-spacing: 0.02em;
         margin: 0 0 20px 0;
@@ -27,7 +27,16 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.caption("Monitoramento do Sistema")
+st.markdown(
+    """
+    <p style="color: #FFFFFF; font-size: 15px; margin-top: -15px;">
+        Monitoramento do Sistema
+    </p>
+    """,
+    unsafe_allow_html=True,
+)
+
+
 
 render_system_widget(
     memory_info=system_service.get_memory_info(),
