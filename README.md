@@ -39,14 +39,18 @@ A camada de pipelines é responsável pela aquisição, preparação e persistê
 ### Pipelines disponíveis
 
 | Pipeline | Fonte dos dados | Descrição |
-|---|---|---|
-| `cvm_formulario_informacoes_trimestrais` | [CVM](https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/ITR/DADOS/) | Extração e processamento dos dados do formulário ITR. |
-| `cvm_formulario_demonstracoes_financeiras_padronizadas` | [CVM](https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/DFP/DADOS/) | Extração e processamento dos dados do formulário DFP. |
-| `cvm_cias_abertas_informacao_cadastral` | [CVM](https://dados.cvm.gov.br/dataset/cia_aberta-cad) | Extração e processamento dos dados de empresas abertas. |
-| `cvm_formulario_de_referencia` | [CVM](https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/FRE/DADOS/) | Extração e processamento dos dados do formulário FRE. |
-| `cvm_informacoes_periodicas_e_eventuais` | [CVM](https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/IPE/DADOS/) | Extração e processamento dos dados do formulário IPE. |
-| `cvm_formulario_cadastral` | [CVM](https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/FCA/DADOS/) | Extração e processamento dos dados do formulário FCA.
-| `cvm_valores_mobiliarios_ofertados`| [CVM](https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/VLMO/DADOS/) | Extração e processamento dos dados do formulário VLMO. |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `cvm_formulario_informacoes_trimestrais`                | [CVM](https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/ITR/DADOS/)                                   | Extração e processamento dos dados do formulário ITR.                                            |
+| `cvm_formulario_demonstracoes_financeiras_padronizadas` | [CVM](https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/DFP/DADOS/)                                   | Extração e processamento dos dados do formulário DFP.                                            |
+| `cvm_cias_abertas_informacao_cadastral`                 | [CVM](https://dados.cvm.gov.br/dataset/cia_aberta-cad)                                            | Extração e processamento das informações cadastrais de companhias abertas.                       |
+| `cvm_formulario_de_referencia`                          | [CVM](https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/FRE/DADOS/)                                   | Extração e processamento dos dados do formulário FRE.                                            |
+| `cvm_informacoes_periodicas_e_eventuais` — *dev*        | [CVM](https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/IPE/DADOS/)                                   | Extração e processamento das informações periódicas e eventuais divulgadas pelas companhias.     |
+| `cvm_formulario_cadastral` — *dev*                      | [CVM](https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/FCA/DADOS/)                                   | Extração e processamento dos dados do formulário FCA.                                            |
+| `cvm_valores_mobiliarios_ofertados` — *dev*             | [CVM](https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/VLMO/DADOS/)                                  | Extração e processamento dos dados de valores mobiliários ofertados.                             |
+| `google_noticias_mercado` — *dev*                       | [Google](https://news.google.com/)                                                           | Extração e processamento de notícias relacionadas ao mercado financeiro.                         |
+| `google_enriquecimento_cadastral_ativos` — *dev* | [Google](https://news.google.com/)                                                           | Extração e processamento de Extração e processamento de informações complementares para enriquecimento cadastral e identificação de ativos financeiros. |
+| `b3_indices_segmentos_setoriais` — *dev*                | [B3](https://www.b3.com.br/pt_br/market-data-e-indices/indices/indices-de-segmentos-e-setoriais/) | Extração e processamento da composição dos índices de segmentos e setoriais.                     |
+| `social_monitoramento_agentes_de_mercado` — dev | [Redes sociais]() | Monitoramento e processamento de publicações de agentes de mercado em redes sociais.
 ---
 
 # **Research**
@@ -62,8 +66,9 @@ A camada de Research é responsável pelo consumo e utilização dos dados produ
 
 | App | Descrição | Preview |
 |---|---|---|
-| `streamlit_app_pipelines` | Monitoramento operacional dos pipelines ETL, com consulta de pipelines disponíveis, logs de execução e checkpoints organizados por pipeline, stage e step. | [preview](docs/screenshots/streamlit_apps/streamlit_app_pipelines/page_overview.png) |
-| `streamlit_app_research` | Aplicação analítica para monitoramento geral e setorial do mercado e de empresas específicas, acompanhamento de preços e retornos, avaliação de estratégias de investimento, análise de conjuntos de ativos, consulta de notícias relevantes por ativo e configuração de alertas para eventos e mudanças relevantes. | ![preview](caminho/para/imagem.png) |
+| `streamlit_app_pipelines` | Monitoramento operacional dos pipelines ETL, incluindo:<br>• Consulta de pipelines disponíveis<br>• Logs de execução<br>• Checkpoints organizados por pipeline, stage e step | [preview](docs/screenshots/streamlit_apps/streamlit_app_pipelines/page_overview.png) |
+| `streamlit_app_research` | Aplicação analítica para pesquisa de mercado, incluindo:<br>• Monitoramento geral e setorial<br>• Acompanhamento de preços e retornos<br>• Avaliação de estratégias de investimento<br>• Análise de conjuntos de ativos<br>• Consulta de notícias por ativo<br>• Configuração de alertas | ![preview](caminho/para/imagem.png) |
+---
 
 # **Topologia**
 
