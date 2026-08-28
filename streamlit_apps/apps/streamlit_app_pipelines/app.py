@@ -11,9 +11,7 @@ st.set_page_config(
 
 pg = st.navigation(
     [
-        st.Page("pages/overview.py", title="Overview"),
-        st.Page("pages/logs.py", title="Logs"),
-        st.Page("pages/checkpoints.py", title="Checkpoints")
+        st.Page("presentation/pages/overview.py", title="Overview"),
     ]
 )
 
