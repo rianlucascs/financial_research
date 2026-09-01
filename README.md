@@ -1,4 +1,4 @@
-# **Financial Research**
+# ** kairos-trap**
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)
@@ -11,7 +11,7 @@
 
 ### Visão geral
 
-O Financial Research coleta e processa dados públicos do mercado financeiro brasileiro — CVM, B3 e outras fontes — através de pipelines de ETL. O projeto reúne interfaces, componentes compartilhados e convenções que orientam extração, transformação, validação e persistência dos dados, mantendo os pipelines independentes entre si para atender diferentes fontes, formatos e regras de negócio.
+O kairos-trap coleta e processa dados públicos do mercado financeiro brasileiro — CVM, B3 e outras fontes — através de pipelines de ETL. O projeto reúne interfaces, componentes compartilhados e convenções que orientam extração, transformação, validação e persistência dos dados, mantendo os pipelines independentes entre si para atender diferentes fontes, formatos e regras de negócio.
 
 ---
 
@@ -45,6 +45,7 @@ A camada de pipelines é responsável pela aquisição, preparação e persistê
 | `b3_enriquecimento_cadastral_ativos` — *dev* | [B3](https://www.b3.com.br/)                                                           | Extração e processamento de informações complementares para enriquecimento cadastral e identificação de ativos financeiros. |
 | `b3_indices_segmentos_setoriais` — *dev*                | [B3](https://www.b3.com.br/pt_br/market-data-e-indices/indices/indices-de-segmentos-e-setoriais/) | Extração e processamento da composição dos índices de segmentos e setoriais.                     |
 | `social_monitoramento_agentes_de_mercado` — dev | [Redes sociais]() | Monitoramento e processamento de publicações de agentes de mercado em redes sociais.
+
 ---
 
 # **Research**
@@ -62,8 +63,8 @@ A camada de Research é responsável pelo consumo e utilização dos dados produ
 |---|---|---|
 | `streamlit_app_pipelines` | Monitoramento operacional dos pipelines ETL, incluindo:<br>• Consulta de pipelines disponíveis<br>• Logs de execução<br>• Checkpoints organizados por pipeline, stage e step | [preview](docs/screenshots/streamlit_apps/streamlit_app_pipelines/page_overview.png) |
 | `streamlit_app_research` | Aplicação analítica para pesquisa de mercado, incluindo:<br>• Monitoramento geral e setorial<br>• Acompanhamento de preços e retornos<br>• Avaliação de estratégias de investimento<br>• Análise de conjuntos de ativos<br>• Consulta de notícias por ativo<br>• Configuração de alertas | ![preview](caminho/para/imagem.png) |
----
 
+---
 
 # **Topologia**
 
