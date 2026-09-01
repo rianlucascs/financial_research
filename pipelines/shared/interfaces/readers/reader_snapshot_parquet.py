@@ -39,4 +39,9 @@ class ReaderSnapshotParquetInterface(ABC):
 
     def read(self) -> DataFrame:
         
-        return read_parquet(self._build_parquet_path(), engine="pyarrow")
+        file_path = self._build_parquet_path()
+        
+        if not file_path.exists():
+            raise FileNotFoundError(f"Parquet file not found: {file_path}")
+        
+        return read_parquet(file_path, engine="pyarrow")

@@ -53,6 +53,8 @@ class BrowserSession:
 # factory = ChromeDriverFactory(logger)
 # browser_session = BrowserSession(factory, logger)
 
+# element_finder = ElementFinder(self.logger)
+
 # with browser_session.open(config) as driver:
 #     finder.find_one(driver, "//button[@id='baixar']")
 #     interactor.safe_click(driver, "//button[@id='baixar']")

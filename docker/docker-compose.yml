@@ -48,3 +48,11 @@ services:
       - PYTHONUNBUFFERED=1
       - PIPELINE_NAME=cvm_formulario_de_referencia
       - PIPELINE_ENV=prod
+
+  b3-cad-pipeline:
+    <<: *pipeline-common
+    container_name: b3-cad-pipeline
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PIPELINE_NAME=b3_enriquecimento_cadastral_ativos
+      - PIPELINE_ENV=prod

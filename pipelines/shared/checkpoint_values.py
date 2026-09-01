@@ -57,6 +57,7 @@ class Step(str, Enum):
     CHECKER = "checker"
     JOINER_WORKERS = "joiner_workers"
     
+    
 
 class Status(str, Enum):
     """Status de execução de um checkpoint.
@@ -86,7 +87,8 @@ class FailurePoint(str, Enum):
     Opções: `DRIVER_CREATION`, `FILE_DETECTION`, `VALIDATION`, `EXCEPTION`,
     `DOWNLOAD_BUTTON_NOT_FOUND`, `TRANSFORM_EXCEPTION`, `NETWORK_ERROR`,
     `AUTH_ERROR`, `SCHEMA_ERROR`, `PARSE_ERROR`, `IO_ERROR`, `TIMEOUT_ERROR`,
-    `DEPENDENCY_ERROR`, `UNEXPECTED_ERROR`, `UNZIP`.
+    `DEPENDENCY_ERROR`, `UNEXPECTED_ERROR`, `UNZIP`, `SEARCH_NO_RESULTS`, 
+    `NO_CADASTRAL_INFO`, `EMPTY_RESPONSE`.
     """
 
     DRIVER_CREATION = "driver_creation"
@@ -104,6 +106,11 @@ class FailurePoint(str, Enum):
     DEPENDENCY_ERROR = "dependency_error"
     UNEXPECTED_ERROR = "unexpected_error"
     UNZIP = "unzip"
+    SEARCH_NO_RESULTS = "search_no_results"
+    NO_CADASTRAL_INFO = "no_cadastral_info"
+    EMPTY_RESPONSE = "empty_response"
+    MAX_RETRIES_EXCEEDED = "max_retries_exceeded"
+    RUNTIME_EXCEEDED = "runtime_exceeded"  
     
 
 class ReasonCode(str, Enum):

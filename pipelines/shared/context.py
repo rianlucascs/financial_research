@@ -62,7 +62,7 @@ class PipelineContext:
         
     
     
-    def build_raw_path(self, pipeline: str, subdir_format: Literal["csv", "html", "text", "zip", "parquet"] | None = None) -> Path:
+    def build_raw_path(self, pipeline: str, subdir_format: Literal["csv", "html", "text", "zip", "parquet", "json"] | None = None) -> Path:
         """Constrói o caminho para o diretório ``raw`` de um pipeline.
 
         Returns:
@@ -143,7 +143,7 @@ class PipelineContext:
             return self.historical_data_dir / pipeline / "snapshot_drift" / subdir
     
     
-    def  prepare_raw_path(self, pipeline: str, subdir_format: Literal["csv", "html", "text", "zip"] | None = None) -> Path:
+    def  prepare_raw_path(self, pipeline: str, subdir_format: Literal["csv", "html", "text", "zip", "json"] | None = None) -> Path:
         """Prepara o diretório ``raw`` de um pipeline.
 
         Returns:
