@@ -1,0 +1,34 @@
+{
+  "start_ubuntu_server": {
+    "schedule": "07:40:00",
+    "frequency": "daily",
+    "timer_unit": "bioss",
+    "note": "Executado pelo serviço bioss."
+  },
+  "cvm_formulario_demonstracoes_financeiras_padronizadas": {
+    "schedule": "08:00:00",
+    "frequency": "daily",
+    "timer_unit": "financial-research-cvm-dfp.timer"
+  },
+  "cvm_formulario_informacoes_trimestrais": {
+    "schedule": "08:30:00",
+    "frequency": "daily",
+    "timer_unit": "financial-research-cvm-itr.timer"
+  },
+  "cvm_cias_abertas_informacao_cadastral": {
+    "schedule": "09:10:00",
+    "frequency": "daily",
+    "timer_unit": "financial-research-cvm-cad.timer"
+  },
+  "b3_enriquecimento_cadastral_ativos": {
+    "schedule": "2026-09-01T22:00:00",
+    "frequency": "once",
+    "timer_unit": "financial-research-b3-cad.timer",
+    "note": "Executado uma vez."
+  },
+  "cvm_formulario_de_referencia": {
+    "schedule": "19:00:00",
+    "frequency": "daily",
+    "timer_unit": "financial-research-cvm-fre.timer"
+  }
+}

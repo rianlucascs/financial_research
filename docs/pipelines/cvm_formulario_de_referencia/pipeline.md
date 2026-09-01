@@ -1,6 +1,6 @@
-# Pipeline — CVM Formulario de Referencia
+# Pipeline - CVM Formulario de Referencia
 
-Como o dado se move, do download até o relatório.
+Obtém e prepara os dados do Formulário de Referência (FRE) da CVM.
 
 ---
 
@@ -10,19 +10,22 @@ Como o dado se move, do download até o relatório.
 extract → to_interim → to_processed → load → compare → retention
 ```
 
-Cada execução cria um snapshot datado (`YYYY-MM-DD`). O pipeline roda diariamente e mantém os últimos 3 dias no disco.
+## Execução e snapshots
+
+- Cada execução cria um snapshot datado (`YYYY-MM-DD`).
+- O pipeline é executado diariamente e mantém os últimos três dias no disco.
 
 ---
 
-## Stage por stage
+## Stages
 
 ### 1. Extract
 
-**Input:** URLs públicas da CVM (um `.zip` por ano, de 2010 até o ano atual).
+**Entrada:** URLs públicas da CVM (um `.zip` por ano, de 2010 até o ano atual).
 
-**O que faz:** Faz o download dos arquivos `.zip` do Formulário de Referência (FRE), descompacta e salva os `.csv` brutos.
+**Processamento:** Faz o download dos arquivos `.zip` do Formulário de Referência (FRE), descompacta e salva os `.csv` brutos.
 
-**Output:**
+**Saída:**
 ```
 data/<pipeline>/<YYYY-MM-DD>/raw/zip/   ← arquivos .zip
 data/<pipeline>/<YYYY-MM-DD>/raw/csv/   ← arquivos .csv descompactados
@@ -30,13 +33,13 @@ data/<pipeline>/<YYYY-MM-DD>/raw/csv/   ← arquivos .csv descompactados
 
 ---
 
-### 2. Transform — to_interim
+### 2. Transform - to_interim
 
-**Input:** `.csv` em `raw/csv/` (separador `;`, encoding `iso-8859-1`).
+**Entrada:** `.csv` em `raw/csv/` (separador `;`, encoding `iso-8859-1`).
 
-**O que faz:** Leitura, padronização de tipos e colunas, limpeza inicial e conversão de datas e campos textuais/cadastrais/financeiros. Um arquivo `.parquet` por ano e por identificador/tabela.
+**Processamento:** Leitura, padronização de tipos e colunas, limpeza inicial e conversão de datas e campos textuais/cadastrais/financeiros. Um arquivo `.parquet` por ano e por identificador/tabela.
 
-**Output:**
+**Saída:**
 ```
 data/<pipeline>/<YYYY-MM-DD>/transformed/to_interim/parquet/
 ```
@@ -48,13 +51,13 @@ Ações principais:
 
 ---
 
-### 3. Transform — to_processed
+### 3. Transform - to_processed
 
-**Input:** `.parquet` de `to_interim/`.
+**Entrada:** `.parquet` de `to_interim/`.
 
-**O que faz:** Concatena os dados anuais dos arquivos intermediários de cada identificador (tabela) do Formulário de Referência em arquivos Parquet consolidados abrangendo a série histórica de 2010 até o ano atual.
+**Processamento:** Concatena os dados anuais dos arquivos intermediários de cada identificador (tabela) do Formulário de Referência em arquivos Parquet consolidados abrangendo a série histórica de 2010 até o ano atual.
 
-**Output:**
+**Saída:**
 ```
 data/<pipeline>/<YYYY-MM-DD>/transformed/to_processed/parquet/
 ```
@@ -68,21 +71,21 @@ fre_cia_aberta_informacao_financeira_2010-2026.parquet
 
 ### 4. Load
 
-**Input:** `.parquet` de `to_processed/`.
+**Entrada:** `.parquet` de `to_processed/`.
 
-**O que faz:** Grava os dados no destino final (banco de dados ou camada de consumo).
+**Processamento:** Grava os dados no destino final (banco de dados ou camada de consumo).
 
-**Output:** destino final configurado no ambiente.
+**Saída:** destino final configurado no ambiente.
 
 ---
 
 ### 5. Compare
 
-**Input:** `.parquet` de `to_processed/` do snapshot atual (`D0`) e do anterior (`D-1`).
+**Entrada:** `.parquet` de `to_processed/` do snapshot atual (`D0`) e do anterior (`D-1`).
 
-**O que faz:** Compara os dois snapshots linha a linha por chave composta e gera três conjuntos: linhas adicionadas, removidas e alteradas.
+**Processamento:** Compara os dois snapshots linha a linha por chave composta e gera três conjuntos: linhas adicionadas, removidas e alteradas.
 
-**Output:**
+**Saída:**
 ```
 data/<pipeline>/<YYYY-MM-DD>/snapshot_drift/<arquivo>/
     <arquivo>_added.parquet
@@ -94,15 +97,15 @@ data/<pipeline>/<YYYY-MM-DD>/snapshot_drift/<arquivo>/
 
 ### 6. Retention
 
-**Input:** `data/<pipeline>/` e `logs/<pipeline>/`.
+**Entrada:** `data/<pipeline>/` e `logs/<pipeline>/`.
 
-**O que faz:** Remove snapshots e logs com mais de 3 dias. Mantém apenas `D0`, `D-1` e `D-2`.
+**Processamento:** Remove snapshots e logs com mais de 3 dias. Mantém apenas `D0`, `D-1` e `D-2`.
 
-**Output:** diretórios antigos deletados; checkpoint gravado.
+**Saída:** diretórios antigos deletados; checkpoint gravado.
 
 ---
 
-## Chave composta (Compare)
+## Chaves de comparação
 
 | Coluna | Descrição |
 |---|---|
@@ -110,8 +113,12 @@ data/<pipeline>/<YYYY-MM-DD>/snapshot_drift/<arquivo>/
 
 ---
 
-## Observações do fluxo FRE
+## Particularidades do pipeline
 
 - O Formulário de Referência (FRE) é um documento anual extenso composto por dezenas de tabelas/módulos temáticos (mais de 60 identificadores).
 - O processamento em `to_processed` consolida os recortes anuais por identificador (tabela) em arquivos parquet de séries históricas de longo prazo (de 2010 até o ano corrente).
 - Algumas tabelas do FRE possuem anos ausentes na origem da CVM para períodos específicos; o pipeline trata arquivos intermediários inexistentes sem interromper o fluxo das demais tabelas.
+
+## Qualidade dos dados
+
+- [detalhar: falta informação sobre validações e tratamento de dados inválidos].

@@ -1,6 +1,6 @@
-# Pipeline — CVM Formulario Demonstracoes Financeiras Padronizadas
+# Pipeline - CVM Formulario Demonstracoes Financeiras Padronizadas
 
-Como o dado se move, do download até o relatório.
+Obtém e prepara as Demonstrações Financeiras Padronizadas (DFP) da CVM.
 
 ---
 
@@ -10,19 +10,22 @@ Como o dado se move, do download até o relatório.
 extract → to_interim → to_processed → load → compare → retention
 ```
 
-Cada execução cria um snapshot datado (`YYYY-MM-DD`). O pipeline roda diariamente e mantém os últimos 3 dias no disco.
+## Execução e snapshots
+
+- Cada execução cria um snapshot datado (`YYYY-MM-DD`).
+- O pipeline é executado diariamente e mantém os últimos três dias no disco.
 
 ---
 
-## Stage por stage
+## Stages
 
 ### 1. Extract
 
-**Input:** URLs públicas da CVM (um `.zip` por ano, de 2011 até o ano atual).
+**Entrada:** URLs públicas da CVM (um `.zip` por ano, de 2011 até o ano atual).
 
-**O que faz:** Faz o download dos arquivos `.zip`, descompacta e salva os `.csv` brutos.
+**Processamento:** Faz o download dos arquivos `.zip`, descompacta e salva os `.csv` brutos.
 
-**Output:**
+**Saída:**
 ```
 data/<pipeline>/<YYYY-MM-DD>/raw/zip/   ← arquivos .zip
 data/<pipeline>/<YYYY-MM-DD>/raw/csv/   ← arquivos .csv descompactados
@@ -30,26 +33,26 @@ data/<pipeline>/<YYYY-MM-DD>/raw/csv/   ← arquivos .csv descompactados
 
 ---
 
-### 2. Transform — to_interim
+### 2. Transform - to_interim
 
-**Input:** `.csv` em `raw/csv/` (separador `;`, encoding `iso-8859-1`).
+**Entrada:** `.csv` em `raw/csv/` (separador `;`, encoding `iso-8859-1`).
 
-**O que faz:** Leitura, padronização de tipos e colunas, limpeza inicial. Um arquivo `.parquet` por ano.
+**Processamento:** Leitura, padronização de tipos e colunas, limpeza inicial. Um arquivo `.parquet` por ano.
 
-**Output:**
+**Saída:**
 ```
 data/<pipeline>/<YYYY-MM-DD>/transformed/to_interim/parquet/
 ```
 
 ---
 
-### 3. Transform — to_processed
+### 3. Transform - to_processed
 
-**Input:** `.parquet` de `to_interim/`.
+**Entrada:** `.parquet` de `to_interim/`.
 
-**O que faz:** Aplica regra de negócio (ex.: filtros por código de demonstração, consolidação por `GRUPO_DFP`). Um arquivo `.parquet` por grupo/ano.
+**Processamento:** Aplica regra de negócio (ex.: filtros por código de demonstração, consolidação por `GRUPO_DFP`). Um arquivo `.parquet` por grupo/ano.
 
-**Output:**
+**Saída:**
 ```
 data/<pipeline>/<YYYY-MM-DD>/transformed/to_processed/parquet/
 ```
@@ -58,21 +61,21 @@ data/<pipeline>/<YYYY-MM-DD>/transformed/to_processed/parquet/
 
 ### 4. Load
 
-**Input:** `.parquet` de `to_processed/`.
+**Entrada:** `.parquet` de `to_processed/`.
 
-**O que faz:** Grava os dados no destino final (banco de dados ou camada de consumo).
+**Processamento:** Grava os dados no destino final (banco de dados ou camada de consumo).
 
-**Output:** destino final configurado no ambiente.
+**Saída:** destino final configurado no ambiente.
 
 ---
 
 ### 5. Compare
 
-**Input:** `.parquet` de `to_processed/` do snapshot atual (`D0`) e do anterior (`D-1`).
+**Entrada:** `.parquet` de `to_processed/` do snapshot atual (`D0`) e do anterior (`D-1`).
 
-**O que faz:** Compara os dois snapshots linha a linha por chave composta e gera três conjuntos: linhas adicionadas, removidas e alteradas.
+**Processamento:** Compara os dois snapshots linha a linha por chave composta e gera três conjuntos: linhas adicionadas, removidas e alteradas.
 
-**Output:**
+**Saída:**
 ```
 data/<pipeline>/<YYYY-MM-DD>/snapshot_drift/<arquivo>/
     <arquivo>_added.parquet
@@ -84,15 +87,15 @@ data/<pipeline>/<YYYY-MM-DD>/snapshot_drift/<arquivo>/
 
 ### 6. Retention
 
-**Input:** `data/<pipeline>/` e `logs/<pipeline>/`.
+**Entrada:** `data/<pipeline>/` e `logs/<pipeline>/`.
 
-**O que faz:** Remove snapshots e logs com mais de 3 dias. Mantém apenas `D0`, `D-1` e `D-2`.
+**Processamento:** Remove snapshots e logs com mais de 3 dias. Mantém apenas `D0`, `D-1` e `D-2`.
 
-**Output:** diretórios antigos deletados; checkpoint gravado.
+**Saída:** diretórios antigos deletados; checkpoint gravado.
 
 ---
 
-## Chave composta (Compare)
+## Chaves de comparação
 
 | Coluna | Descrição |
 |---|---|
@@ -103,3 +106,11 @@ data/<pipeline>/<YYYY-MM-DD>/snapshot_drift/<arquivo>/
 | `ORDEM_EXERC` | Ordem do exercício |
 | `DT_FIM_EXERC` | Data de fim do exercício |
 | `CD_CONTA` | Código da conta contábil |
+
+## Particularidades do pipeline
+
+- `to_processed` aplica filtros por código de demonstração e consolida os dados por `GRUPO_DFP`.
+
+## Qualidade dos dados
+
+- [detalhar: falta informação sobre conversões de tipos, validações e tratamento de dados inválidos].

@@ -1,6 +1,6 @@
-# Pipeline — CVM Cias Abertas Informacao Cadastral
+# Pipeline - CVM Cias Abertas Informacao Cadastral
 
-Como o dado se move, do download até o relatório.
+Obtém e prepara o cadastro de companhias abertas disponibilizado pela CVM.
 
 ---
 
@@ -10,32 +10,35 @@ Como o dado se move, do download até o relatório.
 extract → to_interim → load
 ```
 
-Cada execução cria um snapshot datado (`YYYY-MM-DD`). O pipeline roda diariamente e mantém os últimos 3 dias no disco.
+## Execução e snapshots
+
+- Cada execução cria um snapshot datado (`YYYY-MM-DD`).
+- O pipeline é executado diariamente e mantém os últimos três dias no disco.
 
 ---
 
-## Stage por stage
+## Stages
 
 ### 1. Extract
 
-**Input:** URL pública da CVM para o arquivo de cadastro de companhias abertas.
+**Entrada:** URL pública da CVM para o arquivo de cadastro de companhias abertas.
 
-**O que faz:** Faz o download do arquivo CSV `cad_cia_aberta.csv` e salva o dado bruto na estrutura de snapshots.
+**Processamento:** faz download de `cad_cia_aberta.csv` e preserva o arquivo bruto no snapshot.
 
-**Output:**
+**Saída:**
 ```
 data/<pipeline>/<YYYY-MM-DD>/raw/csv/   ← arquivos .csv
 ```
 
 ---
 
-### 2. Transform — to_interim
+### 2. Transform - to_interim
 
-**Input:** `.csv` em `raw/csv/` (separador `;`, encoding `iso-8859-1`).
+**Entrada:** arquivo CSV em `raw/csv/`, com separador `;` e encoding `iso-8859-1`.
 
-**O que faz:** Leitura, padronização de tipos, conversão de colunas de data e limpeza inicial dos campos cadastrais. O arquivo final é salvo em parquet para uso analítico.
+**Processamento:** padroniza tipos, converte datas e faz a limpeza inicial dos campos cadastrais.
 
-**Output:**
+**Saída:**
 ```
 data/<pipeline>/<YYYY-MM-DD>/transformed/to_interim/parquet/
 ```
@@ -50,11 +53,11 @@ Ações principais:
 
 ### 3. Load
 
-**Input:** `.parquet` de `to_interim/`.
+**Entrada:** arquivos Parquet de `to_interim/`.
 
-**O que faz:** Carrega o dataset em banco SQLite por tabela, com um arquivo `.db` para cada parquet gerado.
+**Processamento:** carrega o dataset em SQLite, com um arquivo `.db` para cada Parquet gerado.
 
-**Output:**
+**Saída:**
 ```
 load/<pipeline>/<YYYY-MM-DD>/
     cad_cia_aberta.db
@@ -62,7 +65,7 @@ load/<pipeline>/<YYYY-MM-DD>/
 
 ---
 
-## Observações do fluxo CAD
+## Particularidades do pipeline
 
 - O pipeline de cadastro não segue o mesmo padrão de demonstrações por conta contábil.
 - A unidade principal é a companhia aberta, e não uma linha contábil por período.
@@ -71,7 +74,7 @@ load/<pipeline>/<YYYY-MM-DD>/
 
 ---
 
-## Dados principais
+## Campos principais
 
 Os campos mais relevantes para uso analítico incluem:
 
@@ -87,7 +90,7 @@ Os campos mais relevantes para uso analítico incluem:
 
 ---
 
-## Chave composta
+## Chaves e identificadores
 
 A base é geralmente identificada por:
 
@@ -99,7 +102,7 @@ A base é geralmente identificada por:
 
 ---
 
-## Observações de qualidade
+## Qualidade dos dados
 
 - O arquivo bruto vem em `;` e encoding `iso-8859-1`.
 - Datas inválidas são convertidas para `NaT` para evitar quebra na leitura.

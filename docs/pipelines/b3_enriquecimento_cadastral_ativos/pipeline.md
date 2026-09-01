@@ -1,6 +1,6 @@
 # Pipeline - B3 Enriquecimento Cadastral de Ativos
 
-Como os dados cadastrais e de negociacao da B3 sao obtidos e preparados para consulta.
+Obtém dados cadastrais e de negociação da B3 para companhias ativas da CVM.
 
 ---
 
@@ -10,32 +10,41 @@ Como os dados cadastrais e de negociacao da B3 sao obtidos e preparados para con
 extract -> to_interim -> load -> retention
 ```
 
-Cada execucao cria um snapshot datado (`YYYY-MM-DD`). O extract usa o snapshot de `cvm_cias_abertas_informacao_cadastral` como fonte de companhias ativas.
+## Execução e snapshots
+
+- Cada execução cria um snapshot datado (`YYYY-MM-DD`).
+- O extract depende de um snapshot disponível de `cvm_cias_abertas_informacao_cadastral`.
 
 ---
 
-## Stage por stage
+## Stages
 
 ### 1. Extract
 
-**Input:** companhias com `SIT = ATIVO` do snapshot cadastral da CVM e endpoint de detalhe de empresas listadas da B3.
+**Entrada:** companhias com `SIT = ATIVO` do snapshot cadastral da CVM e endpoint de detalhe de empresas listadas da B3.
 
-**O que faz:** consulta a B3 por `CD_CVM`, grava uma resposta JSON por companhia e mantém arquivos ja existentes no mesmo snapshot. A consulta tem ate quatro tentativas por empresa e limite total de quatro horas.
+**Processamento:** consulta a B3 por `CD_CVM` e grava uma resposta JSON por companhia.
 
-**Output:**
+**Saída:**
 
 ```
 data/b3_enriquecimento_cadastral_ativos/<YYYY-MM-DD>/raw/json/
     cd_cvm_<codigo>.json
 ```
 
+Particularidades:
+
+- Arquivos já existentes não são sobrescritos em reexecuções do mesmo snapshot.
+- São feitas até quatro tentativas por companhia, com limite total de quatro horas.
+- Respostas vazias, empresa não encontrada, rate limit e indisponibilidade da API geram checkpoints de falha ou retentativas.
+
 ### 2. Transform - to_interim
 
-**Input:** arquivos JSON em `raw/json/`.
+**Entrada:** arquivos JSON em `raw/json/`.
 
-**O que faz:** normaliza o objeto principal de cada companhia e separa a lista `otherCodes` em uma tabela propria. Isso preserva todos os codigos de negociacao e ISINs de empresas que possuem mais de um ativo.
+**Processamento:** normaliza o objeto principal de cada companhia e separa `otherCodes` em uma tabela própria, preservando códigos de negociação e ISINs adicionais.
 
-**Output:**
+**Saída:**
 
 ```
 data/b3_enriquecimento_cadastral_ativos/<YYYY-MM-DD>/transformed/to_interim/parquet/
@@ -43,27 +52,34 @@ data/b3_enriquecimento_cadastral_ativos/<YYYY-MM-DD>/transformed/to_interim/parq
     codigos.parquet
 ```
 
-As datas `dateQuotation` e `lastDate` sao interpretadas no formato brasileiro (`DD/MM/YYYY`) antes da persistencia em parquet.
+Particularidades:
+
+- `dateQuotation` e `lastDate` são interpretadas no formato brasileiro (`DD/MM/YYYY`) antes da persistência em Parquet.
 
 ### 3. Load
 
-**Input:** parquets de `to_interim/`.
+**Entrada:** arquivos Parquet de `to_interim/`.
 
-**O que faz:** carrega cada parquet no destino configurado pelo loader, mantendo os datasets `empresas` e `codigos` separados.
+**Processamento:** carrega os datasets `empresas` e `codigos` separadamente no destino configurado pelo loader.
+
+**Saída:** [detalhar: falta informação sobre o destino e os artefatos gerados].
 
 ### 4. Retention
 
-**O que faz:** aplica as politicas padrao de retencao de dados e logs do projeto.
+**Entrada:** dados e logs do pipeline.
+
+**Processamento:** aplica as políticas padrão de retenção do projeto.
+
+**Saída:** [detalhar: falta informação sobre o período de retenção].
 
 ---
 
-## Dependencia
+## Particularidades do pipeline
 
-- `cvm_cias_abertas_informacao_cadastral` deve ter um snapshot disponivel, pois fornece `CD_CVM` e `SIT` usados no extract.
-- Apenas companhias com situacao `ATIVO` sao consultadas na B3.
+- Apenas companhias em situação `ATIVO` são consultadas na B3.
+- O JSON bruto é preservado para rastreabilidade e reprocessamento.
 
-## Observacoes de qualidade
+## Qualidade dos dados
 
-- O JSON bruto e preservado para rastreabilidade e reprocessamento.
-- Arquivos ja baixados nao sao sobrescritos numa reexecucao do mesmo snapshot.
-- Respostas vazias, empresa nao encontrada, rate limit e indisponibilidade da API geram checkpoints de falha ou retentativas.
+- A lista `otherCodes` é normalizada em `codigos`, evitando perda de ativos adicionais.
+- Dados ausentes e falhas de consulta são registrados em checkpoints.
