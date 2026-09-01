@@ -64,6 +64,7 @@ A camada de Research é responsável pelo consumo e utilização dos dados produ
 | `streamlit_app_research` | Aplicação analítica para pesquisa de mercado, incluindo:<br>• Monitoramento geral e setorial<br>• Acompanhamento de preços e retornos<br>• Avaliação de estratégias de investimento<br>• Análise de conjuntos de ativos<br>• Consulta de notícias por ativo<br>• Configuração de alertas | ![preview](caminho/para/imagem.png) |
 ---
 
+
 # **Topologia**
 
 | Componente | Detalhe |
