@@ -124,11 +124,3 @@ Utilize os apps em `streamlit_apps` para monitorar pipelines e explorar os dados
 | Execução | Docker e Docker Compose |
 | Armazenamento compartilhado | Samba — `/srv/data` |
 | Agendamento | systemd timers |
-
-
-
-   4 backticks markdown
-    // filepath: `/home/rian/kairos-trap/README.md`
-    // ...existing code...
-| Armazenamento compartilhado | Samba — `data` |
-| Agendamento | systemd timers |
