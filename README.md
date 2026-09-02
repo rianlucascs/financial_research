@@ -76,7 +76,44 @@ A camada de **Data Providers** é responsável pela integração com ``bibliotec
 
 ---
 
+# **Como utilizar**
 
+### 1. Clonar o projeto
+
+```python
+git clone https://github.com/rianlucascs/kairos-trap
+cd kairos-trap
+```
+
+### 2. Instalar dependências
+
+```bash
+pip install -e .
+```
+
+### 3. Executar um pipeline manualmente
+
+Cada pipeline é dividido em stages, e cada stage possui seu próprio `pipeline.py`. Para executar um stage isoladamente:
+
+```bash
+python pipelines/<nome_do_pipeline>/<stage>/pipeline.py
+```
+
+Exemplo:
+
+```bash
+python pipelines/cvm_formulario_informacoes_trimestrais/extract/pipeline.py
+```
+
+### 4. Agendar execuções no servidor
+
+Para rodar os pipelines automaticamente via `systemd timers`, siga o passo a passo em [`docs`](docs).
+
+### 5. Consumir os dados
+
+Utilize os apps em `streamlit_apps` para monitorar pipelines e explorar os dados processados, ou acesse diretamente via `research`.
+
+---
 
 # **Topologia**
 
@@ -86,4 +123,12 @@ A camada de **Data Providers** é responsável pela integração com ``bibliotec
 | Acesso remoto | OpenSSH + VS Code Remote-SSH |
 | Execução | Docker e Docker Compose |
 | Armazenamento compartilhado | Samba — `/srv/data` |
+| Agendamento | systemd timers |
+
+
+
+   4 backticks markdown
+    // filepath: `/home/rian/kairos-trap/README.md`
+    // ...existing code...
+| Armazenamento compartilhado | Samba — `data` |
 | Agendamento | systemd timers |
