@@ -68,13 +68,14 @@ A camada de Research é responsável pelo consumo e utilização dos dados produ
 
 # **Data Providers**
 
-A camada de Data Providers é responsável pela integração com bibliotecas e APIs externas de dados de mercado, encapsulando requisições, tratamento e normalização das respostas antes de disponibilizá-las ao restante do projeto.
+A camada de **Data Providers** é responsável pela integração com ``bibliotecas`` e APIs externas de dados de mercado, encapsulando requisições, tratamento, validação e normalização das respostas antes de disponibilizá-las ao restante do projeto.
 
-| Componente | Descrição |
-|---|---|
-| `repositories` | Implementações de acesso a fontes externas de dados (ex.: yfinance), com tratamento e conversão para estruturas padronizadas utilizadas pelo projeto. |
+| Componente                   | Descrição                                                                                         |
+| ---------------------------- | ------------------------------------------------------------------------------------------------- |
+| `yfinance_price_provider.py` | Integração com o yfinance para obtenção, validação, tratamento e normalização de dados de preços. |
 
 ---
+
 
 
 # **Topologia**

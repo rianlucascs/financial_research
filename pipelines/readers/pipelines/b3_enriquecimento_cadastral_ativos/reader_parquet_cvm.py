@@ -15,6 +15,7 @@ class ReaderSnapshotParquet(ReaderSnapshotParquetInterface):
 
         super().__init__(
             pipeline="b3_enriquecimento_cadastral_ativos",
-            file_identifiers=file_identifiers
+            file_identifiers=file_identifiers,
+            use_latest_snapshot=True
         )
         

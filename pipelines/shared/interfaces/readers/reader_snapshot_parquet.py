@@ -72,8 +72,6 @@ class ReaderSnapshotParquetInterface(ABC):
     def read(self) -> DataFrame:
         
         file_path = self._build_parquet_path()
-        
-        print(file_path)
 
         if not file_path.exists():
             
