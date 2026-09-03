@@ -14,9 +14,9 @@ def render_asset_select_widget(
         return None
 
     selected_option = st.selectbox(
-        "Asset",
+        f"Asset  —  {len(list_asset_search_labels)}",
         options=[asset for asset in list_asset_search_labels],
-        format_func=lambda asset: f"{asset.trading_code}  —  {asset.company_name[0]}",
+        format_func=lambda asset: f"{asset.trading_code}  —  {asset.company_name[0] if type(asset.company_name) is list else asset.company_name}",
         key="selected_asset",
     )
 

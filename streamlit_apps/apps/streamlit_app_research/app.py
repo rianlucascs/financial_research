@@ -5,7 +5,7 @@ import streamlit as st
 
 st.set_page_config(
     page_title="kairos-trap",
-    page_icon="💰",
+    page_icon="\U0001FA99",
     layout="wide",
 )
 

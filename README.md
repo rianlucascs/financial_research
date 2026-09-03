@@ -62,7 +62,7 @@ A camada de Research é responsável pelo consumo e utilização dos dados produ
 | App | Descrição | Preview |
 |---|---|---|
 | `streamlit_app_pipelines` | Monitoramento operacional dos pipelines ETL, incluindo:<br>• Consulta de pipelines disponíveis<br>• Logs de execução<br>• Checkpoints organizados por pipeline, stage e step | [preview](docs/screenshots/streamlit_apps/streamlit_app_pipelines/page_overview.png) |
-| `streamlit_app_research` | Aplicação analítica para pesquisa de mercado, incluindo:<br>• Monitoramento geral e setorial<br>• Acompanhamento de preços e retornos<br>• Avaliação de estratégias de investimento<br>• Análise de conjuntos de ativos<br>• Consulta de notícias por ativo<br>• Configuração de alertas | ![preview](caminho/para/imagem.png) |
+| `streamlit_app_research` | Aplicação analítica para pesquisa de mercado, incluindo:<br>• Monitoramento geral e setorial<br>• Acompanhamento de preços, retornos e balanço<br>• Avaliação de estratégias de investimento<br>• Análise de conjuntos de ativos<br>• Consulta de notícias por ativo<br>• Configuração de alertas | ![preview](caminho/para/imagem.png) |
 
 ---
 
@@ -96,7 +96,7 @@ pip install -e .
 Cada pipeline é dividido em stages, e cada stage possui seu próprio `pipeline.py`. Para executar um stage isoladamente:
 
 ```bash
-python pipelines/<nome_do_pipeline>/<stage>/pipeline.py
+python pipelines/<nome_do_pipeline>/stage/pipeline.py
 ```
 
 Exemplo:

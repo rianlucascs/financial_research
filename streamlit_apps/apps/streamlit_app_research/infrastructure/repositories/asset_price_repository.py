@@ -16,3 +16,5 @@ class AssetPriceRepository:
     def get_asset_price(self, **kwargs) -> DataFrame:
         
         return self.yfinance_price_provider.get_asset_price(**kwargs)
+    
+    
