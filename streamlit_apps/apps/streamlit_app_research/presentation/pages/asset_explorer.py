@@ -2,6 +2,8 @@
 
 from streamlit_apps.apps.streamlit_app_research.application.services.asset_service import AssetService
 from streamlit_apps.apps.streamlit_app_research.application.services.asset_price_service import AssetPriceService
+from streamlit_apps.apps.streamlit_app_research.application.analytics.price_regression_analysis import PriceRegressionAnalysis
+from streamlit_apps.apps.streamlit_app_research.application.analytics.return_volatility_analysis import ReturnVolatilityAnalysis
 
 from streamlit_apps.apps.streamlit_app_research.presentation.components.moving_average_select_widget import render_moving_average_select_widget
 from streamlit_apps.apps.streamlit_app_research.presentation.components.asset_select_widget import render_asset_select_widget
@@ -10,15 +12,12 @@ from streamlit_apps.apps.streamlit_app_research.presentation.components.charts.a
 from streamlit_apps.apps.streamlit_app_research.presentation.components.charts.asset_returns_distribution_bar_chart import render_asset_returns_distribution_bar_chart
 from streamlit_apps.apps.streamlit_app_research.presentation.components.styled_tabs_widget import styled_tabs
 from streamlit_apps.apps.streamlit_app_research.presentation.components.charts.asset_price_regression_chart import (
-    PriceRegressionAnalysis,
     render_asset_price_regression_chart,
     render_asset_price_regression_distribution_chart,
 )
 from streamlit_apps.apps.streamlit_app_research.presentation.components.charts.asset_return_vs_volatility import (
-    ReturnVolatilityAnalysis,
     render_asset_return_vs_volatility_chart,
 )
-
 
 from streamlit_apps.apps.streamlit_app_research.shared.dto.asset_dto import AssetTradingCodeDTO
 
@@ -77,8 +76,6 @@ with preco:
     )
     
     with regressao_de_preco:
-        
-        st.subheader("Regressão de Preço")
 
         analysis = PriceRegressionAnalysis(
             price=price,
@@ -90,8 +87,6 @@ with preco:
 
 
 with retornos:
-    
-    st.subheader("Retornos Diários")
     
     daily_returns: DataFrame = asset_price_service.get_asset_returns(
         tickers=asset.trading_code,
@@ -116,16 +111,12 @@ with retornos:
     
     with distribuicao:
         
-        st.subheader("Distribuição de Retornos Diários")
-        
         render_asset_returns_distribution_bar_chart(
             daily_returns=daily_returns,
             moving_average=render_moving_average_select_widget(key="asset_explorer_returns_distribution"),
         )
     
     with retorno_vs_volatilidade:
-        
-        st.subheader("Retorno vs Volatilidade")
 
         analysis = ReturnVolatilityAnalysis(
             price=price,
@@ -136,3 +127,8 @@ with retornos:
         )
 
         render_asset_return_vs_volatility_chart(analysis)
+        
+
+with balanco:
+    
+    st.info("Balanço section is under construction.")

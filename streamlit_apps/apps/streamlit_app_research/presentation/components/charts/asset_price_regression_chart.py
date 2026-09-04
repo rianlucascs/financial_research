@@ -1,44 +1,10 @@
 
 
-import numpy as np
+from streamlit_apps.apps.streamlit_app_research.application.analytics.price_regression_analysis import PriceRegressionAnalysis
+
 import streamlit as st
-import plotly.graph_objects as go
-from pandas import DataFrame
-from scipy.stats import linregress
+import plotly.graph_objects as go        
 
-
-class PriceRegressionAnalysis:
-
-    def __init__(
-        self,
-        price: DataFrame,
-        moving_average: int | None = None,
-    ) -> None:
-        data = price[["Date", "Adj Close"]].dropna().copy()
-
-        if moving_average:
-            data["Adj Close"] = (
-                data["Adj Close"]
-                .rolling(moving_average)
-                .mean()
-            )
-            data = data.dropna()
-
-        x = np.arange(len(data))
-        y = data["Adj Close"].to_numpy()
-
-        regression = linregress(x, y)
-
-        trend = regression.intercept + regression.slope * x
-
-        distance_pct = ((y - trend) / trend) * 100
-
-        self.data = data
-        self.distance_pct = distance_pct
-        self.mean = distance_pct.mean()
-        self.std = distance_pct.std()
-        self.current = distance_pct[-1]
-        
 
 def render_asset_price_regression_chart(
     analysis: PriceRegressionAnalysis,
@@ -109,7 +75,7 @@ def render_asset_price_regression_distribution_chart(
     fig.add_trace(
         go.Histogram(
             x=analysis.distance_pct,
-            nbinsx=30,
+            nbinsx=60,
         )
     )
 

@@ -1,4 +1,4 @@
-# System Times — CVM Cias Abertas Informacao Cadastral
+# Systemd Timers - CVM Cias Abertas Informacao Cadastral
 
 Comandos Systemd para configuração e agendamento da execução automática do pipeline de Cadastro de Companhias Abertas da CVM.
 
@@ -7,9 +7,9 @@ Comandos Systemd para configuração e agendamento da execução automática do 
 ### 1.1 Criar service
 
 ```bash
-sudo tee /etc/systemd/system/financial-research-cvm-cad.service > /dev/null <<'EOF'
+sudo tee /etc/systemd/system/kairos-trap-cvm-cad.service > /dev/null <<'EOF
 [Unit]
-Description=Financial Research - CVM CAD
+Description=Kairos Trap - CVM CAD
 Wants=network-online.target
 After=network-online.target docker.service
 Requires=docker.service
@@ -17,22 +17,22 @@ Requires=docker.service
 [Service]
 Type=oneshot
 User=rian
-WorkingDirectory=/home/rian/financial_research/docker
-ExecStart=/usr/bin/docker compose -f /home/rian/financial_research/docker/docker-compose.yml run --rm cvm-cad-pipeline
+WorkingDirectory=/home/rian/kairos-trap/docker
+ExecStart=/usr/bin/docker compose -f /home/rian/kairos-trap/docker/docker-compose.yml run --rm cvm-cad-pipeline
 EOF
 ```
 
 ### 1.2 Criar timer
 
 ```bash
-sudo tee /etc/systemd/system/financial-research-cvm-cad.timer > /dev/null <<'EOF'
+sudo tee /etc/systemd/system/kairos-trap-cvm-cad.timer > /dev/null <<'EOF
 [Unit]
 Description=Timer - CVM CAD
 
 [Timer]
 OnCalendar=*-*-* 09:10:00
 Persistent=true
-Unit=financial-research-cvm-cad.service
+Unit=kairos-trap-cvm-cad.service
 
 [Install]
 WantedBy=timers.target
@@ -43,5 +43,13 @@ EOF
 
 ```bash
 sudo systemctl daemon-reload
-sudo systemctl enable --now financial-research-cvm-cad.timer
+sudo systemctl enable --now kairos-trap-cvm-cad.timer
+```
+
+### 1.4 Verificar
+
+```bash
+systemctl status kairos-trap-cvm-cad.timer
+systemctl list-timers --all | grep kairos-trap-cvm-cad
+journalctl -u kairos-trap-cvm-cad.service -n 200 --no-pager
 ```

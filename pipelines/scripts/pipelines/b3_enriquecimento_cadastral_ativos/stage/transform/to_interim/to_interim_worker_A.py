@@ -1,6 +1,3 @@
-"""
-
-"""
 
 
 from pipelines.shared.interfaces.pipelines.stage.transform.to_interim.to_interim_workers import ToInterimWorkersInterface
@@ -13,6 +10,7 @@ import gc
 
 
 class ToInterimWorkerA(ToInterimWorkersInterface):
+
 
     process: str = "to_interim_worker_a"
 

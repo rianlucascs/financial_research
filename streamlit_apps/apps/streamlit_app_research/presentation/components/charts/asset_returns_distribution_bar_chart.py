@@ -29,7 +29,7 @@ def render_asset_returns_distribution_bar_chart(
     fig = go.Figure(
         go.Histogram(
             x=returns,
-            nbinsx=30,
+            nbinsx=60,
         )
     )
 

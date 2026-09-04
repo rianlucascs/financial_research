@@ -1,91 +1,10 @@
 
 
+from streamlit_apps.apps.streamlit_app_research.application.analytics.return_volatility_analysis import ReturnVolatilityAnalysis
+
 import numpy as np
-from pandas import DataFrame
 import plotly.graph_objects as go
 import streamlit as st
-
-
-class ReturnVolatilityAnalysis:
-
-    def __init__(
-        self,
-        price: DataFrame,
-        window: int = 21,
-    ) -> None:
-        returns = (
-            price["Adj Close"]
-            .pct_change(fill_method=None)
-            .dropna()
-        )
-        
-        volatility = returns.rolling(window).std()
-        mean_return = returns.rolling(window).mean()
-
-        data = DataFrame(
-            {
-                "volatility": volatility,
-                "mean_return": mean_return,
-            }
-        ).dropna()
-
-        self.data = data
-
-        self.mean_volatility = data["volatility"].mean()
-        self.mean_return = data["mean_return"].mean()
-
-        self.current_volatility = data["volatility"].iloc[-1]
-        self.current_return = data["mean_return"].iloc[-1]
-
-        self.r2 = self._calculate_r2()
-
-        self.ellipse_x, self.ellipse_y = self._calculate_ellipse()
-
-
-    def _calculate_r2(self) -> float:
-        x = self.data["volatility"]
-        y = self.data["mean_return"]
-
-        coef = np.polyfit(x, y, 1)
-        y_pred = np.polyval(coef, x)
-
-        ss_res = np.sum((y - y_pred) ** 2)
-        ss_tot = np.sum((y - y.mean()) ** 2)
-
-        return 1 - ss_res / ss_tot
-
-
-    def _calculate_ellipse(self):
-        x = self.data["volatility"]
-        y = self.data["mean_return"]
-
-        covariance = np.cov(x, y)
-
-        values, vectors = np.linalg.eigh(covariance)
-
-        order = values.argsort()[::-1]
-
-        values = values[order]
-        vectors = vectors[:, order]
-
-        angle = np.linspace(0, 2 * np.pi, 200)
-
-        ellipse = (
-            2
-            * np.sqrt(values[:, None])
-            * np.array([
-                np.cos(angle),
-                np.sin(angle),
-            ])
-        )
-
-        rotated = vectors @ ellipse
-
-        ellipse_x = self.mean_volatility + rotated[0]
-        ellipse_y = self.mean_return + rotated[1]
-
-        return ellipse_x, ellipse_y
-    
 
 
 def render_asset_return_vs_volatility_chart(
@@ -110,22 +29,31 @@ def render_asset_return_vs_volatility_chart(
         )
     )
 
-    # Atual
+    lookbacks = [0, 2, 3]
+    labels = ["Atual", "Anterior", "Anterior 2"]
+
+    vols = [analysis.current_volatility(lookback=lb) if lb else analysis.current_volatility() for lb in lookbacks]
+    rets = [analysis.current_return(lookback=lb) if lb else analysis.current_return() for lb in lookbacks]
+
+    # Pontos de interesse: Atual, Anterior, Anterior 2
     fig.add_trace(
         go.Scatter(
-            x=[analysis.current_volatility],
-            y=[analysis.current_return],
-            mode="markers",
-            name="Atual",
+            x=vols,
+            y=rets,
+            mode="markers+lines",
+            text=labels,
+            textposition="top center",
+            line=dict(color="orange", width=3, dash="dot"),
             marker=dict(
-                size=12,
+                size=[14, 10, 7],           # decrescente = recência
                 color="orange",
                 symbol="diamond",
-                line=dict(
-                    color="purple",
-                    width=0.77,
-                ),
+                opacity=[1.0, 0.6, 0.35],    # decrescente = recência
+                line=dict(color="purple", width=0.77),
             ),
+            showlegend=False,
+            hovertext=labels,
+            hoverinfo="text+x+y",
         )
     )
 
