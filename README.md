@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="banner.png" width="743" height="293">
+</p>
+
 # **kairos-trap**
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)
